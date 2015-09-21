@@ -1,0 +1,53 @@
+.logo-sprite,
+.logo-QQ,
+.logo-close,
+.logo-error,
+.logo-ps,
+.logo-true,
+.logo-user,
+.logo-wei {
+    background-image: url('../img/logo-sc63e238854.png');
+    background-repeat: no-repeat
+}
+
+.logo-QQ {
+    background-position: 0 0;
+    height: 22px;
+    width: 20px
+}
+
+.logo-close {
+    background-position: 0 -27px;
+    height: 16px;
+    width: 19px
+}
+
+.logo-error {
+    background-position: 0 -48px;
+    height: 13px;
+    width: 15px
+}
+
+.logo-ps {
+    background-position: 0 -66px;
+    height: 21px;
+    width: 23px
+}
+
+.logo-true {
+    background-position: 0 -92px;
+    height: 15px;
+    width: 16px
+}
+
+.logo-user {
+    background-position: 0 -112px;
+    height: 19px;
+    width: 20px
+}
+
+.logo-wei {
+    background-position: 0 -136px;
+    height: 22px;
+    width: 24px
+}
