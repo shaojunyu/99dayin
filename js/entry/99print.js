@@ -55,12 +55,40 @@ require(['jquery', 'scroll', 'modal'], function($, scroll,modal) {
         detectShow(signin_frame,true);
     });
     $('body').on('click',function(event){
-        var $target = $(event.target);
+        var $target = $(event.target),
+            _parent = $target.parent();
         if($target.hasClass('login-btn')){
             detectShow(login_frame,true);
         }else if($target.hasClass('signin-btn')){
             detectShow(signin_frame,true);
+        }else if($target.hasClass('user-login')){
+            toggleActive($target,'active');        
+        }
+        /*
+        * 修改登录样式,切换到打印店登录
+        */ 
+        else if($target.hasClass('store-login')){
+            toggleActive($target,'active');        
+        }else if(_parent.hasClass('store-login')){
+            toggleActive(_parent,'active');
+        }
+        /*
+        * 修改登录样式,切换到用户登录
+        */
+        else if($target.hasClass('user-login')){
+            toggleActive($target,'active');
+        }else if(_parent.hasClass('user-login')){
+            toggleActive(_parent,'active');
         }
     })
-    
+    /*
+    * 切换active,以及去掉siblings的active
+    */
+    function toggleActive($target,classname){
+        $target.addClass(classname)
+                .siblings().removeClass(classname);
+    }
+    $('.user-login,.store-login').on('click',function(){        
+       toggleActive($(this),'active');        
+    })
 })

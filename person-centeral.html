@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" type="text/css" href="styles/center.css">
+    <title>99打印</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="setWidth">
+            <a class="logo" href="#">
+                <img class="logo-print" src="./img/logo.png" alt="logo" />
+                <span>久久打印</span>
+            </a>
+            <div class="titles">
+                <div class="title-btn homepage-btn" data-content="首页">首页</div>
+                <div class="title-btn introduction" data-content="简介">简介</div>
+                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
+                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="back-control">
+        <div class="content">
+            <div class="left-part basic-detail">
+                <div class="per-detail">
+                    <img class="portrait" src="img/portrait.png" />
+                    <div class="detail">
+                        <a href="">李广先</a>
+                        <p>手机:<span>1858232323</span></p>
+                        <p>账户类型:<span>管理员</span></p>
+                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                    </div>
+                </div>
+                <p class="indicative">认证信息</p>
+                <div class="authentic">
+                    <button class="authentic-btn">现在去认证</button>
+                    <div class="authenticating">
+                        <button>认证中...</button>
+                        <a href="">联系客服</a>
+                    </div>
+                </div>
+                <p class="indicative">个人信息</p>
+                <div class="info">
+                    <p>电话：<span>18888888888</span></p>
+                    <p>邮箱：<span>321312@qq.d</span></p>
+                    <p>收货地址：<span>韵苑21111</span></p>
+                </div>
+                <div class="basic-btn">
+                    <button>编辑信息</button>
+                    <button>修改密码</button>
+                </div>
+            </div>
+            <div class="left-part authentic-page">
+                <div class="per-detail">
+                    <img class="portrait" src="img/portrait.png" />
+                    <div class="detail">
+                        <a href="">李广先</a>
+                        <p>手机:<span>1858232323</span></p>
+                        <p>账户类型:<span>管理员</span></p>
+                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                    </div>
+                </div>
+                <p class="statement">为保护版权，我们需要确认您是本校学生。 我们向您保证，您的资料不会被泄露。 请放心上传。
+                </p>
+                <div class="upload-img">
+                    <div class="IDcard">
+                        <a class="container-upload" href="javascript:void(0)">上传身份证<input class="upload" type="file" id="idCard-file"/></a>
+                        <img src="" alt="">
+                    </div>
+                    <div class="studentCard">
+                        <a class="container-upload" href="javascript:void(0)">上传学生证<input class="upload" type="file" id="stu-card-file" /></a>
+                        <img src="" alt="">
+                    </div>
+                </div>
+                <p class="statement">审核时间通常为2小时以内。 若超时未能完成，请联系客服
+                </p>
+                <div class="basic-btn">
+                    <button>取消</button>
+                    <button>确认</button>
+                </div>
+            </div>
+             <div class="left-part change-ps">
+                <div class="per-detail">
+                    <img class="portrait" src="img/portrait.png" />
+                    <div class="detail">
+                        <a href="">李广先</a>
+                        <p>手机:<span>1858232323</span></p>
+                        <p>账户类型:<span>管理员</span></p>
+                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                    </div>
+                </div>
+                <div class="ps-input"><input type="password"><span>旧密码:</span></div>
+                <div class="ps-input"><input type="password"><span>新密码:</span></div>
+                <div class="ps-input"><input type="password"><span>再次确认:</span></div>
+                <div class="basic-btn">
+                    <button>取消</button>
+                    <button>确认</button>
+                </div>
+            </div>
+            <div class="right-part">
+                <div class="per-header">
+                    <div class="extra-btn">
+                        <a href="javascript:void(0)">管理后台</a>
+                        <a href="javascript:void(0)">会员上传文件</a>
+                    </div>
+                    <div class="orders-choice">
+                        <button class="pre-order active">未处理订单</button>
+                        <button class="dealing-order">处理中订单</button>
+                        <button class="historic-order">历史订单</button>
+                    </div>
+                </div>
+                <div class="order-interface">                    
+                    <div class="order-header">
+                        <div class="order-info">
+                            订单信息
+                        </div>
+                        <div class="opera">
+                            操作
+                        </div>
+                    </div>
+                    <div id="wrapper" class="container">
+                        <ul class="order-content" id="scroller">
+                            <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">
+                                    <a href="javascript:void(0)">修改订单</a>
+                                    <a href="javascript:void(0)">取消订单</a>
+                                    <a href="javascript:void(0)">订单详情</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">
+                                    <a href="javascript:void(0)">修改订单</a>
+                                    <a href="javascript:void(0)">取消订单</a>
+                                    <a href="javascript:void(0)">订单详情</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">
+                                    <a href="javascript:void(0)">修改订单</a>
+                                    <a href="javascript:void(0)">取消订单</a>
+                                    <a href="javascript:void(0)">订单详情</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/lib/require.js" data-main="js/entry/center.js"></script>
+</body>
+
+</html>
