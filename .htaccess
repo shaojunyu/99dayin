@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^/99dayin/img$ /99dayin/views/img
