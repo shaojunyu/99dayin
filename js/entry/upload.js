@@ -1,13 +1,14 @@
 require.config({
     baseUrl: './js',
     paths: {
-        'jquery': 'lib/jQuery',
+        'jquery': 'lib/jquery.min',
         'iscroll': 'lib/iscroll',
-        'modal': 'lib/jquery.simplemodal'
+        'modal': 'lib/jquery.simplemodal',
+        'prompt': 'entry/function/prompt' //提示模块
     }
 });
 "use strict";
-require(['jquery', 'iscroll'], function($, iscroll) {
+require(['jquery', 'iscroll', 'prompt'], function($, iscroll, prompt) {
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -22,6 +23,10 @@ require(['jquery', 'iscroll'], function($, iscroll) {
         $first.show();
         $second.hide();
     }
+    //初始化提示模块
+    prompt = new prompt.Prompt({
+        prompt: $('.prompt')
+    });
     /*
      * 检查id是否和传入的一致
      */
@@ -93,21 +98,22 @@ require(['jquery', 'iscroll'], function($, iscroll) {
          * 自定义参数实现绑定滚动条
          */
     function bindScroll($target) {
-
+        var arr = new Array();
         $target.each(function() {
-            new IScroll('#'+$(this).attr('id'), {
-                scrollbars: true,
-                mouseWheel: true,
-                interactiveScrollbars: true,
-                shrinkScrollbars: 'scale',
-                // fadeScrollbars: true,
-                useTransition: true
+                var iscroll = new IScroll('#' + $(this).attr('id'), {
+                    scrollbars: true,
+                    mouseWheel: true,
+                    interactiveScrollbars: true,
+                    shrinkScrollbars: 'scale',
+                    // fadeScrollbars: true,
+                    useTransition: true
+                });
+                arr.push(iscroll);
             })
-        })
-        // setTimeout(arguments.callee($('.container')),1000);    
+        return arr;
     }
     //绑定打印车内容滚动条
-    bindScroll($('.container'));
+    var Iscroll = bindScroll($('.container'));
 
     //购物车
     var shopping = {
@@ -219,28 +225,107 @@ require(['jquery', 'iscroll'], function($, iscroll) {
     })
     var upload = {
         $upload: $('#file-upload'),
-        format:/\.(txt|doc|docx|wps|rtf|pdf|xls)$/,
-        FormData: new FormData(),
-        getFiles:function(){
-            this.$upload.on('change',function(e){
-                var files= this.files;
-               for(var i = 0;i<files.length;i++){
-                    if(!format.test(files[i].name.toLowerCase())){
-                        //发出警告;
+        format: /\.(txt|doc|ppt|docx|wps|rtf|pdf|xls)$/,
+        content_a: $('.container-upload'), //包裹input的a标签
+        maxLength: 20, //最大上传文件数目
+        shopping: $('.files-content'), //购物车
+        /*
+         * 用来存放数据
+         * 一个obj包含一个文件
+         * name : 文件名
+         * content: 文件file
+         * date:上传日期
+         * size: 上传大小
+         */
+        filesArray: new Array(),
+
+        getFiles: function() {
+            var modify = [1], //用来表示唯一性
+                copy = [],
+                _this = this;
+            this.$upload.on('change', function(e) {
+                var files = this.files;
+                copy = [];
+                for (var i = 0; i < files.length; i++) {
+                    if (!_this.format.test(files[i].name)) {
+                        prompt.changeInfo("只能上传文档文件!");
                         return false;
                     }
-                    //文件位唯一性验证
-                    names.forEach(function(value){
-                        if(value===files[i].lastModified){
+                    //处理上传时间
+                    var file_date = new Date(),
+                        date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
+                        size = Number(files[i].size / (1024 * 1024)).toFixed(2) + 'MB',
+                        survive = false;
+                    for (var j = 0; j < modify.length; j++) {
+                        var flag = files[i].lastModified;
 
-                        }else{
-                            
+                        if (flag !== modify[j]) {
+                            survive = true;
+                        } else {
+                            survive = false;
+                            break;
                         }
-                    })
-               }
+
+                    }
+                    //如果不重复则添加文件 
+                    if (survive) {
+                        _this.filesArray.push({
+                            'name': files[i].name,
+                            'content': files[i],
+                            'date': date,
+                            'size': size
+                        });
+                        _this.addFiles(files[i], date, size);
+                        copy.push(flag);
+                    }
+                }
+                console.log(copy);
+                modify = modify.concat(copy);
+                if (modify.length - 1 > 20) {
+                    prompt.changeInfo('应少于20个文件！');
+                    modify = modify.slice(0, 21);
+                    //输出提示
+                }
+                _this.changeInputText(modify.length - 1);
+            })
+        },
+        changeInputText: function(num) {
+            this.content_a.attr('data-num', num);
+        },
+        addFiles: function(file, date, size) {
+            var name = file.name.toLowerCase(),
+                index = name.indexOf('.'),
+                li = document.createElement('li'),
+                className = '';
+            switch (name.substring(index + 1)) {
+                case 'doc':
+                    className = 'logo-word';
+                    break;
+                case 'docx':
+                    className = 'logo-word';
+                    break;
+                case 'ppt':
+                    className = 'logo-ppt';
+                    break;
+                case 'pdf':
+                    className = 'logo-pdf';
+                    break;
+                default:
+                    className = 'logo-ppt';
+            }
+            li.innerHTML = '<i class="file-logo ' + className + '"></i>' +
+                '<p class="file-header">' + name.substring(0, index) + '</p>' +
+                '<p>上传时间:<span class="upload-time">' + date + '</span>' +
+                '大小:<span>' + size + '</span></p>' +
+                '<i class="logo-error"></i>';
+            this.shopping.append(li);
+            //刷新滚动条
+            Iscroll.forEach(function(val){
+                setTimeout(function () {
+                        val.refresh();
+                    },100);
             })
         }
-
     }
     upload.getFiles();
 })
