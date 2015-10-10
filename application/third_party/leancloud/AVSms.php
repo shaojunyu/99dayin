@@ -28,4 +28,22 @@ class AVSms extends AVRestClient{
 			$this->throwError('mobilePhoneNumber is required for the requestSmsCode method');
 		}
 	}
+	
+	//验证短信验证码是否正确
+	public function verifySmsCode(){
+		if (!empty($this->data['smsCode']) || !empty($this->data['mobilePhoneNumber'])) {
+			$request = $this->request(array(
+					'method' => 'POST',
+					'requestUrl' => 'verifySmsCode/'.$this->data['smsCode']."?mobilePhoneNumber=".$this->data['mobilePhoneNumber'],
+					'data' => ''
+			));
+			if ($request == true) {
+				return true;
+			}else {
+				return $request;
+			}
+		}else {
+			$this->throwError('mobilePhoneNumber and smsCode are required');
+		}
+	}
 }
