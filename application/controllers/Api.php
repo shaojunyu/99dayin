@@ -39,6 +39,7 @@ class Api extends CI_Controller{
 		try {
 			$this->AVUser->login();
 			$this->echo_msg(true,'登录成功');
+			//header('location:'.base_url());
 			exit();
 		} catch (Exception $e) {
 			$this->echo_msg(false,'用户名或密码错误');
@@ -73,6 +74,6 @@ class Api extends CI_Controller{
 	
 	//封装数据，json格式，返回客户端
 	private function echo_msg($isSuccess = false,$msg = ''){
-		echo json_encode(array('data'=>array('success'=>$isSuccess,'msg'=>$msg)));
+		echo json_encode(array('success'=>$isSuccess,'msg'=>$msg));
 	}
 }
