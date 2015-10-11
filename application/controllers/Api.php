@@ -33,7 +33,7 @@ class Api extends CI_Controller{
 	}
 	public function login() {
 		$username = $this->input->post('username');
-		$password = $this->input->post('password');
+		$password = $this->input->post('ps');
 		$this->AVUser->username = $username;
 		$this->AVUser->password = $password;
 		try {

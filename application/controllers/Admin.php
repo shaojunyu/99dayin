@@ -11,5 +11,13 @@ class Admin extends CI_Controller{
 		parent::__construct();
 		//初始化第三方服务
 		
+		
+		if (!$this->session->userdata('username')) {
+			$this->load->view('admin_login');
+		}
+	}
+	
+	public function index() {
+		
 	}
 }

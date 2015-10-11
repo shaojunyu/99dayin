@@ -9,6 +9,7 @@
 </head>
 
 <body>
+<div class="prompt"></div>
     <div class="header">
         <div class="setWidth">
             <a class="logo" href="#">
@@ -19,7 +20,9 @@
                 <div class="title-btn homepage-btn" data-content="首页">首页</div>
                 <div class="title-btn introduction" data-content="简介">简介</div>
                 <div class="title-btn art-base" data-content="本校文库">本校文库</div>
-                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span></div>
+                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                <!-- <a class="name">李四王五</a> -->
+                </div>
             </div>
         </div>
     </div>
@@ -74,15 +77,30 @@
         <div class="header-btn"><span class="active login-btn">登录</span><span class="signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
         <div class="portrait"><img src="./img/portrait.png"></div>
         <div class="input-frame">
-            <input class="" type="text" /><i class="logo-user"></i>
-            <input class="" type="password" /><i class="logo-ps"></i>
+            <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
+            <input  type="password" class="login-ps" placeholder="密码"/><i class="logo-ps"></i>
         </div>
         <div class="forget"><a href="">忘记密码</a></div>
         <div>
-            <button class="confirm-btn">确认</button>
+            <button class="confirm-btn login-btn" id="confirm-btn">确认</button>
         </div>
         <div class="link-login">
-            其他方式登录:<span class="QQ"><i class="logo-QQ"></i>QQ登录</span><span class="wei"><i class="logo-wei"></i>微信登录</span>
+            其他方式登录:<span class="QQ" id="QQ-login"><i class="logo-QQ"></i>QQ登录</span><span class="wei"><i class="logo-wei"></i>微信登录</span>
+        </div>
+        <div class="login-choice">
+            <div class="user-login active">
+                <div>用</div>
+                <div>户</div>
+                <div>登</div>
+                <div>录</div>
+            </div>
+            <div class="store-login ">                
+                <div>打</div>
+                <div>印</div>
+                <div>店</div>
+                <div>登</div>
+                <div>录</div>
+            </div>
         </div>
     </div>
     <div class="signin-frame" id="signin-frame">
@@ -90,41 +108,43 @@
         <div class="register">
             <div class="row">
                 <span class="des">用户名：</span>
-                <input type="text">
+                <input type="text" class="username" data-iden='0'>
                 <i></i>
             </div>
             <div class="row">
                 <span class="des">密码：</span>
-                <input type="password">
+                <input type="password" class="ps"data-iden='0'> 
                 <i></i>
             </div>
             <div class="row">
                 <span class="des">确认密码：</span>
-                <input type="password">
+                <input type="password" class="confir-ps" data-iden='0'>
                 <i></i>
             </div>
             <div class="row">
                 <span class="des">手机号码：</span>
-                <input type="text">
+                <input type="text" class="phone" data-iden='0'>
                 <i></i>
             </div>
             <div class="row">
                 <span class="des">验证码：</span>
-                <input class="CF-code" type="text">
-                <button class="comfir-btn">发送验证码</button>
+                <input class="CF-code" type="text" class="secu-code" data-iden='0'>
+                <button class="comfir-btn" class="send-SC">发送验证码</button>
                 <i ></i>
             </div>
-            <div class="row">
+            <div class="row">   
                 <span class="des">学校：</span>
-                <input type="text">
+                <input type="text" class="college" data-iden='0'>
                 <i></i>
             </div>
         </div>
         <div>
-            <button class="confirm-btn">确 认</button>
+            <button class="confirm-btn enroll">确 认</button>
         </div>
     </div>
+    
     <script src="js/lib/require.js" data-main="js/entry/99print.js"></script>
+
 </body>
 
 </html>

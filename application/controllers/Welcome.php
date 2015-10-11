@@ -29,8 +29,6 @@ class Welcome extends CI_Controller{
 	}
 	
 	public function index() {
-// 		$buket = 'dayin';
-// 		$uptoken = $this->qiniu_auth->uploadToken($buket);
-// 		echo $uptoken;
+		$this->load->view('index_page');
 	}
 }

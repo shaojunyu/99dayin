@@ -1,2 +1,9 @@
-RewriteEngine on
-RewriteRule ^/99dayin/img$ /99dayin/views/img
+<IfModule mod_rewrite.c>
+ Options +FollowSymLinks
+ RewriteEngine on
+ RewriteBase /99dayin
+ RewriteCond $1 !^(index.php|images|robots.txt)
+ RewriteCond %{REQUEST_FILENAME} !-f
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteRule ^(.*)$ index.php/$1 [QSA,L]
+</IfModule>

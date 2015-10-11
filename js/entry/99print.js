@@ -216,7 +216,10 @@ require(['jquery', 'scroll', 'modal','prompt','enroll','utility'], function($, s
             $('.comfir-btn').on('click',function(){
                 var $this = $(this);            
                 sendAjax({
-                    url:Pathurl.CF_url,                    
+                    url:Pathurl.CF_url,            
+                    data:{
+                    	
+                    },
                     beforeSend:function(){
                         $this.addClass('sending').attr('disabled','disabled'); //添加发送状态
                     },
