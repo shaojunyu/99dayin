@@ -40,6 +40,7 @@ class Api extends CI_Controller{
 			$this->AVUser->login();
 			$this->echo_msg(true,'登录成功');
 			//header('location:'.base_url());
+			$this->session->set_userdata('username',$username);
 			exit();
 		} catch (Exception $e) {
 			$this->echo_msg(false,'用户名或密码错误');
@@ -53,9 +54,10 @@ class Api extends CI_Controller{
 		try {
 			$res = $this->AVSms->requestSmsCode();
 			$this->echo_msg(true,'验证码发送成功');
-			
+			exit();
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
+			exit();
 		}
 		
 	}
