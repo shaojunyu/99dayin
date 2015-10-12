@@ -33,67 +33,53 @@
             <span class="color-block"></span>
         </div>
         <article class="file-content" id="file-content">
-            <a class="container-upload" href="javascript:void(0)" data-num='0'>上传文件<input class="upload" type="file" id="file-upload" multiple accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel"/></a>
-           <!--  <div class="shopping-content">
-                <article class="base-choose">
-                    <div id="wrapper" class="container">
-                        <ul class="files-content" id="scroller">
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                        </ul>
-                    </div>
-                </article>
-            </div> -->
+            <a class="container-upload" href="javascript:void(0)" data-num='0'>上传文件<input class="upload" type="file" id="file-upload" multiple accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel"/></a>          
         </article>       
         <article class="choose-base" id="choose-base">
             <header class="base-header" id="base-header">
                 <button class="active" id="official-base">官方文库</button>
-                <button id="share-base">共享文库</button>
-                <input type="search" placeholder="输入关键字查找文件，按回车确定">
+                <!-- <button id="share-base">共享文库</button> -->
+                <input type="search" placeholder="输入关键字查找文件，按回车确定" id="search">
             </header>
             <section class="base-content">
                 <div class="article-content" id="article-content">
                     <div class="articles">
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444523">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444523">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444523">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
+                        </div>
                         <div class="article-item" data-id="23123444553">
                             <i class="file-logo logo-word"></i>
                             <p class="file-header">小树和小雨的故事</p>

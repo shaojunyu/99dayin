@@ -134,7 +134,12 @@
             </div>
             <div class="row">   
                 <span class="des">学校：</span>
-                <input type="text" class="college" data-iden='0'>
+                <select type="text" class="college" name='school' data-iden='0'>
+                    <option value="华中科技大学">华中科技大学</option>
+                    <option value="武汉大学">武汉大学</option>
+                    <option value="华中师范大学">华中师范大学</option>
+                    <option value="中南财经政法大学">中南财经政法大学</option>
+                </select>
                 <i></i>
             </div>
         </div>
