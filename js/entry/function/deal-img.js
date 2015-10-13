@@ -4,8 +4,7 @@ define(['jquery','lrz'],function($,lrz){
 	}
 	function DealImg(opts){
 		this.opts = opts;
-
-
+		
 	}
 	DealImg.prototype.compressImg = function(){
 		
@@ -16,9 +15,10 @@ define(['jquery','lrz'],function($,lrz){
 	}
 	DealImg.prototype.loadImg=function(){
 		var reader = new FileReader();
-		reader.readAsDataURL(file);
+		reader.readAsDataURL($file);
 		reader.onload= function(e){
 			showImage($file,e.target.result);			
 		}
 	}
+
 })

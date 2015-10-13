@@ -11,7 +11,7 @@
         */
      function bindScroll($target) {
         var arr = new Array();
-        $target.each(function() {
+        $target.each(function() {            
             var iscroll = new IScroll('#' + $(this).attr('id'), {
                 scrollbars: true,
                 mouseWheel: true,
@@ -77,4 +77,11 @@
         */ 
         function moveBlock($target, location) {
             $target.css('transform', 'translateX(' + location + 'px)');
+        }
+        /*
+        * 将第一个显示，第二个隐藏
+        */
+        function changeShow(first,second){
+            first.show();
+            second.hide();
         }
