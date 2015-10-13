@@ -3,11 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use leancloud\AVUser;
 use leancloud\AVSms;
+use leancloud\Sms;
 use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 
 class Api extends CI_Controller{
 	private $AVUser;
 	private $AVSms;
+	private $qiniu_auth;
 	
 	public function __construct(){
 		parent::__construct();
@@ -15,6 +18,12 @@ class Api extends CI_Controller{
 		require_once APPPATH.'/third_party/leancloud/AV.php';
 		$this->AVUser = new AVUser();
 		$this->AVSms = new AVSms();
+		
+		//引入qiniu
+		require_once APPPATH.'third_party/qiniu/autoload.php';
+		$qiniu_accessKey = 'kbnA7-cyf2y4j3JmmB8xKcQszBtQvpl45TAFMZ2z';
+		$qiniu_secretKey = 'e4gSw3iZxrOGI372CjaeMwP6Rif_2ekqfEbPgybA';
+		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
 	}
 	public function signup(){
 		$username = $this->input->post('username');
@@ -47,6 +56,9 @@ class Api extends CI_Controller{
 			exit();
 		}
 	}
+	public function logout(){
+		$this->session->destroy();
+	}
 	
 	//发送验证码
 	function sendSmsCode(){
@@ -73,6 +85,22 @@ class Api extends CI_Controller{
 			$this->echo_msg(false,$e->error_msg);
 		}
 	}
+	//文件上传相关
+	public function getUploadToken(){
+		$bucket = 'dayin';
+		$token = $this->qiniu_auth->uploadToken($bucket);
+		if ($token){
+			return $this->echo_msg(true,$token);
+		}else {
+			
+		}
+	}
+	
+	//订单相关
+	public function order(){
+		
+	}
+	
 	
 	//封装数据，json格式，返回客户端
 	private function echo_msg($isSuccess = false,$msg = ''){

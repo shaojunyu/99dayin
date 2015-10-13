@@ -52,3 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//资源文件重定向
+$route['user/img/(.+)'] = 'Redirect/img/$1';
+$route['user/js/(.+)'] = 'Redirect/js/$1';

@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use leancloud\AVUser;
 use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 
 
 //default controller
@@ -30,5 +31,6 @@ class Welcome extends CI_Controller{
 	
 	public function index() {
 		$this->load->view('index_page');
+		//$bucket = new BucketManager($this->qiniu_auth);
 	}
 }
