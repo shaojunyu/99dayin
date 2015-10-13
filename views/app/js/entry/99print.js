@@ -179,7 +179,6 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                 }
             });
             this.print_btn.on('click', function() {
-
                 if ($(this).attr('data-log') == 0) {
                     detectShow(login_frame, true);
                 }
@@ -307,12 +306,13 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     data: {
                         'username': username,
                         'password': pwd,
-                        'phone': phone,
+                        'mobilePhoneNumber': phone,
                         'college': college
                     },
                     success: function(data) {
                         if (data.success) {
-                            prompt.changeInfo('注册成功！');
+                            window.location.href='./';
+                           
                         } else {
                             prompt.changeInfo('注册失败!');
                         }
