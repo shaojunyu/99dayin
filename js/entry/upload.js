@@ -1,7 +1,7 @@
 require.config({
     baseUrl: './js',
     paths: {
-        'jquery': 'lib/jquery.min',
+        'jquery': 'lib/jQuery',
         'iscroll': 'lib/iscroll',
         'modal': 'lib/jquery.simplemodal',
         'prompt': 'entry/function/prompt', //提示模块

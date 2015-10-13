@@ -250,18 +250,20 @@ module.exports = function(grunt) {
                     src: [
                         '**'
                     ]
-                }, {
-                    expand: true,
-                    dot: true,
-                    cwd: '<%=config.app%>/',
-                    dest: '../application/views/',
-                    src: [
-                        '*.html'
-                    ],
-                    rename: function(dest, src) {
-                        return dest + src.replace('.html', '.php');
-                    }
-                }, {
+                    },
+                //  {
+                //     expand: true,
+                //     dot: true,
+                //     cwd: '<%=config.app%>/',
+                //     dest: '../application/views/',
+                //     src: [
+                //         '*.html'
+                //     ],
+                //     rename: function(dest, src) {
+                //         return dest + src.replace('.html', '.php');
+                //     }
+                // }, 
+                {
                     expand: true,
                     dot: true,
                     cwd: '<%=config.app%>/styles/',

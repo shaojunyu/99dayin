@@ -10,12 +10,16 @@
 
 <body>
 <div class="prompt"></div>
+
 	<?php $this->load->view('public/page_header');?>
+
+
+
     <div id="container">
         <div class="section first">
             <div class="main-content">
                 <div class="des"><img src="./img/desc.png" alt="描述"></div>
-                <button class="print-btn">Print</button>
+                <a href="javascript:void(0)" data-log="<?php if ($this->session->userdata('username')) {echo 1;}else {echo 0;}?>" class="print-btn">Print</a>
             </div>
             <div class="next-arrow"><img id="down-arrow" src="./img/newhand.gif"></div>
         </div>
