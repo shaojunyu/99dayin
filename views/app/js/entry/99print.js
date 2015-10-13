@@ -195,10 +195,10 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                 reg: phone_reg,
                 msg: phone_msg
             });
-            this.$college.enroll({
-                reg: college_reg,
-                msg: college_msg
-            });
+            // this.$college.enroll({
+            //     reg: college_reg,
+            //     msg: college_msg
+            // });
             this.$CF_pwd.inputFocus(). //inputFocus用来改变当聚焦在input框上的样式
             on('blur', function() { //触发blur事件，用来检验两次密码输入是否一致
                 var ps1 = _this.$pwd.val(),
@@ -215,21 +215,22 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             //发送验证码...
             $('.comfir-btn').on('click', function() {
                 var $this = $(this),
-                    phone = $('.CF-code').val();
+                    phone = _this.$phone.val();
+                    console.log(_this.$phone.val());
                 sendAjax({
                     url: Pathurl.CF_url,
                     data: {
-                        phone: phone
+                        "phone": phone
                     },
                     beforeSend: function() {
                         $this.addClass('sending').attr('disabled', 'disabled'); //添加发送状态
                     },
                     success: function(data) {
-                        $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
                         //检查验证码的输入的正确性
                         if (data.success) {
                             _this.CF_code = data.code;
                             _this.$security_code.on('blur', function() {
+                                console.log(1);
                                 var code = $(this).val(); //获取输入验证码的正确性
                                 if (code == data.code) {
                                     $(this).removeClass('error');
@@ -241,6 +242,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                                 }
                             }).inputFocus();
                         } else {
+                             $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
                             prompt.changeInfo('验证码发送失败,请重新发送！');
                             _this.$security_code.off();
                         }
@@ -255,7 +257,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     username = _this.$username.val(),
                     pwd = _this.$pwd.val(),
                     phone = _this.$phone.val(),
-                    college = this.$college.val();
+                    college = _this.$college.val();
                 $('.username,.ps,.confir-ps,.phone,.secu-code,.college,.enroll').each(function() {
                     sign.push($(this).attr('data-iden')); //获取标识                    
                 });
@@ -270,7 +272,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     url: Pathurl.sigin,
                     data: {
                         'username': username,
-                        'pwd': pwd,
+                        'password': pwd,
                         'phone': phone,
                         'college': college
                     },

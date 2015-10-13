@@ -9,20 +9,21 @@
         /*
         *绑定滚动条
         */
-      function bindScroll($target) {
-
-            $target.each(function() {
-                new IScroll($(this)[0], {
-                    scrollbars: true,
-                    mouseWheel: true,
-                    interactiveScrollbars: true,
-                    shrinkScrollbars: 'scale',
-                    fadeScrollbars: true,
-                    useTransition: true
-                })
-            })
-            // setTimeout(arguments.callee($('.container')),1000);    
-        }
+     function bindScroll($target) {
+        var arr = new Array();
+        $target.each(function() {
+            var iscroll = new IScroll('#' + $(this).attr('id'), {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                // fadeScrollbars: true,
+                useTransition: true
+            });
+            arr.push(iscroll);
+        })
+        return arr;
+    }
         /*
         * 发送ajax函数
         */

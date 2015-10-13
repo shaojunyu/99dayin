@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="styles/center.css">
+    <script type="text/javascript">
+        var Orders = []; //从后台获取订单信息
+        var HisOrder=[]; //历史订单
+    </script>
     <title>99打印</title>
 </head>
 
@@ -108,9 +112,9 @@
                         <a href="javascript:void(0)">会员上传文件</a>
                     </div>
                     <div class="orders-choice">
-                        <button class="pre-order active">未处理订单</button>
-                        <button class="dealing-order">处理中订单</button>
-                        <button class="historic-order">历史订单</button>
+                        <button class="pre-order-btn active">未处理订单</button>
+                        <!-- <button class="dealing-order">处理中订单</button> -->
+                        <button class="historic-order-btn">历史订单</button>
                     </div>
                 </div>
                 <div class="order-interface">                    
@@ -122,7 +126,15 @@
                             操作
                         </div>
                     </div>
-                    <div id="wrapper" class="container">
+                    <!-- *
+                    * 每个order包含的内容有
+                    * data-order: 订单编号
+                    * 收货地址
+                    * 电话
+                    * 总价
+                    * data-seq 是订单在原来数组中的位置                    
+                    * -->
+                    <div id="wrapper1" class="container pre-order">
                         <ul class="order-content" id="scroller">
                             <li>
                                 <div class="order-details">
@@ -133,8 +145,156 @@
                                     <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
                                 </div>
                                 <div class="order-btns">                     
+                                    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>               
+                                    <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
                                     <a class="go-pay" href="javascript:void(0)">去付款</a>               
-                                    <a href="javascript:void(0)">取消订单</a>
+                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                    <a class="go-pay" href="javascript:void(0)">去付款</a>               
+                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                    <a class="go-pay" href="javascript:void(0)">去付款</a>               
+                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="container his-order" id="wrapper2">
+                        <ul class="his-content" id="scroller">
+                            <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                 <!--    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>       -->         
+                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                  <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                  <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
+                                </div>
+                                <div class="summary">
+                                    <div class="summary-info">
+                                        总价：<span>120￥</span> 收货方式：
+                                        <span>送货上门</span> 支付状态：
+                                        <span>未支付</span>
+                                    </div>
+                                    <img src="img/divided.png">
+                                </div>
+                            </li>
+                             <li>
+                                <div class="order-details">
+                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>收货地址:<span>韵苑按打印店</span></div>
+                                    <div>用户名:<span>CCC</span></div>
+                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                </div>
+                                <div class="order-btns">                     
+                                  <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">

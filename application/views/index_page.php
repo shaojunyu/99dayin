@@ -20,12 +20,8 @@
                 <div class="title-btn homepage-btn" data-content="首页">首页</div>
                 <div class="title-btn introduction" data-content="简介">简介</div>
                 <div class="title-btn art-base" data-content="本校文库">本校文库</div>
-                <div class="title-btn">
-                <?php if ($this->session->userdata('username')) {?>
-                	<a class="name"><?php echo $this->session->userdata('username')?></a>
-                <?php }else {?>
-                <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
-                <?php }?>
+                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                <!-- <a class="name">李四王五</a> -->
                 </div>
             </div>
         </div>
@@ -138,7 +134,7 @@
             </div>
             <div class="row">   
                 <span class="des">学校：</span>
-                <select type="text" class="college" name='school' data-iden='0'>
+                <select type="text" class="college" name='school' data-iden='1'>
                     <option value="华中科技大学">华中科技大学</option>
                     <option value="武汉大学">武汉大学</option>
                     <option value="华中师范大学">华中师范大学</option>

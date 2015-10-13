@@ -277,12 +277,16 @@ module.exports = function(grunt) {
 
 
 
-    grunt.registerTask('default', [
+    grunt.registerTask('tool', [
         // 'compass',
         'browserSync:livereload',
         'copy:dist',
         'postcss',
         'watch'
     ]);
+    grunt.registerTask('default',[
+        'copy:dist',
+        'postcss',
+        'watch'])
     // grunt.registerTask('copy',['copy:dist']);
 };

@@ -9,20 +9,21 @@
         /*
         *绑定滚动条
         */
-      function bindScroll($target) {
-
-            $target.each(function() {
-                new IScroll($(this)[0], {
-                    scrollbars: true,
-                    mouseWheel: true,
-                    interactiveScrollbars: true,
-                    shrinkScrollbars: 'scale',
-                    fadeScrollbars: true,
-                    useTransition: true
-                })
-            })
-            // setTimeout(arguments.callee($('.container')),1000);    
-        }
+     function bindScroll($target) {
+        var arr = new Array();
+        $target.each(function() {            
+            var iscroll = new IScroll('#' + $(this).attr('id'), {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                // fadeScrollbars: true,
+                useTransition: true
+            });
+            arr.push(iscroll);
+        })
+        return arr;
+    }
         /*
         * 发送ajax函数
         */
@@ -76,4 +77,11 @@
         */ 
         function moveBlock($target, location) {
             $target.css('transform', 'translateX(' + location + 'px)');
+        }
+        /*
+        * 将第一个显示，第二个隐藏
+        */
+        function changeShow(first,second){
+            first.show();
+            second.hide();
         }

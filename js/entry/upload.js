@@ -26,7 +26,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         $first.show();
         $second.hide();
     }
-    
+
     function refresh() {
         Iscroll.forEach(function(val) {
             setTimeout(function() {
@@ -40,14 +40,14 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
     });
 
     var Pathurl = {
-        getToken:'',  //得到上传口令
-        getOfficial:'',   //得到文库数据
-        pay:'',  //去支付
-        search:''  //搜索
-    }
-    /*
-     * 检查id是否和传入的一致
-     */
+            getToken: '', //得到上传口令
+            getOfficial: '', //得到文库数据
+            pay: '', //去支付
+            search: '' //搜索
+        }
+        /*
+         * 检查id是否和传入的一致
+         */
     $(".fn-choice").on('click', function(e) {
             var $target = $(e.target),
                 _id = $target.attr('id'),
@@ -149,7 +149,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                     }
                     //如果不重复则添加文件 
                     if (survive) {
-                        _this.filesArray.push({
+                        var data = {
                             'name': files[i].name.substring(0, files[i].name.indexOf('.')),
                             'content': files[i],
                             'date': date,
@@ -157,9 +157,29 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                             'area': 'self', //自己上传的文件还是官方文库的文件
                             'mark': flag, //表示文件唯一性
                             'type': files[i].name.substring(files[i].name.indexOf('.') + 1) //文件类型
-                        });
+                        }
+                        _this.filesArray.push(data);
                         _this.addFiles(files[i], date, size);
                         copy.push(flag);
+                        sendAjax({
+                            url: Pathurl.getToken, //得到getToken的地址
+                            success: function(data) {
+                                //发送文件
+                                if (data.success) {
+                                    sendAjax({
+                                        url: pathSave,
+                                        token: data.token,
+                                        data: data,
+                                        success: function(data) {
+                                            
+                                        }
+                                    })
+                                } else {
+                                    prompt.changeInfo('网络问题,请重新上传!');
+                                }
+                            }
+                        });
+
                     }
                 }
                 console.log(copy);
@@ -172,32 +192,11 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                 //修改购物车
                 _this.changeInputText(modify.length - 1);
                 //发送请求，获得下载口令，然后上传
-                sendAjax({
-                    url: Pathurl.getToken, //得到getToken的地址
-                    success: function(data) {
-                        //发送文件
-                        if (data.success) {
-                            var uploader = Qiniu.uploader({
-                                runtimes: 'html5,flash,html4', //上传模式,依次退化
-                                browse_button: 'pickfiles', //上传选择的点选按钮，**必需**
-                                uptoken_url: data.token,
-                                domain: 'http://qiniu-plupload.qiniudn.com/',
-                                init: {
-                                    'FilesAdded': function(up, files) {},
-                                    'Error': function(up, err, errTip) {
-                                        prompt.changeInfo('上传失败！请重新添加文件！');
-                                    },
-                                }
-                            })
-                        } else {
-                            prompt.changeInfo('网络问题,请重新上传!');
-                        }
-                    }
-                });
+
             });
 
             this.addBtn.on('click', function(e) {
-                var $target = $(e.target);                
+                var $target = $(e.target);
                 if ($target.hasClass('add-btn')) {
                     var data_area = $target.attr('data-area'),
                         data_mark = $target.attr('data-mark'),
@@ -430,45 +429,48 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                     mark = file.mark,
                     type = file.type,
                     classname = '';
-                    switch (type) {
-                        case 'doc':
-                            className = 'logo-word';
-                            break;
-                        case 'docx':
-                            className = 'logo-word';
-                            break;
-                        case 'ppt':
-                            className = 'logo-ppt';
-                            break;
-                        case 'pdf':
-                            className = 'logo-pdf';
-                            break;
-                        case 'xls':
-                            className = 'logo-excel';
-                            break;
-                        default:
-                            className = 'logo-ppt';
-                    }
+                switch (type) {
+                    case 'doc':
+                        className = 'logo-word';
+                        break;
+                    case 'docx':
+                        className = 'logo-word';
+                        break;
+                    case 'ppt':
+                        className = 'logo-ppt';
+                        break;
+                    case 'pdf':
+                        className = 'logo-pdf';
+                        break;
+                    case 'xls':
+                        className = 'logo-excel';
+                        break;
+                    default:
+                        className = 'logo-ppt';
+                }
                 html = '<i class="file-logo ' + className + '"></i>' +
                     '<p class="file-header">' + name + '</p>' +
                     '<p>上传时间:<span class="upload-time">' + date + '</span>' +
                     '大小:<span>' + size + '</span></p>' +
                     '<i class="add-btn" data-mark=' + mark + '" data-area="' + area + '"></i>';
                 item.innerHTML = html;
-                $(item).addClass('article-item');                
+                $(item).addClass('article-item');
                 article.append(item); //添加子元素
 
             },
             repeatAdd: function(files, unit) {
                 var start = 0;
                 for (var count = 0; count < 3; count++) {
-                    this.articles.eq(count)[0].innerHTML=''; //清空里面的数据
+                    this.articles.eq(count)[0].innerHTML = ''; //清空里面的数据
                     for (var i = start; i < start + unit; i++) {
                         this.addItem(this.articles.eq(count), files[i]); //添加文件                        
                     }
                     start += unit;
                 }
             },
+            /*
+             * 换一组得到数据...
+             */
             init: function() {
                 var _this = this;
                 this.changeGroup.on('click', function() {
@@ -496,9 +498,9 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                 var files = data.files,
                                     len = files.length,
                                     unit = Math.floor(len / 3); //每组长度
-                                _this.repeatAdd(files,unit);
+                                _this.repeatAdd(files, unit);
                             }
-                            
+
                         }
                     })
                 });
@@ -533,30 +535,29 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         }
     });
     /*
-    * 前去支付按钮btn
-    */
+     * 前去支付按钮btn
+     */
     var Pay = {
-        pay_btn:$('#show-shopping'), //前去结算按钮
-        init:function(){
+        pay_btn: $('#show-shopping'), //前去结算按钮
+        init: function() {
             var upload_modify = [];
-            upload.filesArray.forEach(function(val){
+            upload.filesArray.forEach(function(val) {
                 upload_modify.push(val.mark);
             });
-            upload.official.forEach(function(val){
+            upload.official.forEach(function(val) {
                 upload_modify.push(val.mark);
             })
-            this.pay_btn.on('click',function(){
+            this.pay_btn.on('click', function() {
                 sendAjax({
-                    url:Pathurl.pay,
-                    data:{
-                        files:upload_modify
+                    url: Pathurl.pay,
+                    data: {
+                        "files": upload_modify
                     },
-                    success:function(data){
-                        if(data.success){
+                    success: function(data) {
+                        if (data.success) {
                             //当数据发送成功,执行跳转
-
-                            window.href.location=data.url;
-                        }else{
+                            window.href.location = data.url;
+                        } else {
                             prompt.changeInfo("您的浏览器抽风了,请重启一下!");
                         }
                     }
@@ -566,32 +567,32 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
     }
     Pay.init();
     /*
-    * 搜索框
-    */
+     * 搜索框
+     */
     var Search = {
-        search:$('#search'),  //搜索框
-        init:function(){
-            this.search.on('keyup',function(e){
+        search: $('#search'), //搜索框
+        init: function() {
+            this.search.on('keyup', function(e) {
                 var code = e.which,
                     val = $(this).val();
-                if(code === 13){
+                if (code === 13) {
                     //如果开始搜索,则向服务端请求数据,最多只有24条信息
                     sendAjax({
-                        url:Pathurl.search,
-                        data:{
-                            search:val
+                        url: Pathurl.search,
+                        data: {
+                            "search": val
                         },
-                        success:function(data){
+                        success: function(data) {
                             /*
-                            * 返回的data有 data.success || data.files
-                            */
-                            if(data.success){
+                             * 返回的data有 data.success || data.files
+                             */
+                            if (data.success) {
                                 //向下面的展示框填入数据
                                 var files = data.files,
                                     len = files.length,
                                     unit = Math.floor(len / 3); //每组长度
-                                Base.repeatAdd(files,unit);
-                            }else{
+                                Base.repeatAdd(files, unit);
+                            } else {
                                 prompt.changeInfo('对不起您的浏览器抽风了!');
                             }
                         }

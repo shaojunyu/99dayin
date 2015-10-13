@@ -5,9 +5,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="./styles/99shopping.css" />    
     <title>99打印</title>
+    <script type="text/javascript">
+        var FilesMark = [];  //这里填写后台填模板是的数据,并且一起返回给FilesMark;
+    </script>
 </head>
 
 <body class="page">
+<div class="prompt"></div>
      <div class="header">
         <div class="setWidth">
             <a class="logo" href="#">
@@ -25,7 +29,7 @@
     <article class="behavior">
         <div class="print-lists">
             <div class="print-lists-btn">打印列表</div>
-            <div class="upload"><a href="javascript:void(0)">继续上传</a></div>
+            <div class="upload"><a href="javascript:void(0)">重新上传</a></div>
             <div class="add"><a href="javascript:void(0)">去文库添加</a></div>
             <div class="files container" id="container">
                 <table class="table table-bordered">
@@ -46,12 +50,12 @@
                       <tr>
                             <td role="order">1</td>
                             <td role="file-name">
-                                <div><i class="logo-ppt"></i>2015年春微积分模拟卷(启明)</td>
+                                <div><i class="logo-ppt"></i><span class="file-name">2015年春微积分模拟卷(启明)</span></td>
                             </div>
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -59,7 +63,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -67,7 +71,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -92,13 +96,13 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
-                                <a class="delete-btns" href="javascript:void(0)">删除</a>
+                                <a class="delete-btns" data-mark="123671278391" href="javascript:void(0)">删除</a>
                             </td>
                         </tr>
                         <tr>
@@ -109,7 +113,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -117,7 +121,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -125,7 +129,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -150,10 +154,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -168,7 +172,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -176,7 +180,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -184,7 +188,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -209,10 +213,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -226,7 +230,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -234,7 +238,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -242,7 +246,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -267,10 +271,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -285,7 +289,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -293,7 +297,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -301,7 +305,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -326,10 +330,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -343,7 +347,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -351,7 +355,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -359,7 +363,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -384,10 +388,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -402,7 +406,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -410,7 +414,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -418,7 +422,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -443,10 +447,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>
@@ -460,7 +464,7 @@
                             <td role="share">
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked="checked">是</div>
+                                        <input type="radio" name="share1" value="yes" checked>是</div>
                                     <div>
                                         <input type="radio" name="share1" value="no">否</div>
                                 </div>
@@ -468,7 +472,7 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked="checked">单</div>
+                                        <input type="radio" name="page1" value="single" checked>单</div>
                                     <div>
                                         <input type="radio" name="page1" value="double">双</div>
                                 </div>
@@ -476,7 +480,7 @@
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked="checked">竖</div>
+                                        <input type="radio" name="direction1" value="column" checked>竖</div>
                                     <div>
                                         <input type="radio" name="direction1" value="row">横</div>
                                 </div>
@@ -501,10 +505,10 @@
                                 <span class="single">1.5</span>
                             </td>
                             <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="12"><button class="minus"></button>
+                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price">12.00</span>
+                                <span class="gross-price">1</span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" href="javascript:void(0)">删除</a>

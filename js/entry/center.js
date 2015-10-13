@@ -4,12 +4,15 @@ require.config({
         'jquery': 'lib/jQuery',
         'scroll':'lib/iscroll',
         // 'modal': 'lib/jquery.simplemodal',
-        'lrz':'lib/lrz/dist/lrz.bundle'
+        // 'lrz':'lib/lrz/dist/lrz.bundle', //用来处理图片的库
+        'utility': 'entry/utility/utility',
+        'prompt': 'entry/function/prompt' //提示模块
     }
 })
 "use strict";
-require(['jquery', 'scroll', 'lrz'], function($, scroll , lrz) {
-
+require(['jquery', 'scroll','utility'], function($, scroll,util ) {
+	//绑定滚动条
+	var Iscroll = bindScroll($('.container'));
 	$('.upload').on('change',function(e){
 		var file = this.files[0],			
 			_this = $(this);
@@ -28,13 +31,9 @@ require(['jquery', 'scroll', 'lrz'], function($, scroll , lrz) {
 		if($target[0].tagName==="BUTTON"&&!_parent.hasClass('basic-detail')){
 			toggleShow($target.parents('.left-part'));
 		}
-	})
-	 var myScroll = new IScroll('#wrapper', {
-            scrollbars: true,
-            mouseWheel: true,
-            interactiveScrollbars: true,
-            shrinkScrollbars: 'scale',
-            // fadeScrollbars: true,
-            useTransition: true
-        });
+	});
+	var Order = {
+		
+	}
+
 })
