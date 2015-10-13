@@ -58,8 +58,7 @@ class Api extends CI_Controller{
 	}
 	public function logout(){
 		$this->session->sess_destroy();
-		$this->echo_msg(true);
-		header('Location: '.base_url());
+		$this->echo_msg(true);		
 	}
 	
 	//发送验证码

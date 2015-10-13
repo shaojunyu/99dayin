@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div class="prompt"></div>
+    <div class="prompt"></div>
     <div class="header">
         <div class="setWidth">
             <a class="logo" href="#">
@@ -21,17 +21,18 @@
                 <div class="title-btn introduction" data-content="简介">简介</div>
                 <div class="title-btn art-base" data-content="本校文库">本校文库</div>
                 <div class="title-btn">
-                <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
-                <!-- <a class="name">李四王五</a> -->
+                    <!-- <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span> -->
+                    <a class="name">李四王五</a>
                 </div>
             </div>
+            <div class="detail-btn">
+                <a href="javascript:void(0)">个人中心</a>
+                <a href="javascript:void(0)">打印列表</a>
+                <a class="logout" href="javascript:void(0)">退出登录</a>
+            </div>
+        </div>
 
-        </div>
-        <div class="detail-btn">
-            <a href="javascript:void(0)">个人中心</a>
-            <a href="javascript:void(0)">打印列表</a>
-            <a class="logout" href="javascript:void(0)">退出登录</a>
-        </div>
+        
     </div>
     <div id="container">
         <div class="section first">
@@ -84,8 +85,8 @@
         <div class="header-btn"><span class="active login-btn">登录</span><span class="signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
         <div class="portrait"><img src="./img/portrait.png"></div>
         <div class="input-frame">
-            <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
-            <input  type="password" class="login-ps" placeholder="密码"/><i class="logo-ps"></i>
+            <input type="text" class="login-account" placeholder="用户名" /><i class="logo-user"></i>
+            <input type="password" class="login-ps" placeholder="密码" /><i class="logo-ps"></i>
         </div>
         <div class="forget"><a href="">忘记密码</a></div>
         <div>
@@ -101,7 +102,7 @@
                 <div>登</div>
                 <div>录</div>
             </div>
-            <div class="store-login ">                
+            <div class="store-login ">
                 <div>打</div>
                 <div>印</div>
                 <div>店</div>
@@ -120,7 +121,7 @@
             </div>
             <div class="row">
                 <span class="des">密码：</span>
-                <input type="password" class="ps"data-iden='0'> 
+                <input type="password" class="ps" data-iden='0'>
                 <i></i>
             </div>
             <div class="row">
@@ -137,9 +138,9 @@
                 <span class="des">验证码：</span>
                 <input class="CF-code" type="text" class="secu-code" data-iden='0'>
                 <button class="comfir-btn" class="send-SC">发送验证码</button>
-                <i ></i>
+                <i></i>
             </div>
-            <div class="row">   
+            <div class="row">
                 <span class="des">学校：</span>
                 <select type="text" class="college" name='school' data-iden='1'>
                     <option value="华中科技大学">华中科技大学</option>
@@ -154,9 +155,7 @@
             <button class="confirm-btn enroll">确 认</button>
         </div>
     </div>
-    
     <script src="js/lib/require.js" data-main="js/entry/99print.js"></script>
-
 </body>
 
 </html>
