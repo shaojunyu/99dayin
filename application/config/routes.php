@@ -54,7 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 //资源文件重定向
-$route['user/img/(.+)'] = 'Redirect/img/$1';
-$route['user/js/(.+)'] = 'Redirect/js/$1';
-$route['user/styles/(.+)'] = 'Redirect/styles/$1';
-$route['user/fonts/(.+)'] = 'Redirect/fonts/$1';
+$route['user/img|js|styles|fonts/(.+)'] = 'Redirect/source';
+//$route['user/js/(.+)'] = 'Redirect/source';
+// $route['user/styles/(.+)'] = 'Redirect/source';
+// $route['user/fonts/(.+)'] = 'Redirect/source';

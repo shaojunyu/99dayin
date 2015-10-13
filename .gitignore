@@ -3,3 +3,4 @@ config.rb
 .project
 .settings/
 application/logs/
+~$api.xlsx
