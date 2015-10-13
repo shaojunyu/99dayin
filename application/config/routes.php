@@ -57,3 +57,4 @@ $route['translate_uri_dashes'] = FALSE;
 $route['user/img/(.+)'] = 'Redirect/img/$1';
 $route['user/js/(.+)'] = 'Redirect/js/$1';
 $route['user/styles/(.+)'] = 'Redirect/styles/$1';
+$route['user/fonts/(.+)'] = 'Redirect/fonts/$1';
