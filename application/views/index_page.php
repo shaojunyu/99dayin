@@ -13,8 +13,6 @@
 
 	<?php $this->load->view('public/page_header');?>
 
-
-
     <div id="container">
         <div class="section first">
             <div class="main-content">

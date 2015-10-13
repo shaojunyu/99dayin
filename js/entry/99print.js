@@ -44,7 +44,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             if ($target.hasClass('login-btn')) {
                 detectShow(login_frame, true);
             } else if ($target.hasClass('signin-btn')) {
-                console.log(1);
+                
                 detectShow(signin_frame, true);
             } else if ($target.hasClass('user-login')) {
                 toggleActive($target, 'active');
@@ -146,6 +146,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     }
                 });
             });
+            
             $('.QQ-login').on('click', function() {
                 sendAjax({
                     url: Pathurl.Linklogin,
@@ -157,9 +158,11 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             });
             this.title.on('click',function(e){
                 var $target = $(e.target);
+                
                 if($target.hasClass('name')){
                     toggleShow(_this.detail);
                 }else if($target.hasClass('login')){
+                	console.log(1);
                     detectShow(login_frame, true);
                 }else if($target.hasClass('signin')){
                     detectShow(signin_frame, false);
@@ -187,6 +190,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             })
         }
     }
+    
     login.init();
     // prompt.changeInfo("123");
     //验证信息的正则表达式和对应的信息
