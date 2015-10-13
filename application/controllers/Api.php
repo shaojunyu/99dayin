@@ -25,6 +25,7 @@ class Api extends CI_Controller{
 		$qiniu_secretKey = 'e4gSw3iZxrOGI372CjaeMwP6Rif_2ekqfEbPgybA';
 		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
 	}
+	
 	public function signup(){
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
@@ -96,7 +97,13 @@ class Api extends CI_Controller{
 			
 		}
 	}
-	
+	//获取文件列表
+	public function getFileList(){
+		$bucket = 'dayin';
+		$buketManager = new BucketManager($this->qiniu_auth);
+		$list = $buketManager->listFiles($bucket);
+		var_dump($list[0]);
+	}
 	//订单相关
 	public function order(){
 		

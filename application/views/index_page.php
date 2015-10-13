@@ -17,7 +17,7 @@
         <div class="section first">
             <div class="main-content">
                 <div class="des"><img src="./img/desc.png" alt="描述"></div>
-                <a href="javascript:void(0)" data-log="<?php if ($this->session->userdata('username')) {echo 1;}else {echo 0;}?>" class="print-btn">Print</a>
+                <a href="<?php if ($this->session->userdata('username')) {echo base_url('user/upload');}else {echo 'javascript:void(0)';}?>" data-log="<?php if ($this->session->userdata('username')) {echo 1;}else {echo 0;}?>" class="print-btn">Print</a>
             </div>
             <div class="next-arrow"><img id="down-arrow" src="./img/newhand.gif"></div>
         </div>
