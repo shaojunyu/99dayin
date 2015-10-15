@@ -102,7 +102,18 @@ class Api extends CI_Controller{
 		$bucket = 'dayin';
 		$buketManager = new BucketManager($this->qiniu_auth);
 		$list = $buketManager->listFiles($bucket);
-		var_dump($list[0]);
+		$file_array = array();
+		foreach ($list[0] as $file){
+			$tmp['name'] = $file['key'];
+			//$tmp['date'] = $file['putTime'];
+			$tmp['size'] = $file['fsize'];
+			$tmp['type'] = $file[];
+			//echo date('Y-m-d H:i:s', -$file['putTime']);
+			//var_dump(intval(-$file['putTime']));
+			$file_array[] = $tmp;
+		}
+		//var_dump($list);
+		//var_dump($file_array);
 	}
 	//订单相关
 	public function order(){
