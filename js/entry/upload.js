@@ -40,7 +40,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
     });
 
     var Pathurl = {
-            getToken: '', //得到上传口令
+            getToken: 'index.php/api/getUploadToken', //得到上传口令
             getOfficial: '', //得到文库数据
             pay: '', //去支付
             search: '' //搜索
@@ -223,7 +223,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         official: new Array(), //用户挑选官方提供的文件
 
         getFiles: function() {
-            var modify = [1], //用来表示唯一性
+            var modify = [1],//用来表示唯一性
                 copy = [],
                 _this = this;
             this.$upload.on('change', function(e) {
@@ -270,13 +270,13 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                 //发送文件
                                 if (data.success) {
                                     sendAjax({
-                                        url: pathSave,
-                                        token: data.token,
+                                        url: 'http://up.qiniu.com',
+                                        token: data.msg,
                                         data: data,
                                         success: function(data) {
-                                            
+                                            prompt.changeInfo('上传成功!');
                                         }
-                                    })
+                                    });
                                 } else {
                                     prompt.changeInfo('网络问题,请重新上传!');
                                 }
