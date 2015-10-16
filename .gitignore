@@ -4,3 +4,4 @@ config.rb
 .settings/
 application/logs/
 ~$api.xlsx
+view/
