@@ -38,119 +38,122 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
     prompt = new prompt.Prompt({
         prompt: $('.prompt')
     });
-
+    $.ajaxSetup({
+        dataType: "JSON"
+    });
     var Pathurl = {
-            getToken: '', //得到上传口令
+            getToken: '../index.php/api/getUploadToken', //得到上传口令
             getOfficial: '', //得到文库数据
             pay: '', //去支付
-            search: '' //搜索
+            search: '', //搜索
+            comfirm: '../index.php/api/uploadACK' //上传成功后的给后台发送验证
         }
         /*
          * 检查id是否和传入的一致
          */
-         var login = {
-             $username: $('.login-account'),
-             $ps: $('.login-ps'),
-             $iden: $('.login-choice>div.active'), //不同的登录方式
-             title:$('.title-btn'), //获取title-btn如果点击用户名则显示相应的信息
-             detail:$('.detail-btn'), //获得个人信息列表
-             print_btn:$('.print-btn'), //打印按钮
-             getText: function($target) {
-                 return $target.val();
-             },
-             /*
-              * 检验用户以哪种方式登录
-              * 0为用户登录
-              * 1为打印店登录
-              */
-             getIden: function() {
-                 var active = this.$iden;
-                 if (active.hasClass('user-login')) {
-                     return 0;
-                 } else {
-                     return 1;
-                 }
-             },
-             linkSuccess: function(data) {
-                 if (data.success) {
-                     //登录成功
-                 } else {
-                     //登录失败
-                 }
-             },
-             afterLogin:function(name){
-                 this.print_btn.attr('href',Pathurl.upload);
-                 this.title.html('<a class="name">'+name+'/a>');  
-             },
-             beforeLogin:function(){
-                 this.print_btn.attr('href',"javascript:void(0)");
-                 this.title.html('<span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>');  
-             },
-             init: function() {
-                 var _this = this;
-                 $('.login-btn').on('click', function() {
-                     var username = _this.getText(_this.$username),
-                         ps = _this.getText(_this.$ps),
-                         iden = _this.getIden();
-                     sendAjax({                    
-                         url: Pathurl.login,
-                         dataType:'json',
-                         data: {
-                             'username': username,
-                             'ps': ps,
-                             'iden': iden
-                         },
-                         success: function(data) {
-                             if (data.success) {                            
-                                 window.location.href = './';
-                             } else {
-                                 prompt.changeInfo(data.msg);
-                             }
-                         }
-                     });
-                 });
-                 $('.QQ-login').on('click', function() {
-                     sendAjax({
-                         url: Pathurl.Linklogin,
-                         data: {
-                             'login_method': 'QQ'
-                         },
-                         success: _this.linkSuccess
-                     })
-                 });
-                 this.title.on('click',function(e){
-                     var $target = $(e.target);
-                     if($target.hasClass('name')){
-                         toggleShow(_this.detail);
-                     }else if($target.hasClass('login')){
-                         detectShow(login_frame, true);
-                     }else if($target.hasClass('signin')){
-                         detectShow(signin_frame, false);
-                     }
-                 });
-                 this.detail.on('click',function(e){
-                     var $target = $(e.target);
-                     if($target.hasClass('logout')){
-                         sendAjax({
-                             url:Pathurl.logout,
-                             success:function(data){
-                                 if(data.success){
-                                     window.location.href='./';
-                                 }else{
-                                     prompt.changeInfo(data.msg);
-                                 }
-                             }
-                         })
-                     }
-                 });
-                 this.print_btn.on('click',function(){
-                     if($(this).attr('data-log')!=0){
-                         detectShow(login_frame, true);
-                     }
-                 })
-             }
-         }
-         login.init();
+    var login = {
+        $username: $('.login-account'),
+        $ps: $('.login-ps'),
+        $iden: $('.login-choice>div.active'), //不同的登录方式
+        title: $('.title-btn'), //获取title-btn如果点击用户名则显示相应的信息
+        detail: $('.detail-btn'), //获得个人信息列表
+        print_btn: $('.print-btn'), //打印按钮
+        getText: function($target) {
+            return $target.val();
+        },
+        /*
+         * 检验用户以哪种方式登录
+         * 0为用户登录
+         * 1为打印店登录
+         */
+        getIden: function() {
+            var active = this.$iden;
+            if (active.hasClass('user-login')) {
+                return 0;
+            } else {
+                return 1;
+            }
+        },
+        linkSuccess: function(data) {
+            if (data.success) {
+                //登录成功
+            } else {
+                //登录失败
+            }
+        },
+        afterLogin: function(name) {
+            this.print_btn.attr('href', Pathurl.upload);
+            this.title.html('<a class="name">' + name + '/a>');
+        },
+        beforeLogin: function() {
+            this.print_btn.attr('href', "javascript:void(0)");
+            this.title.html('<span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>');
+        },
+        init: function() {
+            var _this = this;
+            $('.login-btn').on('click', function() {
+                var username = _this.getText(_this.$username),
+                    ps = _this.getText(_this.$ps),
+                    iden = _this.getIden();
+                sendAjax({
+                    url: Pathurl.login,
+                    dataType: 'json',
+                    data: {
+                        'username': username,
+                        'ps': ps,
+                        'iden': iden
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            window.location.href = './';
+                        } else {
+                            prompt.changeInfo(data.msg);
+                        }
+                    }
+                });
+            });
+            $('.QQ-login').on('click', function() {
+                sendAjax({
+                    url: Pathurl.Linklogin,
+                    data: {
+                        'login_method': 'QQ'
+                    },
+                    success: _this.linkSuccess
+                })
+            });
+            this.title.on('click', function(e) {
+                var $target = $(e.target);
+                if ($target.hasClass('name')) {
+                    toggleShow(_this.detail);
+                } else if ($target.hasClass('login')) {
+                    detectShow(login_frame, true);
+                } else if ($target.hasClass('signin')) {
+                    detectShow(signin_frame, false);
+                }
+            });
+            this.detail.on('click', function(e) {
+                var $target = $(e.target);
+                if ($target.hasClass('logout')) {
+                    sendAjax({
+                        url: Pathurl.logout,
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = './';
+                            } else {
+                                prompt.changeInfo(data.msg);
+                            }
+                        }
+                    })
+                }
+            });
+            this.print_btn.on('click', function() {
+                if ($(this).attr('data-log') != 0) {
+                    detectShow(login_frame, true);
+                }
+            })
+        }
+    }
+    login.init();
     $(".fn-choice").on('click', function(e) {
             var $target = $(e.target),
                 _id = $target.attr('id'),
@@ -228,7 +231,11 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                 _this = this;
             this.$upload.on('change', function(e) {
                 var files = this.files;
-                copy = [];
+                copy = [],
+                    form = [];
+                for (var i = 0; i < files.length; i++) {
+                    form.push(new FormData());
+                }
                 for (var i = 0; i < files.length; i++) {
                     if (!_this.format.test(files[i].name)) {
                         prompt.changeInfo("只能上传文档文件!");
@@ -252,7 +259,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                     }
                     //如果不重复则添加文件 
                     if (survive) {
-                        var data = {
+                        var Data = {
                             'name': files[i].name.substring(0, files[i].name.indexOf('.')),
                             'content': files[i],
                             'date': date,
@@ -261,27 +268,50 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                             'mark': flag, //表示文件唯一性
                             'type': files[i].name.substring(files[i].name.indexOf('.') + 1) //文件类型
                         }
-                        _this.filesArray.push(data);
+                        _this.filesArray.push(Data);
                         _this.addFiles(files[i], date, size);
                         copy.push(flag);
-                        sendAjax({
-                            url: Pathurl.getToken, //得到getToken的地址
-                            success: function(data) {
-                                //发送文件
-                                if (data.success) {
-                                    sendAjax({
-                                        url: pathSave,
-                                        token: data.token,
-                                        data: data,
-                                        success: function(data) {
-                                            
-                                        }
-                                    })
-                                } else {
-                                    prompt.changeInfo('网络问题,请重新上传!');
+
+                        form[i].append('file', files[i]);
+                        form[i].append('key', files[i].name);
+                        console.log(form[i]);
+                        (function(form, name) {
+                            $.ajax({
+                                url: Pathurl.getToken, //得到getToken的地址
+                                success: function(data) {
+                                    //发送文件    
+                                    if (data.success) {
+                                        form.append('token', data.msg);
+                                        console.log(form);
+                                        $.ajax({
+                                            url: 'http://up.qiniu.com',
+                                            type: 'POST',
+                                            data: form,
+                                            processData: false,
+                                            contentType: false,
+                                            success: function(data) {
+                                                prompt.changeInfo('上传成功!');
+                                                var ID = $('.name'); //用户ID
+                                                $.ajax({
+                                                    url: Pathurl.confirm,
+                                                    type: 'POST',
+                                                    processData: false,
+                                                    contentType: false,
+                                                    data: {
+                                                        username: ID,
+                                                        filename: name
+                                                    }
+                                                })
+                                            }
+                                        });
+
+                                    } else {
+                                        prompt.changeInfo('网络问题,请重新上传!');
+                                    }
                                 }
-                            }
-                        });
+                            });
+
+                        })(form[i], files[i].name);
 
                     }
                 }

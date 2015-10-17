@@ -32,5 +32,6 @@ class Welcome extends CI_Controller{
 	public function index() {
 		$this->load->view('index_page');
 		//$bucket = new BucketManager($this->qiniu_auth);
+		set_cookie('token','123456');
 	}
 }

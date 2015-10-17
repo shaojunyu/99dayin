@@ -55,6 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 //资源文件重定向
 $route['user/img|js|styles|fonts/(.+)'] = 'Redirect/source';
+//$route['user/api/(.+)'] = 'api/$1';
 //$route['user/js/(.+)'] = 'Redirect/source';
 // $route['user/styles/(.+)'] = 'Redirect/source';
 // $route['user/fonts/(.+)'] = 'Redirect/source';

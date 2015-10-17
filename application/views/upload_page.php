@@ -122,49 +122,17 @@
                 <article class="base-choose">
                     <div id="wrapper_1" class="container">
                         <ul class="files-content" id="scroller">
+                       	<?php //购物车
+						foreach ($this->cart->contents() as $items){
+                       	?>
                             <li>
                                 <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
-                                <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
-                                <i class="logo-error"></i>
-                            </li>
-                            <li>
-                                <i class="file-logo logo-word"></i>
-                                <p class="file-header">小树和小雨的故事</p>
+                                <p class="file-header"><?php echo $items['name']?></p>
                                 <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
                                 <i class="logo-error"></i>
                             </li>
                         </ul>
+                        <?php }?>
                     </div>
                 </article>
             </div>
