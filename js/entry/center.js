@@ -8,16 +8,29 @@ require.config({
         'utility': 'entry/utility/utility',
         'prompt': 'entry/function/prompt', //提示模块
         'enroll': 'entry/function/enroll', //注册模块
-        'img': 'entry/function/deal-img'
+        'img': 'entry/function/deal-img',
+        'ping++': 'lib/pingpp-pc', //ping++插件
+        'modal': 'lib/jquery.simplemodal' //模态框插件
     }
 })
 "use strict";
-require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll, util, prompt, enroll) {
+require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], function($, scroll, util, prompt, enroll, ping, modal) {
     //绑定滚动条
     var Iscroll = bindScroll($('.container'));
     prompt = new prompt.Prompt({
         prompt: $('.prompt')
     });
+    /*
+     *检测模态框是否显示，是的不操作，否则显示模态框
+     * $target 为模态框对象
+     * close表示点击罩层是否关闭modals
+     */
+    function detectShow($target, close) {
+        if ($target.css('display') !== 'block') {
+            $.modal.close();
+            openModal($target, close);
+        }
+    }
 
     function toggleShow($target) {
         if ($target.css('display') === 'none') {
@@ -40,16 +53,17 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
         delteOrd: '', //删除订单路由
         addPrint: '', //加印路由
         getToken: '', //得到token值
-        changeInfo:'', //修改个人信息
-        sendImg:'', //发送身份证，学生证图片
-        promptPs:'', //修改密码
-        username:'' // 验证用户名是否存在
+        changeInfo: '', //修改个人信息
+        sendImg: '', //发送身份证，学生证图片
+        promptPs: '', //修改密码
+        username: '' // 验证用户名是否存在
 
     }
     var Order = {
         pre: $('.order-content'), //未处理订单
         history: $('.his-content'), //历史订单
         order_btn: $('.orders-choice'), //切换未处理订单和历史订单
+        checkout_modal: $('.paying'), //支付模态框
         deleteOrder: function($target) {
             var parent_li = $target.parents('li'),
                 order_num = $target.attr('data-order'),
@@ -95,6 +109,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
         },
         init: function() {
             var _this = this;
+            //未处理订单页的应用
             this.pre.on('click', function(e) {
                 var $target = $(e.target);
                 if ($target.hasClass('cancel')) {
@@ -102,8 +117,28 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
                     if (decision) {
                         _this.deleteOrder($target);
                     }
+                    //点击按钮执行支付功能
                 } else if ($target.hasClass('go-pay')) {
-
+                    var li = $target.parents('li'),
+                        num = li.find('.order-num').text(), //获取数量  
+                        money = li.find('.money').text(); //获取总价    
+                    openModal(_this.checkout_modal, false);
+                    $.ajax({
+                        url: Pathurl.go_pay,
+                        data: {
+                            num: num, //订单号
+                            money: money
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
+                                openModal(_this.checkout_modal, false);
+                                _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
+                            } else {
+                                prompt.changeInfo("支付出错，请重新支付!");
+                            }
+                        }
+                    });
                 }
             });
             this.order_btn.on('click', function(e) {
@@ -296,16 +331,16 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
             var code = '';
             this.obtain_code.on('click', function() {
                 $(this).addClass('sending');
-                var phone =  _this.phone.val(),
-                    iden = _this.phone.attr('data-iden')==='1'?true:false;
-                if(!iden){
+                var phone = _this.phone.val(),
+                    iden = _this.phone.attr('data-iden') === '1' ? true : false;
+                if (!iden) {
                     prompt.changeInfo('请输入正确手机号!');
                     return false;
-                }                
+                }
                 sendAjax({
                     url: Pathurl.getToken,
-                    data:{
-                        phone:phone
+                    data: {
+                        phone: phone
                     },
                     success: function(data) {
                         if (data.success) {
@@ -319,7 +354,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
             });
             this.confirm_code.on('blur', function() {
                 var content = $(this).val();
-                if(content==''||content==null){
+                if (content == '' || content == null) {
                     prompt.changeInfo('验证码不能为空');
                     _this.confirm_code.addClass('error');
                 } else if (code === content) {
@@ -354,12 +389,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
                     email = _this.email.val(),
                     address = _this.address.val(),
                     confirm = _this.confirm_code.val(),
-                    mark = _this.name.attr('data-iden') === '1' ? true : false 
-                    && _this.phone.attr('data-iden') === '1' ? true : false 
-                    && _this.email.attr('data-iden') === '1' ? true : false 
-                    && _this.addrss.attr('data-iden') === '1' ? true : false 
-                    && _this.confirm_code.attr('data-iden') === '1' ? true : false 
-                    ? true : false;
+                    mark = _this.name.attr('data-iden') === '1' ? true : false && _this.phone.attr('data-iden') === '1' ? true : false && _this.email.attr('data-iden') === '1' ? true : false && _this.addrss.attr('data-iden') === '1' ? true : false && _this.confirm_code.attr('data-iden') === '1' ? true : false ? true : false;
                 if (mark) {
                     _this.change_btn.addClass('sending');
                     sendAjax({
@@ -392,5 +422,81 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll'], function($, scroll,
         }
     }
     Left.init();
+    var Modal = {
+        pay: $('.paying'), //订单支付模态框
+        close: $('.close'), //关闭btn
+        paying_btn: $('.paying-btn button'), //支付button
+        all_num:$('.order-num'), //获取所有的未处理订单        
+        deleteOrder: function($target) {
+            var parent_li = $target.parents('li'),
+                order_num = $target.attr('data-order'),
+                signal = false,
+                i = -1;
+            //?这里需要确认订单信息
+            /*
+             * val.order 是订单编号
+             */
+            Orders.forEach(function(val, index) {
+                if (Number(val.order) === Number(order_num)) {
+                    signal = true;
+                    i = index
+                }
+            });
+            if (signal) {
+                Orders.splice(i, 1);
+            }
+            parent_li.detach();
+            Iscroll.forEach(function(val) {
+                val.refresh();
+            });
+            sendAjax({
+                url: Pathurl.delteOrd,
+                data: {
+                    Orders: Orders
+                },
+                success: function(data) {
+                    if (!data.success) {
+                        prompt.changeInfo("您的网络又问题，请重新删除~");
+                    }
+                }
+            });
+        },
+        checkOrder: function() {
+            var num = this.pay.attr('data-num'), //获取订单号
+                order = ''; //当前处理订单元素               
+            $.ajax({
+                url: Pathurl,
+                data: {
+                    num: num
+                },
+                success: function(data) {
+                    if (data.success) {
+                        // this.all_num.each(function(){
+                        //     if($(this).attr('data-num')===num){
+                        //         order = $(this); //获取订单页
+                        //     }
+                        // });
+                        // if(order==''||order==null){
+                        //     return false;
+                        // }
+                        // this.deleteOrder(order);
+                        // //删除订单之后，需要将该订单，移动到历史订单里
+                        // this.pay.attr('data-num','');
+                        prompt.changeInfo('您的支付成功，请稍等订单消息~~');
+                        setTimeout(function(){
+                            window.location.href="./"; //刷新页面
+                        },1000);
+                    } else {
+                        prompt.changeInfo('sorry~~您的订单支付不成功，请重新支付');
+                    }
 
+                }
+            });
+        },
+        init: function() {
+            var _this =this;
+            this.close.on('click',this.checkOrder);
+        }
+    }
+    Modal.init();
 })

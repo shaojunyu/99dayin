@@ -9,6 +9,7 @@
 </head>
 
 <body>
+<div class="prompt"></div>
     <div class="header">
         <div class="setWidth">
             <a class="logo" href="#">
@@ -64,13 +65,13 @@
                 </div>
                 <div class="withdraw">体现金额:
                     <input class="withdraw-input" type="text">元</div>
-                <p>可提现:<span>2023213</span>元</p>
-                <p>已提现:<span>23213</span>元</p>
-                <p>已获得总额:<span>23213</span>元</p>
+                <p>可提现:<span class="pre-withdraw">2023213</span>元</p>
+                <p>已提现:<span class="withdrawed">23213</span>元</p>
+                <p>已获得总额:<span class="total">23213</span>元</p>
                 <a href="" id="view-log">&gt;查看提现记录&lt;</a>
                 <div class="basic-btn">
-                    <button>确认</button>
-                    <button>返回</button>
+                    <button class="back">返回</button>
+                    <button class="withdraw-confir">确认</button>
                 </div>
             </div>
             <div class="left-part change-ps" id="change-ps-page">
