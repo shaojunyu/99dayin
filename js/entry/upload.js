@@ -278,10 +278,10 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                         (function(form, name) {
                             $.ajax({
                                 url: Pathurl.getToken //得到getToken的地址
-                            }).then(function(data) {
+                            }).done(function(data) {
                                 //发送文件                                    
                                 if (data.success) {                                    
-                                    form.append('token', data.msg);
+                                    form.append('token', data.msg);                                    
                                     $.ajax({
                                         url: 'http://up.qiniu.com',
                                         type: 'POST',
@@ -289,10 +289,9 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                         processData: false,
                                         contentType: false
                                     }).done(function(data) {
-                                        console.log(1);
                                         prompt.changeInfo('上传成功!');
                                         var ID = $('.name'); //用户ID
-                                        return $.ajax({
+                                        $.ajax({
                                             url: Pathurl.confirm,
                                             type: 'POST',
                                             processData: false,
@@ -301,7 +300,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                                 username: ID,
                                                 filename: name
                                             }
-                                        })
+                                        });
                                     })
                                 } else {
                                     prompt.changeInfo('网络问题,请重新上传!');
