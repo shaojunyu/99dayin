@@ -39,8 +39,8 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         prompt: $('.prompt')
     });
     $.ajaxSetup({
-        dataType: "JSON"
-    });
+        dataType: 'JSON'
+    })
     var Pathurl = {
             getToken: '../index.php/api/getUploadToken', //得到上传口令
             getOfficial: '', //得到文库数据
@@ -277,40 +277,35 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                         console.log(form[i]);
                         (function(form, name) {
                             $.ajax({
-                                url: Pathurl.getToken, //得到getToken的地址
-                                success: function(data) {
-                                    //发送文件    
-                                    if (data.success) {
-                                        form.append('token', data.msg);
-                                        console.log(form);
+                                url: Pathurl.getToken //得到getToken的地址
+                            }).done(function(data) {
+                                //发送文件                                    
+                                if (data.success) {                                    
+                                    form.append('token', data.msg);                                    
+                                    $.ajax({
+                                        url: 'http://up.qiniu.com',
+                                        type: 'POST',
+                                        data: form,
+                                        processData: false,
+                                        contentType: false
+                                    }).done(function(data) {
+                                        prompt.changeInfo('上传成功!');
+                                        var ID = $('.name'); //用户ID
                                         $.ajax({
-                                            url: 'http://up.qiniu.com',
+                                            url: Pathurl.confirm,
                                             type: 'POST',
-                                            data: form,
                                             processData: false,
                                             contentType: false,
-                                            success: function(data) {
-                                                prompt.changeInfo('上传成功!');
-                                                var ID = $('.name'); //用户ID
-                                                $.ajax({
-                                                    url: Pathurl.confirm,
-                                                    type: 'POST',
-                                                    processData: false,
-                                                    contentType: false,
-                                                    data: {
-                                                        username: ID,
-                                                        filename: name
-                                                    }
-                                                })
+                                            data: {
+                                                username: ID,
+                                                filename: name
                                             }
                                         });
-
-                                    } else {
-                                        prompt.changeInfo('网络问题,请重新上传!');
-                                    }
+                                    })
+                                } else {
+                                    prompt.changeInfo('网络问题,请重新上传!');
                                 }
-                            });
-
+                            })
                         })(form[i], files[i].name);
 
                     }
