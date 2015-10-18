@@ -39,14 +39,14 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         prompt: $('.prompt')
     });
     $.ajaxSetup({
-        dataType: 'JSON'
+        dataType: 'json'
     })
     var Pathurl = {
             getToken: '../index.php/api/getUploadToken', //得到上传口令
             getOfficial: '', //得到文库数据
             pay: '', //去支付
             search: '', //搜索
-            comfirm: '../index.php/api/uploadACK' //上传成功后的给后台发送验证
+            confirm: '../index.php/api/uploadACK' //上传成功后的给后台发送验证
         }
         /*
          * 检查id是否和传入的一致
@@ -290,16 +290,15 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                         contentType: false
                                     }).done(function(data) {
                                         prompt.changeInfo('上传成功!');
-                                        var ID = $('.name'); //用户ID
+                                        var ID = $('.name').text(); //用户ID
                                         $.ajax({
                                             url: Pathurl.confirm,
                                             type: 'POST',
-                                            processData: false,
-                                            contentType: false,
+                                            dataType:'json',
                                             data: {
                                                 username: ID,
                                                 filename: name
-                                            }
+                                            }	
                                         });
                                     })
                                 } else {

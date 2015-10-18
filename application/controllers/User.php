@@ -15,4 +15,8 @@ class User extends CI_Controller{
 		$this->load->view('upload_page');
 	}
 	
+	//订单页面
+	function order() {
+		$this->load->view('99shopping');
+	}
 }

@@ -20,7 +20,11 @@
             <span class="color-block"></span>
         </div>
         <article class="file-content" id="file-content">
-            <a class="container-upload" href="javascript:void(0)" data-num='0'>上传文件<input class="upload" type="file" id="file-upload" multiple accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel"/></a>          
+        	<?php 
+        	$cart = new MY_Cart();
+        	$items = $cart->getItems();
+        	?>
+            <a class="container-upload" href="javascript:void(0)" data-num='<?php echo count($items)?>'>上传文件<input class="upload" type="file" id="file-upload" multiple accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel"/></a>          
         </article>       
         <article class="choose-base" id="choose-base">
             <header class="base-header" id="base-header">
@@ -122,17 +126,20 @@
                 <article class="base-choose">
                     <div id="wrapper_1" class="container">
                         <ul class="files-content" id="scroller">
-                       	<?php //购物车
-						foreach ($this->cart->contents() as $items){
-                       	?>
+						<?php 
+							if ($items) {
+								foreach ($items as $item){
+						?>
                             <li>
                                 <i class="file-logo logo-word"></i>
-                                <p class="file-header"><?php echo $items['name']?></p>
+                                <p class="file-header"><?php echo $item->filename?></p>
                                 <p>上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb</p>
                                 <i class="logo-error"></i>
                             </li>
+                            
+                            <?php }}?>
                         </ul>
-                        <?php }?>
+                        
                     </div>
                 </article>
             </div>

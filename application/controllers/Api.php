@@ -44,7 +44,17 @@ class Api extends CI_Controller{
 		
 	}
 	public function test(){
-		var_dump($this->cart->contents());
+		$cart = new MY_Cart();
+		//$cart->addItem('123', 'dadsad');
+		//var_dump($cart->deleteItem('dadsad'));
+		var_dump($cart->getItems());
+		
+		
+// 		$cart = new AVObject('Cart');
+// 		$cart->userId = 'qwerty';
+// 		$cart->items = array('a'=>1,'b'=>'c');
+// 		$res = $cart->save();
+// 		var_dump($res);
 // 		$pay_channel = 'wx_pub_qr';
 // 		switch ($pay_channel) {
 // 			case 'wx_pub':
@@ -174,22 +184,20 @@ class Api extends CI_Controller{
 			$this->echo_msg(false,'参数错误');
 			exit();
 		}
+		
+		$bucketManager = new BucketManager($this->qiniu_auth);
+		$fileInfo = $bucketManager->stat('dayin', $filename);
+		$fileHash = $fileInfo[0]['hash'];
+		$file->fileHash = $fileHash;
+		
 		try {
-			//echo $this->session->userdata('userId');
+			//文件信息保存到云
 			$file->save();
 			//存入购物车
-			$data = array(
-			    'id'      => 'sku_123ABC',
-			    'qty'     => 1,
-			    'price'   => 39.95,
-			    'name'    => $filename,
-			    'options' => array('Size' => 'L', 'Color' => 'Red')
-			);
+			$cart = new MY_Cart();
+			$cart->addItem($filename,$fileHash);
 			
-			$ack = $this->cart->insert($data);
-			$this->cart->destroy();
-			var_dump($ack);
-			$this->echo_msg(true,'true');
+			$this->echo_msg(true,$fileHash);
 			exit();
 		} catch (Exception $e) {
 			$this->echo_msg(false,'上传失败'.$e->error_msg);
