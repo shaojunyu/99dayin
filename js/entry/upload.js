@@ -268,14 +268,13 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                             'mark': flag, //表示文件唯一性
                             'type': files[i].name.substring(files[i].name.indexOf('.') + 1) //文件类型
                         }
-                        _this.filesArray.push(Data);
-                        _this.addFiles(files[i], date, size);
+                        _this.filesArray.push(Data);                        
                         copy.push(flag);
 
                         form[i].append('file', files[i]);
                         form[i].append('key', files[i].name);
                         console.log(form[i]);
-                        (function(form, name) {
+                        (function(form, name,file) {
                             $.ajax({
                                 url: Pathurl.getToken //得到getToken的地址
                             }).done(function(data) {
@@ -289,7 +288,6 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                         processData: false,
                                         contentType: false
                                     }).done(function(data) {
-                                        prompt.changeInfo('上传成功!');
                                         var ID = $('.name').text(); //用户ID
                                         $.ajax({
                                             url: Pathurl.confirm,
@@ -299,13 +297,21 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                                 username: ID,
                                                 filename: name
                                             }	
-                                        });
+                                        }).done(function(data){
+                                            console.log(data);
+                                            if(data.success){
+                                                _this.addFiles(file, date, size,data.msg);
+                                                prompt.changeInfo('上传成功!');
+                                            }else{
+                                                prompt.changeInfo('上传失败!');
+                                            }
+                                        })
                                     })
                                 } else {
                                     prompt.changeInfo('网络问题,请重新上传!');
                                 }
                             })
-                        })(form[i], files[i].name);
+                        })(form[i], files[i].name,files[i]);
 
                     }
                 }
@@ -352,10 +358,10 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         changeInputText: function(num) {
             this.content_a.attr('data-num', num);
         },
-        addFiles: function(file, date, size) {
+        addFiles: function(file, date, size,mark) {
             var name = file.name.toLowerCase(),
                 index = name.indexOf('.'),
-                mark = file.lastModified;
+                mark = mark;
             li = document.createElement('li'),
                 className = '';
             switch (name.substring(index + 1)) {
