@@ -33,13 +33,12 @@ class Api extends CI_Controller{
 		$qiniu_secretKey = 'e4gSw3iZxrOGI372CjaeMwP6Rif_2ekqfEbPgybA';
 		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
 		
-		//引入ping++
-		require_once APPPATH.'third_party/pingpp/init.php';
-		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
-		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
-		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
-		
-		\pingpp\Pingpp::setApiKey($test_key);
+// 		//引入ping++
+// 		require_once APPPATH.'third_party/pingpp/init.php';
+// 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
+// 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
+// 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
+// 		\pingpp\Pingpp::setApiKey($test_key);
 		//本地用户数据保存
 		
 	}
@@ -154,9 +153,11 @@ class Api extends CI_Controller{
 		$this->AVSms->mobilePhoneNumber = $this->input->post('phone');
 		$this->AVSms->smsCode = $this->input->post('smsCode');
 		try {
+			//echo $this->input->post('phone');
 			$res = $this->AVSms->verifySmsCode();
 			$this->echo_msg(true,'验证码有效');
 		} catch (Exception $e) {
+			//echo $this->input->post('phone');;
 			$this->echo_msg(false,$e->error_msg);
 		}
 	}

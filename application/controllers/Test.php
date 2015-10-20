@@ -20,7 +20,9 @@ class Test extends CI_Controller{
 	public function index(){
 		$cart = new MY_Cart();
 		//($cart->addItem('123', '4567'));
-		$cart->deleteItem('Fteg9ocVkLv0NHFTRd0kB3KUqxG-');
-		var_dump($cart->getItems());
+		//$cart->deleteItem('Fteg9ocVkLv0NHFTRd0kB3KUqxG-');
+		//var_dump($cart->getItems());
+		$order = new MY_Order();
+		$order->createPingPay();
 	}
 }

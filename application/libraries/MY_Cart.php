@@ -8,7 +8,7 @@ require_once 'MY_Base_Class.php';
 class MY_Cart extends MY_Base_Class{
 	private $userId;
 	private $AVObject;
-	
+	protected $AVQuery;
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
@@ -98,6 +98,23 @@ class MY_Cart extends MY_Base_Class{
 			}
 			
 		}else {
+			return false;
+		}
+	}
+	
+	/*
+	 * 生成订单，清空删除购物车
+	 */
+	public function deleteAll(){
+		$res = $this->AVQuery->find()->results;
+		$id = $res[0]->objectId;
+		$items = array();
+		try {
+			$this->AVObject->items = $items;
+			$this->AVObject->update($id);
+			return true;
+		} catch (AVLibraryException $e) {
+			echo $e->error_msg;
 			return false;
 		}
 	}
