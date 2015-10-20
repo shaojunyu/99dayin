@@ -4,11 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <link rel="stylesheet" type="text/css" href="styles/center.css">
-    <script type="text/javascript">
-    var Orders = []; //从后台获取订单信息
-    var HisOrder = []; //历史订单
-    </script>
+    <link rel="stylesheet" type="text/css" href="../styles/center.css">
+    
     <title>99打印</title>
 </head>
 
