@@ -90,50 +90,50 @@
             </div>
         </div>
     </div>
-    <div class="signin-frame" id="signin-frame">
-        <div class="header-btn"><span class="login-btn">登录</span><span class="active signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
-        <div class="register">
-            <div class="row">
-                <span class="des">用户名：</span>
-                <input type="text" class="username" data-iden='0'>
-                <i></i>
-            </div>
-            <div class="row">
-                <span class="des">密码：</span>
-                <input type="password" class="ps"data-iden='0'> 
-                <i></i>
-            </div>
-            <div class="row">
-                <span class="des">确认密码：</span>
-                <input type="password" class="confir-ps" data-iden='0'>
-                <i></i>
-            </div>
-            <div class="row">
-                <span class="des">手机号码：</span>
-                <input type="text" class="phone" data-iden='0'>
-                <i></i>
-            </div>
-            <div class="row">
-                <span class="des">验证码：</span>
-                <input class="CF-code" type="text" class="secu-code" data-iden='0'>
-                <button class="comfir-btn" class="send-SC">发送验证码</button>
-                <i ></i>
-            </div>
-            <div class="row">   
-                <span class="des">学校：</span>
-                <select type="text" class="college" name='school' data-iden='1'>
-                    <option value="华中科技大学">华中科技大学</option>
-                    <option value="武汉大学">武汉大学</option>
-                    <option value="华中师范大学">华中师范大学</option>
-                    <option value="中南财经政法大学">中南财经政法大学</option>
-                </select>
-                <i></i>
-            </div>
-        </div>
-        <div>
-            <button class="confirm-btn enroll">确 认</button>
-        </div>
-    </div>
+   <div class="signin-frame" id="signin-frame">
+          <div class="header-btn"><span class="login-btn">登录</span><span class="active signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
+          <div class="register">
+              <div class="row">
+                  <span class="des">用户名：</span>
+                  <input type="text" class="username" data-iden='0'>
+                  <i></i>
+              </div>
+              <div class="row">
+                  <span class="des">密码：</span>
+                  <input type="password" class="ps" data-iden='0'>
+                  <i></i>
+              </div>
+              <div class="row">
+                  <span class="des">确认密码：</span>
+                  <input type="password" class="confir-ps" data-iden='0'>
+                  <i></i>
+              </div>
+              <div class="row">
+                  <span class="des">手机号码：</span>
+                  <input type="text" class="phone" data-iden='0'>
+                  <i></i>
+              </div>
+              <div class="row">
+                  <span class="des">验证码：</span>
+                  <input class="CF-code secu-code" type="text" data-iden='0'>
+                  <button class="comfir-btn" class="send-SC">发送验证码</button>
+                  <i></i>
+              </div>
+              <div class="row">
+                  <span class="des">学校：</span>
+                  <select type="text" class="college" name='school' data-iden='1'>
+                      <option value="华中科技大学">华中科技大学</option>
+                      <option value="武汉大学">武汉大学</option>
+                      <option value="华中师范大学">华中师范大学</option>
+                      <option value="中南财经政法大学">中南财经政法大学</option>
+                  </select>
+                  <i></i>
+              </div>
+          </div>
+          <div>
+              <button class="confirm-btn enroll">确 认</button>
+          </div>
+      </div>
     
     <script src="js/lib/require.js" data-main="js/entry/99print.js"></script>
 

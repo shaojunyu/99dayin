@@ -1,4 +1,7 @@
 
+    /*
+    * 显示目标元素，或者隐藏目标元素
+    */
     function toggleShow($target){
             if($target.css('display')==='none'){
                 $target.show();
@@ -6,6 +9,12 @@
                 $target.hide();
             }
         }
+        /*
+        * 切换绑定的class名,移除siblings含有的class名
+        */
+    function changeClass($target,classname){
+        $target.addClass(classname).siblings().removeClass(classname);
+    }
         /*
         *绑定滚动条
         */
@@ -23,6 +32,11 @@
             arr.push(iscroll);
         })
         return arr;
+    }
+    function refreshScroll(arr){
+        arr.forEach(function(val){
+            val.refresh();  //刷新scroll滚动条
+        })
     }
         /*
         * 发送ajax函数

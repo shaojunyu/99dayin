@@ -46,7 +46,8 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
             getOfficial: '', //得到文库数据
             pay: '', //去支付
             search: '', //搜索
-            confirm: '../index.php/api/uploadACK' //上传成功后的给后台发送验证
+            confirm: '../index.php/api/uploadACK', //上传成功后的给后台发送验证
+            remove:'../index.php/api/deleteCartItem'  //删除购物车
         }
         /*
          * 检查id是否和传入的一致
@@ -225,7 +226,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         filesArray: new Array(), //用户自己上传的文件
         official: new Array(), //用户挑选官方提供的文件
 
-        getFiles: function() {
+        init: function() {
             var modify = [1], //用来表示唯一性
                 copy = [],
                 _this = this;
@@ -301,6 +302,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                             console.log(data);
                                             if(data.success){
                                                 _this.addFiles(file, date, size,data.msg);
+                                                _this.changeInputText(1);
                                                 prompt.changeInfo('上传成功!');
                                             }else{
                                                 prompt.changeInfo('上传失败!');
@@ -323,8 +325,6 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                     //输出提示
                 }
                 //修改购物车
-                _this.changeInputText(modify.length - 1);
-                //发送请求，获得下载口令，然后上传
 
             });
 
@@ -355,8 +355,9 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                 }
             });
         },
-        changeInputText: function(num) {
-            this.content_a.attr('data-num', num);
+        changeInputText: function(amount) {
+            var num = Number(this.content_a.attr('data-num'));
+            this.content_a.attr('data-num', num+amount);
         },
         addFiles: function(file, date, size,mark) {
             var name = file.name.toLowerCase(),
@@ -415,7 +416,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         },
         deleteItem: function($target, modify) {
             var li = $target.parents('li'),
-                mark = Number($target.attr('data-mark')),
+                mark = $target.attr('data-mark'),
                 area = $target.attr('data-area'),
                 loca = null;
             for (var i = 0; i < modify.length; i++) {
@@ -428,14 +429,29 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                 modify.splice(loca, 1);
             }
             if (area === 'self') {
-                this.findIndex(this.filesArray, mark);
-                this.changeInputText(modify.length - 1);
+                this.findIndex(this.filesArray, mark);                
             } else {
                 this.findIndex(this.official, mark);
             }
+            console.log(mark);
+            $.ajax({
+                url:Pathurl.remove,
+                type:'POST',
+                data:{
+                    mark:mark
+                }
+            }).then(function(data){
+                if(data.success){
+                    prompt.changeInfo('删除成功!');
+                    error.removeLi(li); //删除指定元素
+                    this.changeInputText(-1);
+                }else{
+                    prompt.changeInfo('删除失败!');
+                }
+            })
         }
     }
-    upload.getFiles();
+    upload.init();
     /*
      * 定义购物车出现移除icon的操作
      */
@@ -460,14 +476,6 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
             mouseout: function(e) {
                 var $target = e.target.tagName === "LI" ? $(e.target) : $(e.target).parents('li');
                 error.hideError($target);
-            },
-            //删除选中的li
-            click: function(e) {
-                var $target = $(e.target);
-                if ($target.hasClass('logo-error')) {
-                    error.removeLi($target);
-                }
-
             }
         })
         //购物车
