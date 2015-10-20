@@ -152,7 +152,7 @@
 				<i class="shopping-uparrow " id="shopping-arrow"></i>
 				<div class="shopping-btn">
 					<!-- <button id="show-store">查看打印车</button> -->
-					<button id="show-shopping">前去结算</button>
+					<a id="show-shopping">前去结算</a>
 					<span class="scroll-frame"></span>
 				</div>
 			</div>

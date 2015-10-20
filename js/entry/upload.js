@@ -188,8 +188,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
                                         processData: false,
                                         contentType: false
                                     }).done(function(data) {
-                                        var ID = $('.name').text(), //用户ID
-                                        
+                                        var ID = $('.name').text(); //用户ID
                                         $.ajax({
                                             url: Pathurl.confirm,
                                             type: 'POST',
@@ -200,7 +199,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
                                             }	
                                         })
                                         .progress(function(filledFileds){
-                                            var processor = 
+                                     
                                         })
                                         .done(function(data){
                                             console.log(data);
