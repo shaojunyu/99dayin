@@ -135,8 +135,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     dataType: 'json',
                     data: {
                         'username': username,
-                        'ps': ps,
-                        'iden': iden
+                        'ps': ps
                     },
                     success: function(data) {
                         if (data.success) {

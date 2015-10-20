@@ -7,11 +7,12 @@ require.config({
         'prompt': 'entry/function/prompt', //提示模块
         'utility': 'entry/utility/utility', //基本工具函数
         'qiniu': 'lib/qiniu/qiniu.min', //7牛
-        'plupload': 'lib/qiniu/plupload.full.min'
+        'plupload': 'lib/qiniu/plupload.full.min',
+        'header':'entry/header'
     }
 });
 "use strict";
-require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], function($, iscroll, prompt) {
+require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header'], function($, iscroll, prompt) {
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -52,109 +53,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         /*
          * 检查id是否和传入的一致
          */
-    var login = {
-        $username: $('.login-account'),
-        $ps: $('.login-ps'),
-        $iden: $('.login-choice>div.active'), //不同的登录方式
-        title: $('.title-btn'), //获取title-btn如果点击用户名则显示相应的信息
-        detail: $('.detail-btn'), //获得个人信息列表
-        print_btn: $('.print-btn'), //打印按钮
-        getText: function($target) {
-            return $target.val();
-        },
-        /*
-         * 检验用户以哪种方式登录
-         * 0为用户登录
-         * 1为打印店登录
-         */
-        getIden: function() {
-            var active = this.$iden;
-            if (active.hasClass('user-login')) {
-                return 0;
-            } else {
-                return 1;
-            }
-        },
-        linkSuccess: function(data) {
-            if (data.success) {
-                //登录成功
-            } else {
-                //登录失败
-            }
-        },
-        afterLogin: function(name) {
-            this.print_btn.attr('href', Pathurl.upload);
-            this.title.html('<a class="name">' + name + '/a>');
-        },
-        beforeLogin: function() {
-            this.print_btn.attr('href', "javascript:void(0)");
-            this.title.html('<span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>');
-        },
-        init: function() {
-            var _this = this;
-            $('.login-btn').on('click', function() {
-                var username = _this.getText(_this.$username),
-                    ps = _this.getText(_this.$ps),
-                    iden = _this.getIden();
-                sendAjax({
-                    url: Pathurl.login,
-                    dataType: 'json',
-                    data: {
-                        'username': username,
-                        'ps': ps,
-                        'iden': iden
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            window.location.href = './';
-                        } else {
-                            prompt.changeInfo(data.msg);
-                        }
-                    }
-                });
-            });
-            $('.QQ-login').on('click', function() {
-                sendAjax({
-                    url: Pathurl.Linklogin,
-                    data: {
-                        'login_method': 'QQ'
-                    },
-                    success: _this.linkSuccess
-                })
-            });
-            this.title.on('click', function(e) {
-                var $target = $(e.target);
-                if ($target.hasClass('name')) {
-                    toggleShow(_this.detail);
-                } else if ($target.hasClass('login')) {
-                    detectShow(login_frame, true);
-                } else if ($target.hasClass('signin')) {
-                    detectShow(signin_frame, false);
-                }
-            });
-            this.detail.on('click', function(e) {
-                var $target = $(e.target);
-                if ($target.hasClass('logout')) {
-                    sendAjax({
-                        url: Pathurl.logout,
-                        success: function(data) {
-                            if (data.success) {
-                                window.location.href = './';
-                            } else {
-                                prompt.changeInfo(data.msg);
-                            }
-                        }
-                    })
-                }
-            });
-            this.print_btn.on('click', function() {
-                if ($(this).attr('data-log') != 0) {
-                    detectShow(login_frame, true);
-                }
-            })
-        }
-    }
-    login.init();
+  
     $(".fn-choice").on('click', function(e) {
             var $target = $(e.target),
                 _id = $target.attr('id'),
@@ -289,7 +188,8 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                         processData: false,
                                         contentType: false
                                     }).done(function(data) {
-                                        var ID = $('.name').text(); //用户ID
+                                        var ID = $('.name').text(), //用户ID
+                                        
                                         $.ajax({
                                             url: Pathurl.confirm,
                                             type: 'POST',
@@ -298,7 +198,11 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
                                                 username: ID,
                                                 filename: name
                                             }	
-                                        }).done(function(data){
+                                        })
+                                        .progress(function(filledFileds){
+                                            var processor = 
+                                        })
+                                        .done(function(data){
                                             console.log(data);
                                             if(data.success){
                                                 _this.addFiles(file, date, size,data.msg);
@@ -743,4 +647,5 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload'], functio
         }
     }
     Search.init();
+
 })
