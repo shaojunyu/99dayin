@@ -18,11 +18,9 @@ class Test extends CI_Controller{
 	}
 	
 	public function index(){
-
-		//$qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
- 		//$bucket = new BucketManager($qiniu_auth);
- 		$bucketManager = new BucketManager($this->qiniu_auth);
- 		var_dump($bucketManager->listFiles('dayin'));
- 		var_dump($bucketManager->stat('dayin', 'doxmate-master.zip'));
+		$cart = new MY_Cart();
+		//($cart->addItem('123', '4567'));
+		$cart->deleteItem('Fteg9ocVkLv0NHFTRd0kB3KUqxG-');
+		var_dump($cart->getItems());
 	}
 }

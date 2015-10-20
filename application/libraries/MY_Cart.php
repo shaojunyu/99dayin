@@ -1,6 +1,7 @@
 <?php
 use leancloud\AVQuery;
 use leancloud\AVObject;
+use leancloud\AVLibraryException;
 
 require_once 'MY_Base_Class.php';
 //自定义购物车类
@@ -11,13 +12,14 @@ class MY_Cart extends MY_Base_Class{
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
+		
 		if (!empty($this->userId)) {
 			$this->AVQuery = new AVQuery('Cart');
 			$this->AVQuery->where('userId', $this->userId);
 			if (!$this->AVQuery->find()->results) {
 				$cart = new AVObject('Cart');
 				$cart->userId = $this->userId;
-				$cart->items = json_encode(array());
+				$cart->items = array();
 				$cart->save();
 			}
 		}
@@ -28,7 +30,6 @@ class MY_Cart extends MY_Base_Class{
 	public function getItems(){
 		$res = $this->AVQuery->find()->results;
 		$items = $res[0]->items;
-		$items = json_decode($items);
 		if ($items) {
 			return $items;
 		}else {
@@ -40,81 +41,83 @@ class MY_Cart extends MY_Base_Class{
 	public function addItem($filename,$fileHash){
 		$res = $this->AVQuery->find()->results;
 		$id = $res[0]->objectId;
-		$orign = $res[0]->items;
-		$orign = json_decode($orign);
-		if ($orign) {
-			$item = array(
-				'filename'=>$filename,
-				'fileHash'=>$fileHash,
-					'amount'=>1,
-					'price'=>(float)0.1
-			);
-			$isIn = false;
-			foreach ($orign as $one){
-				if ($item['fileHash'] == $one->fileHash) {
-					$isIn = true;
-					continue;
-				}
+		$items = $res[0]->items;
+		//判断文件是否已存在购物车
+		$isIn = false;
+		foreach ($items as $one){
+			if ($one->fileHash == $fileHash) {
+				$isIn = true;
+				continue;
 			}
-			if(!$isIn){
-				array_push($orign,$item);
+		}
+		
+		if(!$isIn){
+			$item = new item($filename, $fileHash);
+			$items[] = $item;
+			//更新购物车
+			try {
+				$this->AVObject->items = ($items);
+				$this->AVObject->update($id);
+				return true;
+			} catch (Exception $e) {
+				return false;
 			}
-			$new = $orign;
-		}else {
-			$new = array(array(
-				'filename'=>$filename,
-				'fileHash'=>$fileHash,
-					'amount'=>1,
-					'price'=>(float)0.1
-			));
 		}
-		//更新购物车
-		try {
-			$this->AVObject->items = json_encode($new);
-			$this->AVObject->update($id);
-			return true;
-		} catch (Exception $e) {
-			return $e;
-		}
-
+		return true;
 	}
 	
 	public function deleteItem($fileHash){
-		if (empty($fileHash)) {
-			return '参数错误';
-		}
+
 		$res = $this->AVQuery->find()->results;
 		$id = $res[0]->objectId;
-		$orign = $res[0]->items;
-		$orign = json_decode($orign);
-		if ($orign) {
-			$isIn = false;
-			$key = 0;
-			foreach ($orign as $one){
-				if ($fileHash == $one->fileHash) {
-					$isIn = true;
-					break;
-				}
-				$key++;
+		$items = $res[0]->items;
+		
+		//判断文件是否存在
+		$isIn = false;
+		$key = 0;
+		foreach ($items as $one){
+			if ($one->fileHash == $fileHash) {
+				$isIn = true;
+				break;
 			}
-			if($isIn){
-				unset($orign[$key]);
-				//return $orign;
-			}else {
-				return '文件不存在';
-			}
-			$new = $orign;
-		}else {
-			return '文件不存在';
+			$key++;
 		}
-		//更新购物车
-		try {
-			$this->AVObject->items = json_encode($new);
-			$this->AVObject->update($id);
-			return true;
-		} catch (Exception $e) {
-			return $e;
+		if ($isIn) {
+			//var_dump($items);
+			//echo  $key;
+			array_splice($items,$key,1);
+			//var_dump($items);
+			//更新购物车
+			try {
+				$this->AVObject->items = $items;
+				$this->AVObject->update($id);
+				return true;
+			} catch (AVLibraryException $e) {
+				echo $e->error_msg;
+				return false;
+			}
+			
+		}else {
+			return false;
 		}
 	}
 	
+}
+
+
+
+class item{
+	var $filename;
+	var $fileHash;
+	var $count = 1;
+	var $price = 0;
+	
+	public function __construct($filename,$fileHash){
+		$this->filename = $filename;
+		$this->fileHash = $fileHash;
+	}
+	
+	public function __set($key,$value){
+		$this->$key = $value;
+	}
 }

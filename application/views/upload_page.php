@@ -24,7 +24,7 @@
 		<article class="file-content" id="file-content">
         	<?php
 									$cart = new MY_Cart ();
-									$items = $cart->getItems ();
+									$items = $cart->getItems();
 									?>
             <a class="container-upload" href="javascript:void(0)"
 				data-num='<?php echo count($items)?>'>上传文件<input class="upload"
@@ -170,7 +170,8 @@
 								<p class="file-header"><?php echo $item->filename?></p>
 								<p>
 									上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb
-								</p> <i class="logo-error" data-mark="<?php echo $item->fileHash?>" data-area="self"></i></li>
+								</p> <i class="logo-error" data-mark="<?php echo $item->fileHash?>" data-area="self"></i>
+							</li>
                             
                             <?php }}?>
                         </ul>
