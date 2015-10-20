@@ -45,9 +45,9 @@ class Api extends CI_Controller{
 	}
 	public function test(){
 		$cart = new MY_Cart();
-		//$cart->addItem('123', 'dadsad');
+		$cart->addItem('123', 'dadsad');
 		//var_dump($cart->deleteItem('dadsad'));
-		var_dump($cart->getItems());
+		//var_dump($cart->getItems());
 		
 		
 // 		$cart = new AVObject('Cart');
@@ -211,7 +211,7 @@ class Api extends CI_Controller{
 		$fileHash = $this->input->post('mark');
 		
 		$cart = new MY_Cart();
-		if ($cart->deleteItem($fileHash) != true) {
+		if ($cart->deleteItem($fileHash)) {
 			$this->echo_msg(true,'删除成功');
 		}else {
 			$this->echo_msg(false,'删除失败，请重试');
