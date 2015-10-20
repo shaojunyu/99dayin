@@ -91,9 +91,10 @@ class Api extends CI_Controller{
 		$phone = $this->input->post('phone');
 		$college = $this->input->post('college');
 		
-		$this->AVUser->phone = $phone;
-		$this->AVUser->college = $college;
+
 		try {
+			$this->AVUser->mobilePhoneNumber = $phone;
+			$this->AVUser->college = $college;
 			$this->AVUser->signup($username,$password);
 			$this->echo_msg(true,'注册成功');
 			$this->session->set_userdata(array('username'=>$username));
@@ -236,11 +237,14 @@ class Api extends CI_Controller{
 	}
 	
 	//订单相关
-	public function create_order(){
+	public function createPay(){
 		//订单状态
 		//购物车->确认订单（完善，确认订单信息）->提交订单->支付订单->商家打印->等待配送->完成订单
-		$username = $this->input->post('username');
-		$files = $this->input->post('files');
+// 		$username = $this->input->post('username');
+// 		$files = $this->input->post('files');
+		$order = new MY_Order();
+		$charge = $order->createPingPay();
+		echo ($charge);
 	}
 	
 	

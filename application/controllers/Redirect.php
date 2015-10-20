@@ -21,7 +21,7 @@ class Redirect extends CI_Controller{
 	//img文件
 	public function img($img = null){
 		//echo base_url('img/'.$pa);
-		//header('<!DOCTYPE html>');
+		header('<!DOCTYPE html>');
 		header("Location: ".base_url('img/'.$img));
 		//var_dump($pa);
 	}

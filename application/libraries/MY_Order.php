@@ -81,7 +81,7 @@ class MY_Order extends MY_Base_Class{
 					'client_ip' => '127.0.0.1',
 					'app'       => array('id' => $this->pingpp_app_id)
 			));
-			var_dump($ch);
+			return ($ch);
 		} catch (\Pingpp\Error\Base $e) {
     		header('Status: ' . $e->getHttpStatus());
     		echo($e->getHttpBody());
