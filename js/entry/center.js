@@ -9,12 +9,12 @@ require.config({
         'prompt': 'entry/function/prompt', //提示模块
         'enroll': 'entry/function/enroll', //注册模块
         'img': 'entry/function/deal-img',
-        'ping++': 'lib/pingpp-pc', //ping++插件
+        'ping': 'lib/pingpp-pc', //ping++插件
         'modal': 'lib/jquery.simplemodal' //模态框插件
     }
 })
 "use strict";
-require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], function($, scroll, util, prompt, enroll, ping, modal) {
+require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], function($, scroll, util, prompt, enroll, modal) {
     //绑定滚动条
     var Iscroll = bindScroll($('.container'));
     prompt = new prompt.Prompt({
@@ -56,7 +56,8 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
         changeInfo: '', //修改个人信息
         sendImg: '', //发送身份证，学生证图片
         promptPs: '', //修改密码
-        username: '' // 验证用户名是否存在
+        username: '', // 验证用户名是否存在
+        createPay: '../index.php/api/createPay' //获得支付凭证
 
     }
     var Order = {
@@ -124,21 +125,18 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
                         money = li.find('.money').text(); //获取总价    
                     openModal(_this.checkout_modal, false);
                     $.ajax({
-                        url: Pathurl.go_pay,
-                        data: {
-                            num: num, //订单号
-                            money: money
-                        },
-                        success: function(data) {
-                            if (data.success) {
+                            url: Pathurl.createPay
+
+                        })
+                        .done(function(data) {
                                 //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
-                            } else {
-                                prompt.changeInfo("支付出错，请重新支付!");
-                            }
-                        }
-                    });
+                                pingppPc.createPayment(data, function(result, err) {
+                                    console.log(result);
+                                      console.log(err);  
+                                });
+                        })
                 }
             });
             this.order_btn.on('click', function(e) {
@@ -426,7 +424,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
         pay: $('.paying'), //订单支付模态框
         close: $('.close'), //关闭btn
         paying_btn: $('.paying-btn button'), //支付button
-        all_num:$('.order-num'), //获取所有的未处理订单        
+        all_num: $('.order-num'), //获取所有的未处理订单        
         deleteOrder: function($target) {
             var parent_li = $target.parents('li'),
                 order_num = $target.attr('data-order'),
@@ -483,9 +481,9 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
                         // //删除订单之后，需要将该订单，移动到历史订单里
                         // this.pay.attr('data-num','');
                         prompt.changeInfo('您的支付成功，请稍等订单消息~~');
-                        setTimeout(function(){
-                            window.location.href="./"; //刷新页面
-                        },1000);
+                        setTimeout(function() {
+                            window.location.href = "./"; //刷新页面
+                        }, 1000);
                     } else {
                         prompt.changeInfo('sorry~~您的订单支付不成功，请重新支付');
                     }
@@ -494,9 +492,13 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
             });
         },
         init: function() {
-            var _this =this;
-            this.close.on('click',this.checkOrder);
+            var _this = this;
+            this.close.on('click', this.checkOrder);
         }
     }
     Modal.init();
+    /*
+     * 支付
+     */
+
 })

@@ -109,4 +109,4 @@ define(['jquery'],function($){
        }
 
     login.init();
-})
+});

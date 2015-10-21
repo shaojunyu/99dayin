@@ -22,7 +22,7 @@ class MY_Order extends MY_Base_Class{
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
-		\pingpp\Pingpp::setApiKey($test_key);
+		\pingpp\Pingpp::setApiKey($live_key);
 	}
 	
 	public function createOrder(){
@@ -67,6 +67,13 @@ class MY_Order extends MY_Base_Class{
 				$extra = array(
 				'product_id' => '123456'
 						);
+				break;
+			case 'wx_pub':
+				$extra = array(
+					'open_id' => 'wxd781831d64bb0674');
+				break;
+			default:
+				$extra = array();
 				break;
 		}
 		try {

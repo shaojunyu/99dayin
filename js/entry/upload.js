@@ -6,13 +6,11 @@ require.config({
         'modal': 'lib/jquery.simplemodal',
         'prompt': 'entry/function/prompt', //提示模块
         'utility': 'entry/utility/utility', //基本工具函数
-        'qiniu': 'lib/qiniu/qiniu.min', //7牛
-        'plupload': 'lib/qiniu/plupload.full.min',
-        'header':'entry/header'
+        'header': 'entry/header'
     }
 });
 "use strict";
-require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header'], function($, iscroll, prompt) {
+require(['jquery', 'iscroll', 'prompt', 'utility', 'header'], function($, iscroll, prompt) {
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -26,6 +24,48 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
     function toggleContent($first, $second) {
         $first.show();
         $second.hide();
+    }
+
+    function process(url, opts) {
+        var xhr = new XMLHttpRequest(),
+            def = $.Deferred(),
+            $upload = $('.upload'); //上传按钮
+        xhr.open('POST', url, true);
+        xhr.upload.onprogress = function(e) { //处理进度条事件 
+            $upload.addClass('pending')
+            .prop('disabled',true);
+            if (e.lengthComputable) { //表示
+                var num = (e.loaded / e.total) * 100
+                if(num>=100){
+                    def.resolve();
+                }
+                prompt.changeInfo(num.toFixed(2)+'%');
+            }
+        };
+        def.done(function(e) {
+            prompt.changeInfo('上传成功！');
+            var ID = $('.name').text(); //用户ID
+            $.ajax({
+                    url: Pathurl.confirm,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        username: ID,
+                        filename: opts.name
+                    }
+                })
+                .done(function(data) {   
+                    $upload.removeClass('pending')
+                    .prop('disabled',false);
+                    if (data.success) {
+                       opts.successFn();
+                    } else {
+                        prompt.changeInfo('上传失败!');
+                    }
+                })
+
+        });
+        xhr.send(opts.form);
     }
 
     function refresh() {
@@ -48,12 +88,12 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
             pay: '', //去支付
             search: '', //搜索
             confirm: '../index.php/api/uploadACK', //上传成功后的给后台发送验证
-            remove:'../index.php/api/deleteCartItem'  //删除购物车
+            remove: '../index.php/api/deleteCartItem' //删除购物车
         }
         /*
          * 检查id是否和传入的一致
          */
-  
+
     $(".fn-choice").on('click', function(e) {
             var $target = $(e.target),
                 _id = $target.attr('id'),
@@ -168,55 +208,63 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
                             'mark': flag, //表示文件唯一性
                             'type': files[i].name.substring(files[i].name.indexOf('.') + 1) //文件类型
                         }
-                        _this.filesArray.push(Data);                        
+                        _this.filesArray.push(Data);
                         copy.push(flag);
 
                         form[i].append('file', files[i]);
                         form[i].append('key', files[i].name);
                         console.log(form[i]);
-                        (function(form, name,file) {
+                        (function(form, name, file) {
                             $.ajax({
                                 url: Pathurl.getToken //得到getToken的地址
                             }).done(function(data) {
                                 //发送文件                                    
-                                if (data.success) {                                    
-                                    form.append('token', data.msg);                                    
-                                    $.ajax({
-                                        url: 'http://up.qiniu.com',
-                                        type: 'POST',
-                                        data: form,
-                                        processData: false,
-                                        contentType: false
-                                    }).done(function(data) {
-                                        var ID = $('.name').text(); //用户ID
-                                        $.ajax({
-                                            url: Pathurl.confirm,
-                                            type: 'POST',
-                                            dataType:'json',
-                                            data: {
-                                                username: ID,
-                                                filename: name
-                                            }	
-                                        })
-                                        .progress(function(filledFileds){
-                                     
-                                        })
-                                        .done(function(data){
-                                            console.log(data);
-                                            if(data.success){
-                                                _this.addFiles(file, date, size,data.msg);
-                                                _this.changeInputText(1);
-                                                prompt.changeInfo('上传成功!');
-                                            }else{
-                                                prompt.changeInfo('上传失败!');
-                                            }
-                                        })
-                                    })
+                                if (data.success) {
+                                    form.append('token', data.msg);
+                                    var obj = {
+                                        form: form,
+                                        name:name,
+                                        successFn: function() {
+                                            _this.addFiles(file, date, size, data.msg);
+                                            _this.changeInputText(1);
+                                            prompt.changeInfo('上传成功!');
+                                        }
+                                    }
+                                    process('http://up.qiniu.com', obj);
+                                    // $.ajax({
+                                    //     url: 'http://up.qiniu.com',
+                                    //     type: 'POST',
+                                    //     data: form,
+                                    //     processData: false,
+                                    //     contentType: false
+                                    // })
+                                    // .done(function(data) {
+                                    //     var ID = $('.name').text(); //用户ID
+                                    //     $.ajax({
+                                    //         url: Pathurl.confirm,
+                                    //         type: 'POST',
+                                    //         dataType:'json',
+                                    //         data: {
+                                    //             username: ID,
+                                    //             filename: name
+                                    //         }    
+                                    //     })                                        
+                                    //     .done(function(data){
+                                    //         console.log(data);
+                                    //         if(data.success){
+                                    //             _this.addFiles(file, date, size,data.msg);
+                                    //             _this.changeInputText(1);
+                                    //             prompt.changeInfo('上传成功!');
+                                    //         }else{
+                                    //             prompt.changeInfo('上传失败!');
+                                    //         }
+                                    //     })
+                                    // })
                                 } else {
                                     prompt.changeInfo('网络问题,请重新上传!');
                                 }
                             })
-                        })(form[i], files[i].name,files[i]);
+                        })(form[i], files[i].name, files[i]);
 
                     }
                 }
@@ -260,9 +308,9 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
         },
         changeInputText: function(amount) {
             var num = Number(this.content_a.attr('data-num'));
-            this.content_a.attr('data-num', num+amount);
+            this.content_a.attr('data-num', num + amount);
         },
-        addFiles: function(file, date, size,mark) {
+        addFiles: function(file, date, size, mark) {
             var name = file.name.toLowerCase(),
                 index = name.indexOf('.'),
                 mark = mark;
@@ -321,7 +369,8 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
             var li = $target.parents('li'),
                 mark = $target.attr('data-mark'),
                 area = $target.attr('data-area'),
-                loca = null;
+                loca = null,
+                _this = this;
             for (var i = 0; i < modify.length; i++) {
                 if (modify[i] === mark) {
                     loca = i;
@@ -332,23 +381,24 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
                 modify.splice(loca, 1);
             }
             if (area === 'self') {
-                this.findIndex(this.filesArray, mark);                
+                this.findIndex(this.filesArray, mark);
             } else {
                 this.findIndex(this.official, mark);
             }
             console.log(mark);
             $.ajax({
-                url:Pathurl.remove,
-                type:'POST',
-                data:{
-                    mark:mark
+                url: Pathurl.remove,
+                type: 'POST',
+                data: {
+                    mark: mark
                 }
-            }).then(function(data){
-                if(data.success){
+            }).then(function(data) {
+                if (data.success) {
                     prompt.changeInfo('删除成功!');
                     error.removeLi(li); //删除指定元素
-                    this.changeInputText(-1);
-                }else{
+                    console.log(li);
+                    _this.changeInputText(-1);
+                } else {
                     prompt.changeInfo('删除失败!');
                 }
             })
@@ -366,7 +416,7 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'qiniu', 'plupload','header']
             $target.find('.logo-error').hide();
         },
         removeLi: function($target) {
-            $target.parents('li').detach();
+            $target.detach();
         }
     }
     $('.files-content').on({

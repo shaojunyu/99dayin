@@ -6,6 +6,7 @@
          'modal': 'lib/jquery.simplemodal',
          'utility': 'entry/utility/utility',
          'prompt': 'entry/function/prompt', //提示模块
+   
      }
  });
  require(['jquery', 'utility', 'scroll', 'prompt'], function($, util, scroll, prompt) {
@@ -18,6 +19,7 @@
          checkout: '', //发送结算信息给后台
          center: '', //用户中心的地址
          back:'',
+         
      }
      var Iscroll = bindScroll($('.container'));
      //!!!!! FileMarks已经在网页脚本中定义，可以直接获取
@@ -286,5 +288,5 @@
              }
          })
      });
-
+ 
  })
