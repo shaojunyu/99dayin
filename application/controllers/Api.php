@@ -237,6 +237,16 @@ class Api extends CI_Controller{
 	}
 	
 	//订单相关
+	public function createOrder(){
+		try{
+			$order = new MY_Order();
+			$order->createOrder();
+			$this->echo_msg(true,'成功');
+		}catch (MY_Exception $e){
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
+
 	public function createPay(){
 		//订单状态
 		//购物车->确认订单（完善，确认订单信息）->提交订单->支付订单->商家打印->等待配送->完成订单

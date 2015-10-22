@@ -16,6 +16,7 @@ require.config({
 "use strict";
 require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], function($, scroll, util, prompt, enroll, modal) {
     //绑定滚动条
+  
     var Iscroll = bindScroll($('.container'));
     prompt = new prompt.Prompt({
         prompt: $('.prompt')
@@ -125,13 +126,17 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
                         money = li.find('.money').text(); //获取总价    
                     openModal(_this.checkout_modal, false);
                     $.ajax({
-                            url: Pathurl.createPay
-
+                            url: Pathurl.createPay,
+                            async:false,
+                            dataType:'JSON'
                         })
                         .done(function(data) {
                                 //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
+                                  window.open('./user/pay?orderId='+data.order_no);
+                                  console.log(data);
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
+                              
                                 
                         })
                 }
