@@ -25,6 +25,7 @@ class MY_Order extends MY_Base_Class{
 		\pingpp\Pingpp::setApiKey($live_key);
 	}
 	
+	//创建成功，返回订单号
 	public function createOrder(){
 		$this->AVQuery->where('userId', $this->userId);
 		$this->AVQuery->where('state', orderState::UNPAID);
@@ -46,10 +47,10 @@ class MY_Order extends MY_Base_Class{
 		$this->AVOrder->items = $items;
 		$this->AVOrder->price = 10;
 		$this->AVOrder->state = orderState::UNPAID;
-		$this->AVOrder->save();
+		$order = $this->AVOrder->save();
 		$this->cart->deleteAll();
 		//创建ping++ 支付订单
-		
+		return $order;
 		
 	}
 	
@@ -92,12 +93,26 @@ class MY_Order extends MY_Base_Class{
 					'client_ip' => '127.0.0.1',
 					'app'       => array('id' => $this->pingpp_app_id)
 			));
+			
+			//更新订单的信息
+			
 			return ($ch);
+			
+			
+			
 		} catch (\Pingpp\Error\Base $e) {
     		header('Status: ' . $e->getHttpStatus());
     		echo($e->getHttpBody());
 		}
 		
+	}
+	
+	/*
+	 * 获取支付信息
+	 */
+	public function getChargeInfo($chargeId){
+		$ch = Pingpp\Charge::retrieve($chargeId,array());
+		return $ch;
 	}
 	
 	public function payOrder(){

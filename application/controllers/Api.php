@@ -240,7 +240,7 @@ class Api extends CI_Controller{
 	public function createOrder(){
 		try{
 			$order = new MY_Order();
-			$order->createOrder();
+			$orderId = $order->createOrder();
 			$this->echo_msg(true,'成功');
 		}catch (MY_Exception $e){
 			$this->echo_msg(false,$e->error_msg);

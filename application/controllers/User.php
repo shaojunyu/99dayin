@@ -25,6 +25,15 @@ class User extends CI_Controller{
 	}
 	
 	function pay() {
-		$this->load->view('pay_page');
+		$chargeId = $this->input->get('chargeId');
+		if (empty($chargeId)) {
+			echo '无效订单号！';
+			exit();
+		}else {
+			$order = new MY_Order();
+			$charge = $order->getChargeInfo($chargeId);
+			$this->load->view('pay_page',array('charge'=>$charge));
+		}
+		//$this->load->view('errors/html/error_general.php');
 	}
 }
