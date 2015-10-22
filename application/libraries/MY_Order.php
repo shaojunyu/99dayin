@@ -59,13 +59,17 @@ class MY_Order extends MY_Base_Class{
 		$this->AVQuery->where('state', orderState::UNPAID);
 		
 		$res = $this->AVQuery->find()->results;
-		
+		if (empty($res)) {
+			throw new MY_Exception('暂无未支付订单！');
+		}
+		$orderId = $res[0]->objectId;
+		//return $orderId;
 		//支付渠道 wx_pub_qr
 		$channel = 'wx_pub_qr';
 		switch ($channel){
 			case 'wx_pub_qr':
 				$extra = array(
-				'product_id' => '123456'
+				'product_id' => 'print'
 						);
 				break;
 			case 'wx_pub':
@@ -81,7 +85,7 @@ class MY_Order extends MY_Base_Class{
 					'subject' => '99打印在线支付',
 					'body' => '文档打印',
 					'amount'=>1,
-					'order_no'=>'wwqadfsaf',
+					'order_no'=>$orderId,
 					'currency'  => 'cny',
 					'extra'     => $extra,
 					'channel'   => $channel,
