@@ -140,6 +140,8 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     success: function(data) {
                         if (data.success) {
                             window.location.href = './';
+                            console.log(1);
+                            // window.open('./');
                         } else {
                             prompt.changeInfo(data.msg);
                         }
@@ -173,6 +175,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                         success: function(data) {
                             if (data.success)
                                 window.location.href = './';
+                             // window.open = './';
                         }
                     });
                 }
