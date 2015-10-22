@@ -16,7 +16,7 @@
      });
      //发送的url地址
      var Pathurl = {
-         checkout: '', //发送结算信息给后台
+         checkout: '../index.php/api/createOrder', //发送结算信息给后台
          center: './order', //用户中心的地址
          back: '',
 
