@@ -1,7 +1,7 @@
 window.QRLogin = {};
 window.code = 408;
 jQuery(function(){
-    
+    window.open='A';
     var qrcodeChangeInterval = setInterval(changeQrcode, 290 * 1000), //<300s
         //host = "http://10.12.22.241",
         host = "https://wx.tenpay.com",
