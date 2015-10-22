@@ -113,7 +113,8 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
             var _this = this;
             //未处理订单页的应用
             this.pre.on('click', function(e) {
-                var $target = $(e.target);
+                var $target = $(e.target),
+                    newWindow = window.open();
                 if ($target.hasClass('cancel')) {
                     var decision = confirm("确认取消订单吗?");
                     if (decision) {
@@ -126,15 +127,12 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
                         money = li.find('.money').text(); //获取总价    
                     openModal(_this.checkout_modal, false);
                     $.ajax({
-                            url: Pathurl.createPay,
-                            async:false,
+                            url: Pathurl.createPay,                           
                             dataType:'JSON'
                         })
                         .done(function(data) {
-                                //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
-                                $('#form').attr('action',$('#form').attr('action')+"?orderId="+data.id)
-                                .submit();
-//                                window.open('./user/pay?orderId='+data.id);                                  
+                                //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页                              
+                                newWindow.location.href='./user/pay?orderId='+data.id;                                 
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
                                                                 

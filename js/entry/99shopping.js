@@ -10,9 +10,6 @@
      }
  });
  require(['jquery', 'utility', 'scroll', 'prompt'], function($, util, scroll, prompt) {
-	 $.ajaxSetup({
-		 dataType:'json'
-	 });
      //初始化提示信息
      var prompt = new prompt.Prompt({
          prompt: $('.prompt')
@@ -278,7 +275,6 @@
                      $(this).addClass('sending').prop('disabled',true); //禁止多次点击结算按钮
                      $.ajax({
                          url: Pathurl.checkout,
-                         dataType:'JSON',
                          // data: {
                          //     // "info": info,
                          //     // "files": _this.Files
@@ -288,7 +284,7 @@
                                  window.location.href = Pathurl.center;
                              } else {
                                  prompt.changeInfo(data.msg);
-                                 _this.checkout.removeClass('sending').prop('disabled',false);
+                                 $(this).removeClass('sending').prop('disabled',false);
                              }
                          }
                      });
