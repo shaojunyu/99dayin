@@ -6,7 +6,7 @@
          'modal': 'lib/jquery.simplemodal',
          'utility': 'entry/utility/utility',
          'prompt': 'entry/function/prompt', //提示模块
-   
+
      }
  });
  require(['jquery', 'utility', 'scroll', 'prompt'], function($, util, scroll, prompt) {
@@ -18,8 +18,8 @@
      var Pathurl = {
          checkout: '', //发送结算信息给后台
          center: './order', //用户中心的地址
-         back:'',
-         
+         back: '',
+
      }
      var Iscroll = bindScroll($('.container'));
      //!!!!! FileMarks已经在网页脚本中定义，可以直接获取
@@ -96,6 +96,25 @@
      var Delete_btn = {
          $delete_btns: $('.delete-btns'),
          $tbody: $('tbody'),
+         deleteItem: function($target) {
+             var li = $target.parents('tr'),
+                 mark = $target.attr('data-mark'),
+                 _this = this;
+             $.ajax({
+                 url: Pathurl.remove,
+                 type: 'POST',
+                 data: {
+                     mark: mark
+                 }
+             }).then(function(data) {
+                 if (data.success) {
+                     prompt.changeInfo('删除成功!');
+                     li.detach();
+                 } else {
+                     prompt.changeInfo('删除失败!');
+                 }
+             })
+         },
          removeRow: function($target) {
              var decision = confirm("确认删除吗？");
              if (decision) {
@@ -115,6 +134,10 @@
                          val.refresh();
                      });
                  }, 0);
+                 $.ajax({
+                         url: Pathurl.delete //删除goods
+                     })
+                     .done()
              }
          },
          init: function() {
@@ -249,19 +272,19 @@
                              }
                          }
                      }
-                     $(this).addClass('sending'); //禁止多次点击结算按钮
-                     sendAjax({
+                     $(this).addClass('sending').prop('disabled',true); //禁止多次点击结算按钮
+                     $.ajax({
                          url: Pathurl.checkout,
-                         data: {
-                             "info": info,
-                             "files": _this.Files
-                         },
+                         // data: {
+                         //     // "info": info,
+                         //     // "files": _this.Files
+                         // },
                          success: function(data) {
                              if (data.success) {
                                  window.location.href = Pathurl.center;
                              } else {
                                  prompt.changeInfo(data.msg);
-                                 $(this).removeClass('sending');
+                                 $(this).removeClass('sending').prop('disabled',false);
                              }
                          }
                      });
@@ -274,19 +297,6 @@
      // !结算
      //继续上传和文库添加，返回前一页
      $('.upload,.add').on('click', function() {
-         sendAjax({
-             url: Pathurl.back,
-             success: function(data) {
-                 if (data.success) {
-                     var confir = confirm("确认返回上传吗？您现在上传的物品可就没有了哦，要不先支付吧~");
-                     if (confir) {
-                         window.location.href = data.upload;
-                     }
-                 } else {
-                     prompt.changeInfo(data.msg);
-                 }
-             }
-         })
+         window.location.href = './upload'; //返回继续上传页面       
      });
- 
  })
