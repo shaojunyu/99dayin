@@ -34,11 +34,11 @@ class Api extends CI_Controller{
 		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
 		
 // 		//引入ping++
-// 		require_once APPPATH.'third_party/pingpp/init.php';
-// 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
-// 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
-// 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
-// 		\pingpp\Pingpp::setApiKey($test_key);
+		require_once APPPATH.'third_party/pingpp/init.php';
+		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
+		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
+		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
+		\pingpp\Pingpp::setApiKey($live_key);
 		//本地用户数据保存
 		
 	}
@@ -255,11 +255,21 @@ class Api extends CI_Controller{
 		try{
 			$order = new MY_Order();
 			$charge = $order->createPingPay();
-			var_dump($charge);
+			echo ($charge);
 		}catch (MY_Exception $e){
 			$this->echo_msg(false,$e->error_msg);
 		}
 
+	}
+	
+	function isPaid(){
+		$chargeId = $this->input->post('chargeId');
+		try {
+			$charge = Pingpp\Charge::retrieve($chargeId);
+			$values = $charge->__toArray();
+		} catch (Exception $e) {
+		}
+		
 	}
 	
 	

@@ -15,7 +15,7 @@
         <div class="setWidth">
             <a class="logo" href="#">
                 <img class="logo-print" src="./img/logo.png" alt="logo" />
-                <span>久久打印</span>
+                <span>九九打印</span>
             </a>
             <div class="titles">
                 <div class="title-btn homepage-btn" data-content="首页">首页</div>
@@ -169,7 +169,12 @@
                     * data-seq 是订单在原来数组中的位置                    
                     * -->
                     <div id="wrapper1" class="container pre-order">
+
                         <ul class="order-content" id="scroller">
+                   <?php 
+                    foreach ($orders as $order){
+                    	if ($order->state == 'UNPAID') {
+                    ?>
                             <li>
                                 <div class="order-details">
                                     <div >订单编号:<span class="order-num">12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
@@ -179,7 +184,6 @@
                                     <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
                                 </div>
                                 <div class="order-btns">
-                                <form action="./order" method="get" id="form" target="_blank"></form>
                                     <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>
                                     <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
                                 </div>
@@ -192,69 +196,7 @@
                                     <img src="img/divided.png">
                                 </div>
                             </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="go-pay" href="javascript:void(0)">去付款</a>
-                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="go-pay" href="javascript:void(0)">去付款</a>
-                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="go-pay" href="javascript:void(0)">去付款</a>
-                                    <a class="cancel" href="javascript:void(0)">取消订单</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
+                            <?php }}?>
                         </ul>
                     </div>
                     <div class="container his-order" id="wrapper2">

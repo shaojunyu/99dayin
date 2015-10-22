@@ -25,7 +25,9 @@ class MY_Order extends MY_Base_Class{
 		\pingpp\Pingpp::setApiKey($live_key);
 	}
 	
-	//创建成功，返回订单号
+	/*
+	 * //创建成功，返回订单号
+	 */
 	public function createOrder(){
 		$this->AVQuery->where('userId', $this->userId);
 		$this->AVQuery->where('state', orderState::UNPAID);

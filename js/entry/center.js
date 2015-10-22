@@ -134,7 +134,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
                                 //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
                                 $('#form').attr('action',$('#form').attr('action')+"?orderId="+data.id)
                                 .submit();
-                                window.open('./user/pay?orderId='+data.id);                                  
+//                                window.open('./user/pay?orderId='+data.id);                                  
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
                                                                 
