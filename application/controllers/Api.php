@@ -245,7 +245,7 @@ class Api extends CI_Controller{
 		try{
 			$order = new MY_Order();
 			$charge = $order->createPingPay();
-			echo ($charge);
+			var_dump($charge);
 		}catch (MY_Exception $e){
 			$this->echo_msg(false,$e->error_msg);
 		}

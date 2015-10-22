@@ -23,4 +23,8 @@ class User extends CI_Controller{
 	function order() {
 		$this->load->view('order_page');
 	}
+	
+	function pay() {
+		$this->load->view('pay_page');
+	}
 }
