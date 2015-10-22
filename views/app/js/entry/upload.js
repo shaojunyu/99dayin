@@ -642,21 +642,13 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'header'], function($, iscrol
                 upload_modify.push(val.mark);
             })
             this.pay_btn.on('click', function() {
-                sendAjax({
-                    url: Pathurl.pay,
-                    data: {
-                        "files": upload_modify
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            //当数据发送成功,执行跳转
-                            window.href.location = data.url;
-                        } else {
-                            prompt.changeInfo("您的浏览器抽风了,请重启一下!");
-                        }
+                var order_num =Number($('.container-upload').attr('data-num'));
+                if(order_num===0){
+                        prompt.changeInfo('购物车为0,不能结算!');
+                    }else if(order_num>0){
+                        window.location.href ='./confirm';
                     }
-                })
-            })
+                });
         }
     }
     Pay.init();
@@ -696,5 +688,5 @@ require(['jquery', 'iscroll', 'prompt', 'utility', 'header'], function($, iscrol
         }
     }
     Search.init();
-
+    
 })

@@ -553,7 +553,7 @@
                 </div>
                 <div class="right-part">
                     总价:<span class="total-price">123</span>元
-                    <button class="btn btn-primary clearing">结算</button>
+                    <button class="btn btn-primary clearing">提交</button>
                 </div>
             </div>
         </div>
