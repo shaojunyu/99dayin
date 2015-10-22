@@ -184,7 +184,7 @@
                                     <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
                                 </div>
                                 <div class="order-btns">
-                                <form action="./order" method="get" id="form" target="_blank"></form>
+                               
                                     <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>
                                     <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
                                 </div>
