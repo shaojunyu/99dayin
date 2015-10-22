@@ -132,10 +132,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
                                 //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
-                                pingppPc.createPayment(data, function(result, err) {
-                                    console.log(result);
-                                      console.log(err);  
-                                });
+                                
                         })
                 }
             });
