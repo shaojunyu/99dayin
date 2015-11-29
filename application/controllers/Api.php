@@ -12,7 +12,6 @@ use leancloud\AVQuery;
 class Api extends CI_Controller{
 	private $AVUser;
 	private $AVSms;
-	private $qiniu_auth;
 	private $pingpp_app_id;
 	
 	private $local_data;
@@ -20,7 +19,17 @@ class Api extends CI_Controller{
 	public function __construct(){
 		parent::__construct();
 		
-		//token验证
+		//api加密
+		$time_stamp = $this->input->get('time');
+		$token = $this->input->get('token');
+		$secret = '99dayin_api_secrete';
+		if(empty($time_stamp) || empty($token)){
+			exit('url参数错误！无授权参数');
+		}
+		$md5 = md5($time_stamp.$secret);
+		if ($md5 != $token) {
+			exit('加密错误！');
+		}
 		
 		//引入leancloud
 		require_once APPPATH.'/third_party/leancloud/AV.php';
@@ -41,6 +50,9 @@ class Api extends CI_Controller{
 		\pingpp\Pingpp::setApiKey($live_key);
 		//本地用户数据保存
 		
+	}
+	public function index(){
+		echo 'api';
 	}
 	public function test(){
 		$cart = new MY_Cart();

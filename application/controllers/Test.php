@@ -17,46 +17,61 @@ class Test extends CI_Controller{
 		$qiniu_secretKey = 'e4gSw3iZxrOGI372CjaeMwP6Rif_2ekqfEbPgybA';
 		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
 		
-		//aliyun oss
-		require APPPATH.'third_party/aliyun/aliyun-php-sdk-core/Config.php';
-		// 你需要操作的资源所在的region，STS服务目前只有杭州节点可以签发Token，签发出的Token在所有Region都可用
-		// 只允许子用户使用角色
-		$iClientProfile = DefaultProfile::getProfile("cn-hangzhou", "GtzMAvDTnxg72R04", "VhD2czcwLVAaE7DReDG4uEVSgtaSYK");
-		$client = new DefaultAcsClient($iClientProfile);
-		
-		// 角色资源描述符，在RAM的控制台的资源详情页上可以获取
-		$roleArn = "<role-arn>";
-		// 在扮演角色(AssumeRole)时，可以附加一个授权策略，进一步限制角色的权限；
-		// 详情请参考《RAM使用指南》
-		// 此授权策略表示读取所有OSS的只读权限
-		$policy=<<<POLICY
-{
-  "Statement": [
-    {
-      "Action": [
-        "oss:Get*",
-        "oss:List*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ],
-  "Version": "1"
-}
-POLICY;
-		
-		$request = new Sts\AssumeRoleRequest();
-		// RoleSessionName即临时身份的会话名称，用于区分不同的临时身份
-		// 您可以使用您的客户的ID作为会话名称
-		$request->setRoleSessionName("99dayin");
-		$request->setRoleArn($roleArn);
-		$request->setPolicy($policy);
-		$request->setDurationSeconds(3600);
-		$response = $client->doAction($request);
-		print_r("\r\n");
-		print_r($response);
+
 	}
 	
 	public function index(){
 	}
+	
+	function gmt_iso8601($time) {
+		$dtStr = date("c", $time);
+		$mydatetime = new DateTime($dtStr);
+		$expiration = $mydatetime->format(DateTime::ISO8601);
+		$pos = strpos($expiration, '+');
+		$expiration = substr($expiration, 0, $pos);
+		return $expiration."Z";
+	}
+	
+	function get_token(){
+		require_once APPPATH.'third_party/oss_php_sdk_20140625/sdk.class.php';
+		$id= 'GtzMAvDTnxg72R04';
+		$key= 'VhD2czcwLVAaE7DReDG4uEVSgtaSYK';
+		$host = 'http://dayin.oss-cn-hangzhou.aliyuncs.com';
+		$now = time();
+		$expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
+		$end = $now + $expire;
+		$expiration = $this->gmt_iso8601($end);
+		
+		$oss_sdk_service = new alioss($id, $key, $host);
+		$dir = 'user-dir/';
+		
+		//最大文件大小.用户可以自己设置
+		$condition = array(0=>'content-length-range', 1=>0, 2=>1048576000);
+		$conditions[] = $condition;
+		
+		//表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只是为了安全起见,防止用户通过policy上传到别人的目录
+		$start = array(0=>'starts-with', 1=>'$key', 2=>$dir);
+		$conditions[] = $start;
+		
+		
+		//这里默认设置是２０２０年.注意了,可以根据自己的逻辑,设定expire 时间.达到让前端定时到后面取signature的逻辑
+		$arr = array('expiration'=>$expiration,'conditions'=>$conditions);
+		//echo json_encode($arr);
+		//return;
+		$policy = json_encode($arr);
+		$base64_policy = base64_encode($policy);
+		$string_to_sign = $base64_policy;
+		$signature = base64_encode(hash_hmac('sha1', $string_to_sign, $key, true));
+		
+		$response = array();
+		$response['accessid'] = $id;
+		$response['host'] = $host;
+		$response['policy'] = $base64_policy;
+		$response['signature'] = $signature;
+		$response['expire'] = $end;
+		//这个参数是设置用户上传指定的前缀
+		$response['dir'] = $dir;
+		echo json_encode($response);
+	}
+	
 }
