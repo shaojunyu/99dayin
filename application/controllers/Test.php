@@ -16,7 +16,6 @@ class Test extends CI_Controller{
 		$qiniu_accessKey = 'kbnA7-cyf2y4j3JmmB8xKcQszBtQvpl45TAFMZ2z';
 		$qiniu_secretKey = 'e4gSw3iZxrOGI372CjaeMwP6Rif_2ekqfEbPgybA';
 		$this->qiniu_auth = new Auth($qiniu_accessKey, $qiniu_secretKey);
-		
 
 	}
 	
