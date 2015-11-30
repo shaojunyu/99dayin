@@ -2,7 +2,7 @@
         <div class="setWidth">
             <a class="logo" href="#">
                 <img class="logo-print" src="./img/logo.png" alt="logo" />
-                <span>久久打印</span>
+                <span>99打印</span>
             </a>
             <div class="titles">
                 <div class="title-btn homepage-btn" data-content="首页">首页</div>

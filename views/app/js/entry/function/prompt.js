@@ -1,4 +1,4 @@
-"use strict";
+
 define(['jquery'],function($){
 	//显示提示信息
 	//隐藏提示信息
@@ -28,4 +28,4 @@ define(['jquery'],function($){
 	return {
 		Prompt:Prompt
 	}
-})
+});

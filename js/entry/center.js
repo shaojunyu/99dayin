@@ -4,11 +4,10 @@ require.config({
         'jquery': 'lib/jQuery',
         'scroll': 'lib/iscroll',
         // 'modal': 'lib/jquery.simplemodal',
-        'lrz': 'lib/lrz/dist/lrz.bundle', //用来处理图片的库
+      
         'utility': 'entry/utility/utility',
         'prompt': 'entry/function/prompt', //提示模块
-        'enroll': 'entry/function/enroll', //注册模块
-        'img': 'entry/function/deal-img',
+        'enroll': 'entry/function/enroll', //注册模块        
         'ping': 'lib/pingpp-pc', //ping++插件
         'modal': 'lib/jquery.simplemodal' //模态框插件
     }
@@ -132,7 +131,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'modal', 'ping'], fu
                         })
                         .done(function(data) {
                                 //如果发送支付请求成功，弹出模态框，然后再另外定位一个网页                              
-                                newWindow.location.href='./pay?chargeId='+data.id;                                 
+                                newWindow.location.href='./user/pay?orderId='+data.id;                                 
                                 openModal(_this.checkout_modal, false);
                                 _this.checkout_modal.attr('data-num', num); //修改模态框的订单号
                                                                 
