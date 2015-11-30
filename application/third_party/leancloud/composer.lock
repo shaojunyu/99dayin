@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "e44b7723b18a0a32c82ee86e891f5350",
+    "content-hash": "f590c8ed506e4b93655d06aa2417304a",
+    "packages": [
+        {
+            "name": "leancloud/leancloud-sdk",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leancloud/php-sdk.git",
+                "reference": "30aab473fbff6042fda454bed453d91abf8f5a08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leancloud/php-sdk/zipball/30aab473fbff6042fda454bed453d91abf8f5a08",
+                "reference": "30aab473fbff6042fda454bed453d91abf8f5a08",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*"
+            },
+            "require-dev": {
+                "apigen/apigen": "^4.1",
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LeanCloud\\": "src/LeanCloud"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Juvenn Woo",
+                    "email": "yun.wu@leancloud.rocks"
+                }
+            ],
+            "description": "LeanCloud PHP SDK",
+            "homepage": "https://github.com/leancloud/php-sdk",
+            "keywords": [
+                "leancloud"
+            ],
+            "time": "2015-11-13 08:29:47"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
