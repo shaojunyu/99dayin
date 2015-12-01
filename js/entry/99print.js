@@ -7,10 +7,13 @@ require.config({
         'utility': 'entry/utility/utility', //基本工具函数
         'prompt': 'entry/function/prompt', //提示模块
         'enroll': 'entry/function/enroll', //注册模块
-        'SMS': 'https://cdn1.lncld.net/static/js/av-mini-0.6.1.js' //短信模块
+        'SMS': 'https://cdn1.lncld.net/static/js/av-mini-0.6.1.js', //短信模块
+        'md5': "lib/jquery.md5",
+        'encryption':"entry/function/encryption"
     }
 })
-require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($, scroll, modal, prompt, enroll) {
+require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'], function($, scroll, modal, prompt, enroll,Encryption) {
+    
     var scroll = new scroll.ScrollPage(),
         prompt = new prompt.Prompt({
             prompt: $('.prompt')
@@ -77,14 +80,15 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             toggleActive($(this), 'active');
         })
         //发送路径的url地址
+    
     var Pathurl = {
-        login: 'index.php/api/login',
-        sigin: 'index.php/api/signup',
+        login: Encryption.Encryption('index.php/api/login'),
+        sigin: Encryption.Encryption('index.php/api/signup'),
         Linklogin: '', //以QQ方式登录
-        username: 'index.php/api/verifySmsCode', //验证用户名的url
-        CF_url: 'index.php/api/sendSmsCode', //验证码发送的url
+        username: Encryption.Encryption('index.php/api/verifySmsCode'), //验证用户名的url
+        CF_url: Encryption.Encryption('index.php/api/sendSmsCode'), //验证码发送的url
         upload: '', //上传文件的地址
-        logout: 'index.php/api/logout'
+        logout: Encryption.Encryption('index.php/api/logout')
     }
     var login = {
         $username: $('.login-account'),
@@ -219,8 +223,9 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     phone = _this.$phone.val();
                 $.ajax({
                         url: Pathurl.username,
+                        type:'POST',
                         data: {
-                            phone: phone, //手机号
+                            mobilePhoneNumber: phone, //手机号
                             smsCode: code // 验证码
                         }
                     })
@@ -242,8 +247,6 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
             this.$username.enroll({
                 reg: username_reg,
                 msg: username_msg,
-                override: true,
-                url: Pathurl.username
             });
 
             this.$pwd.enroll({
@@ -286,6 +289,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'utility'], function($
                     success: function(data) {
                         //检查验证码的输入的正确性
                         if (data.success) {
+
                         } else {
                             $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
                             prompt.changeInfo(data.msg);

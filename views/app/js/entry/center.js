@@ -4,11 +4,10 @@ require.config({
         'jquery': 'lib/jQuery',
         'scroll': 'lib/iscroll',
         // 'modal': 'lib/jquery.simplemodal',
-        'lrz': 'lib/lrz/dist/lrz.bundle', //用来处理图片的库
+      
         'utility': 'entry/utility/utility',
         'prompt': 'entry/function/prompt', //提示模块
-        'enroll': 'entry/function/enroll', //注册模块
-        'img': 'entry/function/deal-img',
+        'enroll': 'entry/function/enroll', //注册模块        
         'ping': 'lib/pingpp-pc', //ping++插件
         'modal': 'lib/jquery.simplemodal' //模态框插件
     }

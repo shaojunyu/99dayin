@@ -4,10 +4,9 @@ require.config({
         'jquery': 'lib/jQuery',
         'scroll': 'lib/iscroll',
         'modal': 'lib/jquery.simplemodal',
-        // 'lrz':'lib/lrz/dist/lrz.bundle'
         'utility': 'entry/utility/utility',
         'checkEvent': 'entry/function/checkAll',
-        'prompt': 'entry/function/prompt', //提示模块
+        'prompt': 'entry/function/prompt' //提示模块
     }
 })
 "use strict";
@@ -266,9 +265,46 @@ require(['jquery', 'scroll', 'checkEvent', 'prompt', 'modal', 'utility'], functi
             /*
              * 点击体现，查看体现记录
              */
-             this.showLog();
+            this.showLog();
         }
     }
     Refresh.init();
 
+/*
+* 输出提示信息
+*/
+    // function remind() {
+    //     $.ajax({
+    //             url: Pathurl.getMessage,
+    //         })
+    //         .done(function() {
+    //             if (window.Notification && Notification.permission !== "denied") {
+    //                 Notification.requestPermission(function(status) {
+    //                     var a = new Notification('有新订单了', {
+    //                         body: '现在时间是123' + new Date().toLocaleString()
+    //                     });
+    //                 });
+    //             } else {
+    //                 alert("有新订单,现在时间是" + new Date().toLocaleString());
+    //             }
+    //         });
+
+    // }
+
+    // function notification() {
+
+    //     setTimeout(function() {
+    //         remind();
+    //         notification();
+    //     }, 10000)
+    // }
+
+    // notification();
+    // navigator.vibrate = navigator.vibrate 
+    //                 || navigator.webkitVibrate 
+    //                 || navigator.mozVibrate 
+    //                 || navigator.msVibrate;
+    // setTimeout(navigator.vibrate(1000),1000);
+    
+   
 })

@@ -26,7 +26,7 @@
 									$cart = new MY_Cart ();
 									$items = $cart->getItems();
 									?>
-            <a class="container-upload" href="javascript:void(0)"
+            <a class="container-upload" id="container-upload" href="javascript:void(0)"
 				data-num='<?php echo count($items)?>'>上传文件<input class="upload"
 				type="file" id="file-upload" multiple 
 				accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel" /></a>

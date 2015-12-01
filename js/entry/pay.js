@@ -1,7 +1,7 @@
 window.QRLogin = {};
-window.code = 408;
-jQuery(function(){
-    
+
+jQuery(function() {
+
     var qrcodeChangeInterval = setInterval(changeQrcode, 290 * 1000), //<300s
         //host = "http://10.12.22.241",
         host = "https://wx.tenpay.com",
@@ -10,18 +10,18 @@ jQuery(function(){
         defalutPayClass = payMsg$[0].className,
         qrCodeTimeout = null;
 
-    function changePayInfo(info){
+    function changePayInfo(info) {
         payMsg$[0].className = defalutPayClass + " " + info;
     }
 
     function changeQrcode() {
         var self = arguments.callee,
-            restart = function () {
+            restart = function() {
                 clearTimeout(qrCodeTimeout);
                 qrCodeTimeout = setTimeout(self, 10000);
             },
             data = {
-                _:new Date().getTime()
+                _: new Date().getTime()
             };
         // for (var i in setting) {
         //     data[i] = setting[i];
@@ -62,23 +62,24 @@ jQuery(function(){
         //     error:restart
         // });
     }
-    function confirm(){
+
+    function confirm() {
         $.ajax({
-            url:Pathurl.getResult
-        })
-        .done(function(data){
-            if(data.success){
-                var mark = confirm("支付成功，请点击确认返回首页！");
-                if(mark){
-                    window.location.href="/";
-                }else{
-                    window.location.href='/';
+                url: Pathurl.getResult
+            })
+            .done(function(data) {
+                if (data.success) {
+                    var mark = confirm("支付成功，请点击确认返回首页！");
+                    if (mark) {
+                        window.location.href = "/";
+                    } else {
+                        window.location.href = '/';
+                    }
                 }
-            }
-        })
-        setTimeout(arguments.callee,1500);
+            })
+        setTimeout(arguments.callee, 1500);
     }
-   
+
 
 
 
@@ -93,26 +94,62 @@ jQuery(function(){
 
         function _back() {
             _nTimer = setTimeout(function() {
-                _oGuide$.stop().animate({marginLeft:"-101px",opacity:0}, "400", "swing",function(){
+                _oGuide$.stop().animate({
+                    marginLeft: "-101px",
+                    opacity: 0
+                }, "400", "swing", function() {
                     _oGuide$.hide();
                 });
             }, 100);
         }
 
         /*guide*/
-        _oGuide$.css({"left":"50%", "opacity":0});
-        _oGuideTrigger$.mouseover(function(){
+        _oGuide$.css({
+            "left": "50%",
+            "opacity": 0
+        });
+        _oGuideTrigger$.mouseover(function() {
             clearTimeout(_nTimer);
-            _oGuide$.css("display", "block").stop().animate({marginLeft:"+147px", opacity:1}, 900, "swing", function() {
-                _oGuide$.animate({marginLeft:"+134px"}, 300);
+            _oGuide$.css("display", "block").stop().animate({
+                marginLeft: "+147px",
+                opacity: 1
+            }, 900, "swing", function() {
+                _oGuide$.animate({
+                    marginLeft: "+134px"
+                }, 300);
             });
         }).mouseout(_back);
 
-        _oGuide$.mouseover(function(){
+        _oGuide$.mouseover(function() {
             clearTimeout(_nTimer);
-        }).mouseout(_back);
-        confirm();
+        }).mouseout(_back);        
     }
 
     init();
+
+
+
+    /*
+    * 验证支付是否成功
+    */
+    function confirmPay() {
+        if (!!window.EventSource) {
+            var source = new EventSource('/dates'); //相当于url
+            source.addEventListener('message', function(e) {
+                var data = JSON.parse(e.data);
+                if (data.success) {
+                    var mark = confirm("支付成功，请点击确认返回首页！");
+                    if (mark) {
+                        window.location.href = "/";
+                    } else {
+                        window.location.href = '/';
+                    }
+                }
+            }, false);            
+        }else{
+            confirm();
+        }
+    }
+
+
 });
