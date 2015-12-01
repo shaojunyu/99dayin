@@ -1,8 +1,6 @@
 .project
 .settings/
-99-print/.sass-cache
-99-print/sass
-99-print/config.rb
+99-print/
 
 application/logs/
 .htaccess
