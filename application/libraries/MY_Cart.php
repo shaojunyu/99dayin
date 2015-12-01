@@ -12,6 +12,7 @@ class MY_Cart extends MY_Base_Class{
 		if (!empty($this->userId)) {
 			//在bmob上生成一条购物车记录
 			try {
+				//bmob上已设置userId字段唯一
 				$bmobObj = new BmobObject('Cart');
 				$bmobObj->create(array(
 						'userId'=>$this->userId,
@@ -36,6 +37,7 @@ class MY_Cart extends MY_Base_Class{
 	}
 	
 	public function addItem($filename,$fileMD5){
+		$bmobObj = new BmobObject('Cart');
 		$res = $this->AVQuery->find()->results;
 		$id = $res[0]->objectId;
 		$items = $res[0]->items;

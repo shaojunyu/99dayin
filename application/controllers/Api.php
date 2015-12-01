@@ -211,6 +211,7 @@ class Api extends CI_Controller{
 		//文件信息保存到购物车
 		try {
 			$cart = new MY_Cart();
+			$cart->addItem($filename, $fileMD5);
 			//$cart->addItem($filename, $fileHash);
 		} catch (Exception $e) {
 			
