@@ -183,14 +183,18 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
                 prevent_duplicates: true //防止上传相同大小文件
             },
             init: {
-                PostInit: function PostInit() {},
+                PostInit: function PostInit() {
+                    console.log(123);
+                    console.log(123);
+                },
                 FilesAdded: function FilesAdded(files) {
-
+                    console.log(files);
                     upload.fillUpload(this);
                 }
             }
         }),
         init: function init() {
+
             this.uploader.init();
         },
         fillUpload: function fillUpload(up) {
@@ -218,8 +222,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
         getAjax: function getAjax() {
             var msg = '';
             $.ajax({
-                // url: Pathurl.getToken,
-                url: 'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
+                url: Pathurl.getToken,
+                // url:'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
                 type: 'post',
                 contentType: "application/json",
                 dataType: 'json'

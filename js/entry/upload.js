@@ -183,14 +183,18 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
                 prevent_duplicates: true //防止上传相同大小文件
             },
             init: {
-                PostInit: function PostInit() {},
+                PostInit: function PostInit() {
+                    console.log(123);
+                    console.log(123);
+                },
                 FilesAdded: function FilesAdded(files) {
-
+                    console.log(files);
                     upload.fillUpload(this);
                 }
             }
         }),
         init: function init() {
+
             this.uploader.init();
         },
         fillUpload: function fillUpload(up) {
