@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>JS Bin</title>
+</head>
+
+<body>
+    <video src=""></video>
+    <img src="" alt="">
+    <canvas></canvas>
+    <script type="text/javascript">
+    var video = document.querySelector('video');
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    var localMediaStream = null;
+    navigator.getUserMedia = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+        video.width = 400,
+        video.height = 400;
+    function snapshot() {
+        if (localMediaStream) {
+            ctx.drawImage(video,0,0,100,100);
+            // “image/webp”对Chrome有效，
+            // 其他浏览器自动降为image/png
+            document.querySelector('img').src = canvas.toDataURL('image/webp');
+        }
+    }
+
+    video.addEventListener('click', snapshot, false);
+
+    navigator.getUserMedia({
+        video: true
+    }, function(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        localMediaStream = stream;
+        video.autoplay = true;
+    }, function(stream) {
+        console.log("Error Happen!");
+    });
+    </script>
+</body>
+
+</html>
