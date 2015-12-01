@@ -1,14 +1,12 @@
 <?php
 //自定义类的基类
-use leancloud\AVQuery;
-use leancloud\AVObject;
 
 class MY_Base_Class{
 	protected $CI;
 	public function __construct(){
 		//引入各种服务
-		//引入leancloud
-		require_once APPPATH.'/third_party/leancloud/AV.php';
+		//引入bmob
+		require_once APPPATH.'/third_party/bmob/lib/BmobObject.class.php';
 		$this->CI = get_instance();
 	}
 }

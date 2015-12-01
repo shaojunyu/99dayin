@@ -1,30 +1,27 @@
 <?php
-use leancloud\AVQuery;
-use leancloud\AVObject;
-use leancloud\AVLibraryException;
 
 require_once 'MY_Base_Class.php';
 //自定义购物车类
 class MY_Cart extends MY_Base_Class{
 	private $userId;
-	private $AVObject;
-	protected $AVQuery;
+	private $bmobObject;
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		
 		if (!empty($this->userId)) {
-			$this->AVQuery = new AVQuery('Cart');
-			$this->AVQuery->where('userId', $this->userId);
-			if (!$this->AVQuery->find()->results) {
-				$cart = new AVObject('Cart');
-				$cart->userId = $this->userId;
-				$cart->items = array();
-				$cart->save();
+			//在bmob上生成一条购物车记录
+			try {
+				$bmobObj = new BmobObject('Cart');
+				$bmobObj->create(array(
+						'userId'=>$this->userId,
+						'items'=>array()
+				));
+			} catch (Exception $e) {
 			}
 		}
 		
-		$this->AVObject = new AVObject('Cart');
+		//$this->AVObject = new AVObject('Cart');
 	}
 	
 	public function getItems(){
@@ -38,7 +35,7 @@ class MY_Cart extends MY_Base_Class{
 		
 	}
 	
-	public function addItem($filename,$fileHash){
+	public function addItem($filename,$fileMD5){
 		$res = $this->AVQuery->find()->results;
 		$id = $res[0]->objectId;
 		$items = $res[0]->items;
