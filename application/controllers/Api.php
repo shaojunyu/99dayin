@@ -136,14 +136,14 @@ class Api extends CI_Controller{
 		require_once APPPATH.'third_party/oss_php_sdk_20140625/sdk.class.php';
     	$id= 'GtzMAvDTnxg72R04';
     	$key= 'VhD2czcwLVAaE7DReDG4uEVSgtaSYK';
-    	$host = 'http://dayin.oss-cn-hangzhou.aliyuncs.com';
+    	$host = 'http://99dayin.oss-cn-hangzhou.aliyuncs.com';
     	$now = time();
     	$expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
     	$end = $now + $expire;
     	$expiration = $this->gmt_iso8601($end);
 
     	$oss_sdk_service = new alioss($id, $key, $host);
-    	$dir = 'user_upload/';
+    	$dir = 'user_upload/'.$this->session->userdata('userId').'/';
 
     	//最大文件大小.用户可以自己设置
     	$condition = array(0=>'content-length-range', 1=>0, 2=>1048576000);
@@ -187,8 +187,8 @@ class Api extends CI_Controller{
 		}
 		//文件信息写到本地文件，供文件监听器调用
 		try {
-			$filedata = array('uploader '=>$username,'filename'=>$filename);
-			file_put_contents('./temp/'.$username.time().'.json',json_encode($filedata));
+			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
+			file_put_contents('./file_analysis/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
