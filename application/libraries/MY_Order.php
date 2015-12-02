@@ -16,7 +16,7 @@ class MY_Order extends MY_Base_Class{
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		$this->cart = new MY_Cart();
-		$this->AVQuery = new AVQuery('Order');
+		//$this->AVQuery = new AVQuery('Order');
 		//引入ping++
 		require_once APPPATH.'third_party/pingpp/init.php';
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';

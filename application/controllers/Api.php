@@ -180,11 +180,14 @@ class Api extends CI_Controller{
 	public function uploadACK(){
 		$username = $this->input->post('username');
 		$filename = $this->input->post('filename');
+		$fileMD5 = $this->input->post('fileMD5');
 		$uploader = $this->session->userdata('userId');
-		if (empty($filename)) {
+		
+		if (empty($filename) or empty($fileMD5)) {
 			$this->echo_msg(false,'参数不全');
 			exit();
 		}
+		
 		//文件信息写到本地文件，供文件监听器调用
 		try {
 			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
@@ -203,6 +206,15 @@ class Api extends CI_Controller{
 			$this->echo_msg(true,'');
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
+		}
+		
+		//文件信息保存到购物车
+		try {
+			$cart = new MY_Cart();
+			$cart->addItem($filename, $fileMD5);
+			//$cart->addItem($filename, $fileHash);
+		} catch (Exception $e) {
+			
 		}
 	}
 	
