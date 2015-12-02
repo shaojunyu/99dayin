@@ -25,6 +25,22 @@ define(['jquery'],function($){
 			_this.hidePrompt();
 		},1500);
 	};
+	/*
+	* 显示进度条
+	*/
+	Prompt.prototype.loading = function(percent){
+		this.showPrompt();
+		var _percent = Number(percent),
+			_this =this;
+		if(_percent===100){  
+			this.prompt_ele.text(_percent+"%");	
+			setTimeout(function(){
+				_this.hidePrompt();
+			},800);  //隐藏进度条
+		}else{
+			this.prompt_ele.text(_percent+"%");	
+		}
+	}
 	return {
 		Prompt:Prompt
 	}

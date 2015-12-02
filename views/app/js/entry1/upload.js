@@ -154,88 +154,289 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
     }
     //绑定打印车内容滚动条
     var Iscroll = bindScroll($('.container'));
+    // let upload = {
+    //     filesArray: [],
+    //     official: [],
+    //     format: /\.(doc|ppt|docx|pdf|pptx)$/,
+    //     content_a: $('.container-upload'), //包裹input的a标签
+    //     maxLength: 20, //最大上传文件数目
+    //     shopping: $('.files-content'), //购物车
+    //     addBtn: $('.article-content'), //文库里面的添加btn
+    //     delete_btn: $('#scroller'), //删除Btn的ul
+    //     aliToken: {}, //获得aliyun的token值
+    //     uploader: new plupload.Uploader({
+    //         runtimes: 'html5,flash,silverlight,html4', //上传的环境
+    //         browse_button: 'container-upload', //
+    //         container: document.getElementById('file-content'), //上传文件的容器
+    //         // flash_swf_url : 'lib/plupload-2.1.2/js/Moxie.swf',
+    //         // silverlight_xap_url : 'lib/plupload-2.1.2/js/Moxie.xap',
+
+    //         url: 'http://oss.aliyuncs.com', //上传的参数
+    //         filters: {
+    //             mime_types: [
+    //                 // { title : "Image files", extensions : "jpg,gif,png" },
+    //                 {
+    //                     title: "document",
+    //                     extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
+    //                 }
+    //             ],
+    //             max_file_size: "100mb", //设置最大上传文件大小
+    //             prevent_duplicates: true //防止上传相同大小文件
+    //         },
+    //         init: {
+    //             PostInit() {
+    //                     console.log(this);
+    //                     $('#container-upload').on('click',()=>{upload.fillUpload(this);});
+    //                     $('#uploadfiles').on('click',()=>{this.start();return false;})
+    //                 },
+    //                 FilesAdded(up, files) {
+    //                     console.log(this);
+    //                     plupload.each(files, function(file) {
+    //                         prompt.changeInfo(file.percent + "%");
+    //                     });
+    //                 },
+    //                 UploadProgress(up, file) {
+
+    //                     prompt.changeInfo(file.percent + "%");
+    //                 },
+    //                 FileUploaded(up, file, info) {
+    //                     if (info.status == 200) {
+    //                         //添加购物车数据
+    //                         var file_date = new Date(), //添加日期
+    //                             date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
+    //                             size = Number(files[i].size / (1024 * 1024)).toFixed(2) + 'MB'; //添加文件大小
+    //                         addFiles(file, date, size, file.id);
+    //                         _this.changeInputText(1);
+    //                         prompt.changeInfo("上传成功~");
+    //                     } else {
+    //                         prompt.changeInfo("上传失败!");
+    //                     }
+    //                 },
+    //         }
+    //     }),
+    //     init() {
+    //         this.uploader.init();
+    //     },
+    //     fillUpload(up) {
+    //         let msg = this.getAjax(),
+    //             {
+    //                 dir, host, policy, accessid, signature
+    //             } = msg;
+    //         let new_multipart_params = {
+    //             'key': dir + '${filename}', //获得文件名
+    //             'policy': policy,
+    //             'OSSAccessKeyId': accessid,
+    //             'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+    //             // 'callback' : callbackbody,
+    //             'signature': signature //由后台获得的签名
+    //         }
+    //         up.setOption({ //设置上传参数
+    //             'url': host,
+    //             'multipart_params': new_multipart_params
+    //         });
+
+    //     },
+    //     getAjax() {
+    //         var msg = '';
+    //         $.ajax({
+    //                 url: Pathurl.getToken,
+    //                 // url:'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
+    //                 type: 'post',
+    //                 contentType: "application/json",
+    //                 dataType: 'json'
+    //             })
+    //             .done(function(data) {
+    //                 msg = data;
+    //             })
+    //         return msg;
+    //     }
+    // }
+    // upload.init();
+    let uploader = new plupload.Uploader({
+        runtimes: 'html5,flash,silverlight,html4', //上传的环境
+        browse_button: 'container-upload', //
+        'success_action_status': '200',
+        container: document.getElementById('file-content'), //上传文件的容器
+        // flash_swf_url : 'lib/plupload-2.1.2/js/Moxie.swf',
+        // silverlight_xap_url : 'lib/plupload-2.1.2/js/Moxie.xap',
+
+        url: 'http://99dayin.oss-cn-hangzhou.aliyuncs.com', //上传的参数
+
+        filters: {
+            mime_types: [
+                // { title : "Image files", extensions : "jpg,gif,png" },
+                {
+                    title: "document",
+                    extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
+                }
+            ],
+            max_file_size: "100mb", //设置最大上传文件大小
+            prevent_duplicates: true, //防止上传相同大小文件
+
+        },
+        init: {
+            PostInit() {
+                },
+                FilesAdded(up, files) {
+                    upload.getAjax(this);
+
+                },
+                UploadProgress(up, file) {
+                    prompt.loading(0);
+                    prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
+                },
+                FileUploaded(up, file, info) {
+                    for(var n in file){
+                        console.log(`key is ${n} and name is  ${file.name} and type is ${file.type} `);
+                    }
+                    if (info.status == 200) {
+                        //添加购物车数据
+                        var file_date = new Date(), //添加日期
+                            date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
+                            size = plupload.formatSize(file.size); //添加文件大小
+                        upload.addFiles(file.name, date, size, file.id);
+                        prompt.changeInfo("上传成功~");
+                    } else {
+                        prompt.changeInfo("上传失败!");
+                    }
+                },
+        }
+    });
+    uploader.init();
+
     let upload = {
-        filesArray: [],
-        official: [],
-        format: /\.(txt|doc|ppt|docx|wps|rtf|pdf|xls)$/,
-        content_a: $('.container-upload'), //包裹input的a标签
-        maxLength: 20, //最大上传文件数目
-        shopping: $('.files-content'), //购物车
+        shopping:$('.files-content'),
         addBtn: $('.article-content'), //文库里面的添加btn
         delete_btn: $('#scroller'), //删除Btn的ul
-        aliToken: {}, //获得aliyun的token值
-        uploader: new plupload.Uploader({
-            runtimes: 'html5,flash,silverlight,html4', //上传的环境
-            browse_button: 'container-upload', //
-            container: document.getElementById('file-content'), //上传文件的容器
-            // flash_swf_url : 'lib/plupload-2.1.2/js/Moxie.swf',
-            // silverlight_xap_url : 'lib/plupload-2.1.2/js/Moxie.xap',
-
-            url: 'http://oss.aliyuncs.com', //上传的参数
-            filters: {
-                mime_types: [
-                    // { title : "Image files", extensions : "jpg,gif,png" },
-                    {
-                        title: "document",
-                        extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
-                    }
-                ],
-                max_file_size: "100mb", //设置最大上传文件大小
-                prevent_duplicates: true //防止上传相同大小文件
+        fillUpload(up, data) {
+                console.log(up);
+                let {
+                    dir, signature, accessid, policy, host
+                } = data;
+                let new_multipart_params = {
+                    'key': dir + '${filename}', //获得文件名
+                    'policy': policy,
+                    'OSSAccessKeyId': accessid,
+                    'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+                    // 'callback' : callbackbody,
+                    'signature': signature //由后台获得的签名
+                }
+                up.setOption({ //设置上传参数
+                    'url': host,
+                    'multipart_params': new_multipart_params
+                });
+                up.start(); //触发上传
             },
-            init: {
-                PostInit() {
-                    console.log(123);
-                        console.log(123);
-                    },
-                    FilesAdded(files) {
-                        console.log(files);
-                        upload.fillUpload(this);
-
-                        
+            getAjax(up) {
+                var msg = '';
+                var _this = this;
+                $.ajax({
+                        url: Pathurl.getToken,
+                        // url: 'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
+                        type: 'GET',
+                        contentType: "application/json",
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        msg = data;
+                        _this.fillUpload(up, data);
+                    })
+            },
+            changeInputText(amount) {
+                var num = Number(this.content_a.attr('data-num'));
+                this.content_a.attr('data-num', num + amount);
+            },
+            /*
+            * 当上传完成时,将上传的文件添加给购物车
+            */
+            addFiles(name, date, size, mark) {
+                var index = name.indexOf('.'),
+                    mark = mark;
+                var li = document.createElement('li'),
+                    className = '';
+                    console.log(`index is ${index} and name is ${name.substring(index + 1)}`);
+                switch (name.substring(index + 1)) {
+                    case 'doc':
+                        className = 'logo-word';
+                        break;
+                    case 'docx':
+                        className = 'logo-word';
+                        break;
+                    case 'ppt':
+                        className = 'logo-ppt';
+                        break;
+                    case 'pdf':
+                        className = 'logo-pdf';
+                        break;
+                    case 'xls':
+                        className = 'logo-excel';
+                        break;
+                    default:
+                        className = 'logo-ppt';
+                }
+                li.innerHTML = '<i class="file-logo ' + className + '"></i>' +
+                    '<p class="file-header">' + name.substring(0, index) + '</p>' +
+                    '<p>上传时间:<span class="upload-time">' + date + '</span>' +
+                    '大小:<span>' + size + '</span></p>' +
+                    '<i class="logo-error" data-mark=' + mark + ' data-area=self></i>';
+                $(li).attr('data-type', className);
+                this.shopping.append(li);
+                //刷新滚动条
+                Iscroll.forEach(function(val) {
+                    setTimeout(function() {
+                        val.refresh();
+                    }, 100);
+                })
+                //完成添加操作后,将Input的图标改为+1;
+                this.changeInputText(1);
+            },
+            //找到specified item并且删除
+            findIndex(arr, mark) {
+                var loca = null;
+                refresh(); //这里的refresh可以去掉，只是给死数据刷新                    
+                if (arr.length === 0) {
+                    return false;
+                };
+                arr.forEach(function(val, index) {
+                    if (val.mark === mark) {
+                        loca = index;
                     }
-            }
-        }),
-        init() {
+                });
+                arr.splice(loca, 1);
+                refresh();
 
-            this.uploader.init();
-        },
-        fillUpload(up) {
-            console.log(up);
-            let msg = this.getAjax(),
-                {
-                    dir, host, policy, accessid, signature
-                } = msg;
-            let new_multipart_params = {
-                'key': dir + '${filename}', //获得文件名
-                'policy': policy,
-                'OSSAccessKeyId': accessid,
-                'success_action_status': '200', //让服务端返回200,不然，默认会返回204
-                // 'callback' : callbackbody,
-                'signature': signature //由后台获得的签名
-            }
-            up.setOption({ //设置上传参数
-                'url': host,
-                'multipart_params': new_multipart_params
-            });
+            },
+            deleteItem($target) {
+                var li = $target.parents('li'),
+                    mark = $target.attr('data-mark'),
+                    area = $target.attr('data-area'),
+                    loca = null,
+                    _this = this;
 
-        },
-        getAjax() {
-            var msg = '';
-            $.ajax({
-                    url: Pathurl.getToken,
-                    // url:'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
-                    type: 'post',
-                    contentType: "application/json",
-                    dataType: 'json'
+                if (area === 'self') {
+                    this.findIndex(this.filesArray, mark);
+                } else {
+                    this.findIndex(this.official, mark);
+                }
+                $.ajax({
+                    url: Pathurl.remove,
+                    type: 'POST',
+                    data: {
+                        mark: mark
+                    }
+                }).then(function(data) {
+                    if (data.success) {
+                        prompt.changeInfo('删除成功!');
+                        error.removeLi(li); //删除指定元素
+                        console.log(li);
+                        _this.changeInputText(-1);
+                    } else {
+                        prompt.changeInfo('删除失败!');
+                    }
                 })
-                .done(function(data) {
-                    msg = data;
-                })
-            return msg;
-        }
+            }
     }
-    upload.init();
+    upload.addFiles("123", '2015-12-12', '200KB', 123);
 
     /*
      * 定义购物车出现移除icon的操作

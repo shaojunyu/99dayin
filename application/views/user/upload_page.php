@@ -27,9 +27,12 @@
 									$items = $cart->getItems();
 									?>
             <a class="container-upload" id="container-upload" href="javascript:void(0)"
-				data-num='<?php echo count($items)?>'>上传文件<input class="upload"
+				data-num='<?php echo count($items)?>'>上传文件
+				<!-- <input class="upload"
 				type="file" id="file-upload" multiple 
-				accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel" /></a>
+				accept="application/msword,image/jpeg,image/png,application/vnd.ms-powerpoint,,application/nd.ms-works,application/vnd.ms-excel" /> -->
+				</a>
+				  <!-- <a id="uploadfiles" href="javascript:;">[Upload files]</a> -->
 		</article>
 		<article class="choose-base" id="choose-base">
 			<header class="base-header" id="base-header">

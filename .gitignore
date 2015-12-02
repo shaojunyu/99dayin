@@ -4,4 +4,4 @@
 
 application/logs/
 .htaccess
-views/
+views
