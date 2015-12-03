@@ -378,10 +378,11 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 dataType: "json",
                 contentType: "application/json",
                 data: {
-                    filename: file.name
+                    filename: file.name,
+                    fileMD5: file.hash
                 }
-            }).then(function () {
-                upload.addFiles(file);
+            }).then(function (data) {
+                if (data.success) upload.addFiles(file);else prompt.changeInfo('对不起您的浏览器抽风了');
             });
         },
 
@@ -397,7 +398,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    mark: mark
+                    fileMD5: mark //发送文件的hash值
                 }
             }).then(function (data) {
                 if (data.success) {
@@ -452,24 +453,26 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         * 验证文件是否存在,如果存在则直接添加,显示添加成功,如果不存在则开始上传文件
         */
         confirm: function confirm(up, hash, file) {
-            //注意这里的原来的uploadfile对象      
-            $.ajax({
-                url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                type: "POST",
-                dataType: "json",
-                contentType: 'application/json',
-                data: {
-                    hash: hash
-                }
-            }).then(function (data) {
-                if (!data.success) {
-                    //如果不存在的话
-                    file.hash = hash;
-                    up.removeFile(file); //删除队列中已经存在的文件
-                    console.log(file.hash);
-                    upload.addFileToken(file);
-                }
-            });
+            //注意这里的原来的uploadfile对象     
+            file.hash = hash;
+            up.removeFile(file); //删除队列中已经存在的文件
+            upload.addFileToken(file);
+            // $.ajax({
+            //     url:Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+            //     type:"POST",
+            //     dataType:"json",
+            //     contentType:'application/json',
+            //     data:{
+            //         fileMD5:hash
+            //     }
+            // })
+            // .then(data=>{
+            //     if(!data.success){ //如果不存在的话
+            //        file.hash = hash;
+            //        up.removeFile(file);  //删除队列中已经存在的文件
+            //        upload.addFileToken(file);
+            //     }
+            // })
         }
     };
     upload.init();
@@ -692,11 +695,15 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 var mark = [],
                     goods = $("#scroller").find(".logo-error");
                 goods.each(function (val) {
+                    //获取商品的hash值.
                     mark.push(val.attr('data-mark'));
                 });
-                if (mark.length === 0) {
+                var len = mark.length;
+                if (len === 0) {
+                    //检查上平数量是否为0
                     prompt.changeInfo('购物车为0,不能结算!');
-                } else if (order_num > 0) {
+                } else if (len > 0) {
+                    //看这里需不需要发送商品总的hash值;
                     window.location.href = './confirm';
                 }
             });
