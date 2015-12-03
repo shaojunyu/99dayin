@@ -69,7 +69,6 @@ while(1){
 					//开始分析
 					print "complete download, start analysising ".realpath($localfile)."\n";
 					$extension = substr(strrchr($localfile,'.'),1);
-					//exit();
 					
 					$page = 0;
 					$type = '';

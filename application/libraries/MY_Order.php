@@ -1,22 +1,22 @@
 <?php
-use leancloud\AVQuery;
-use leancloud\AVObject;
-use leancloud\AVLibraryException;
 
 require_once 'MY_Base_Class.php';
 //自定义订单类
 class MY_Order extends MY_Base_Class{
 	private $userId;
-	private $AVOrder;
+	private $order;
 	private $cart;
-	private $AVQuery;
 	private $pingpp_app_id;
+	private $bombObj;
 	
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		$this->cart = new MY_Cart();
-		//$this->AVQuery = new AVQuery('Order');
+		try {
+			$this->bombObj = new BmobObject('Order');
+		} catch (Exception $e) {
+		}
 		//引入ping++
 		require_once APPPATH.'third_party/pingpp/init.php';
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
@@ -26,34 +26,69 @@ class MY_Order extends MY_Base_Class{
 	}
 	
 	/*
-	 * //创建成功，返回订单号
+	 * 创建成功，返回订单号
 	 */
 	public function createOrder(){
-		$this->AVQuery->where('userId', $this->userId);
-		$this->AVQuery->where('state', orderState::UNPAID);
-		$res = $this->AVQuery->find()->results;
-		if (!empty($res)) {
+		$res = $this->bombObj->get('',array('where={"uesrId":"'.$this->userId.'"}','where={"state":"'.orderState::UNPAID.'"}'));
+		//var_dump($res);
+
+// 		$this->AVQuery->where('userId', $this->userId);
+// 		$this->AVQuery->where('state', orderState::UNPAID);
+// 		$res = $this->AVQuery->find()->results;
+		if (!empty($res->results)) {
 			throw new MY_Exception('存在未支付订单，无法创建新订单！');
-			return ;
+			return;
 		}
 		
 		//创建订单
 		$items = $this->cart->getItems();
 		if (empty($items)) {
 			throw new MY_Exception('购物车为空');
-			return ;
+			return;
 		}
 		
-		$this->AVOrder = new AVObject('Order');
-		$this->AVOrder->userId = $this->userId;
-		$this->AVOrder->items = $items;
-		$this->AVOrder->price = 10;
-		$this->AVOrder->state = orderState::UNPAID;
-		$order = $this->AVOrder->save();
-		$this->cart->deleteAll();
-		//创建ping++ 支付订单
-		return $order;
-		
+		$price = $this->get_price($items);
+		$items = json_encode($items);
+		try {
+			$res = $this->bombObj->create(array(
+					'userId'=>$this->userId,
+					'items'=>$items,
+					'price'=>$price,
+					'state'=>orderState::UNPAID
+			));
+			$this->cart->deleteAll();
+			return $res->objectId;
+		} catch (Exception $e) {
+		}
+	}
+	
+	/*
+	 * 计算订单价格
+	 * return int
+	 * 计价单位 分
+	 */
+	public function test(){
+		$this->get_price($this->cart->getItems());
+	}
+	private function get_price($items){
+		$total_price = 0;
+		foreach ($items as &$item){
+			$fileMD5 = $item->fileMD5;
+			try {
+				$bmob = new BmobObject('File_Info');
+				$res = $bmob->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+				if (!empty($res->results)) {
+					$res = $res->results[0];
+					$total_price = $total_price + (int)($res->pages) * (int)($item->amount);
+					var_dump($res);
+				}else {
+					$this->cart->deleteItem($fileMD5);
+				}
+			} catch (Exception $e) {
+			}
+		}
+		var_dump($total_price);
+		return $total_price;
 	}
 	
 	//ping++

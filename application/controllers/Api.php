@@ -42,6 +42,9 @@ class Api extends CI_Controller{
 		echo 'api';
 	}
 	public function test(){
+		$b = new BmobObject('test');
+		$res = $b->create(array('id'=>'134'));
+		var_dump($res);
 	}
 	
 	public function signup(){
@@ -133,10 +136,14 @@ class Api extends CI_Controller{
 	}
 	
 	public function getUploadToken(){
+		$username = $this->session->userdata('username');
+		
 		require_once APPPATH.'third_party/oss_php_sdk_20140625/sdk.class.php';
     	$id= 'GtzMAvDTnxg72R04';
     	$key= 'VhD2czcwLVAaE7DReDG4uEVSgtaSYK';
     	$host = 'http://99dayin.oss-cn-hangzhou.aliyuncs.com';
+    	$callback_body = '{"callbackUrl":"http://oss-demo.aliyuncs.com:23450","callbackHost":"oss-demo.aliyuncs.com","callbackBody":"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}","callbackBodyType":"application/x-www-form-urlencoded"}';
+    	$base64_callback_body = base64_encode($callback_body);
     	$now = time();
     	$expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
     	$end = $now + $expire;
@@ -211,7 +218,13 @@ class Api extends CI_Controller{
 		//文件信息保存到购物车
 		try {
 			$cart = new MY_Cart();
+			//$cart->deleteAll();
 			$cart->addItem($filename, $fileMD5);
+			//$cart->increase($fileMD5);
+			//$cart->decrease($fileMD5);
+			//$cart->deleteItem($fileMD5);
+			var_dump($cart->getItems());
+			//
 			//$cart->addItem($filename, $fileHash);
 		} catch (Exception $e) {
 			
@@ -255,6 +268,7 @@ class Api extends CI_Controller{
 	public function createOrder(){
 		try{
 			$order = new MY_Order();
+			//$order->test();
 			$orderId = $order->createOrder();
 			$this->echo_msg(true,'成功');
 		}catch (MY_Exception $e){
