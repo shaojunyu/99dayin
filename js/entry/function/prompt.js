@@ -33,14 +33,18 @@ define(['jquery'], function ($) {
 		this.showPrompt();
 		var _percent = Number(percent),
 		    _this = this;
-		if (_percent === 100) {
-			this.prompt_ele.text(_percent + "%");
+		this.prompt_ele.text(_percent + "%");
+	};
+	Prompt.prototype.detactInfo = function (percent) {
+		this.showPrompt();
+		this.prompt_ele.text("检验文件中:" + percent + "%");
+		var _this = this;
+		if (percent === 100) {
+			this.prompt_ele.text("检测成功~开始上传");
 			setTimeout(function () {
 				_this.hidePrompt();
 			}, 800); //隐藏进度条
-		} else {
-				this.prompt_ele.text(_percent + "%");
-			}
+		}
 	};
 	return {
 		Prompt: Prompt
