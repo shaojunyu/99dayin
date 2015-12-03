@@ -272,27 +272,23 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
             max_file_size: "100mb", //设置最大上传文件大小
             prevent_duplicates: true },
         //防止上传相同大小文件
-
         init: {
             PostInit: function PostInit() {},
             FilesAdded: function FilesAdded(up, files) {
-                upload.getAjax(this);
+                upload.getAjax(this);  //使用ajax获取里面的信息
             },
             UploadProgress: function UploadProgress(up, file) {
-                prompt.loading(0);
-                prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
+                prompt.loading(file.percent);
             },
             FileUploaded: function FileUploaded(up, file, info) {
-                for (var n in file) {
-                    console.log('key is ' + n + ' and name is  ' + file.name + ' and type is ' + file.type + ' ');
-                }
                 if (info.status == 200) {
                     //添加购物车数据
                     var file_date = new Date(),
                         //添加日期
                     date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
-                        size = plupload.formatSize(file.size); //添加文件大小
-                    upload.addFiles(file.name, date, size, file.id);
+                        size = Number(files[i].size / (1024 * 1024)).toFixed(2) + 'MB'; //添加文件大小
+                    addFiles(file, date, size, file.id);
+                    _this.changeInputText(1);
                     prompt.changeInfo("上传成功~");
                 } else {
                     prompt.changeInfo("上传失败!");
@@ -301,11 +297,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
         }
     });
     uploader.init();
-
     var upload = {
-        shopping: $('.files-content'),
-        addBtn: $('.article-content'), //文库里面的添加btn
-        delete_btn: $('#scroller'), //删除Btn的ul
         fillUpload: function fillUpload(up, data) {
             console.log(up);
             var dir = data.dir;
@@ -314,6 +306,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
             var policy = data.policy;
             var host = data.host;
 
+            console.log('' + (dir + signature));
             var new_multipart_params = {
                 'key': dir + '${filename}', //获得文件名
                 'policy': policy,
@@ -341,99 +334,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'fileupload', 'utility', '
                 msg = data;
                 _this.fillUpload(up, data);
             });
-        },
-        changeInputText: function changeInputText(amount) {
-            var num = Number(this.content_a.attr('data-num'));
-            this.content_a.attr('data-num', num + amount);
-        },
-
-        /*
-        * 当上传完成时,将上传的文件添加给购物车
-        */
-        addFiles: function addFiles(name, date, size, mark) {
-            var index = name.indexOf('.'),
-                mark = mark;
-            var li = document.createElement('li'),
-                className = '';
-            console.log('index is ' + index + ' and name is ' + name.substring(index + 1));
-            switch (name.substring(index + 1)) {
-                case 'doc':
-                    className = 'logo-word';
-                    break;
-                case 'docx':
-                    className = 'logo-word';
-                    break;
-                case 'ppt':
-                    className = 'logo-ppt';
-                    break;
-                case 'pdf':
-                    className = 'logo-pdf';
-                    break;
-                case 'xls':
-                    className = 'logo-excel';
-                    break;
-                default:
-                    className = 'logo-ppt';
-            }
-            li.innerHTML = '<i class="file-logo ' + className + '"></i>' + '<p class="file-header">' + name.substring(0, index) + '</p>' + '<p>上传时间:<span class="upload-time">' + date + '</span>' + '大小:<span>' + size + '</span></p>' + '<i class="logo-error" data-mark=' + mark + ' data-area=self></i>';
-            $(li).attr('data-type', className);
-            this.shopping.append(li);
-            //刷新滚动条
-            Iscroll.forEach(function (val) {
-                setTimeout(function () {
-                    val.refresh();
-                }, 100);
-            });
-            //完成添加操作后,将Input的图标改为+1;
-            this.changeInputText(1);
-        },
-
-        //找到specified item并且删除
-        findIndex: function findIndex(arr, mark) {
-            var loca = null;
-            refresh(); //这里的refresh可以去掉，只是给死数据刷新                   
-            if (arr.length === 0) {
-                return false;
-            };
-            arr.forEach(function (val, index) {
-                if (val.mark === mark) {
-                    loca = index;
-                }
-            });
-            arr.splice(loca, 1);
-            refresh();
-        },
-        deleteItem: function deleteItem($target) {
-            var li = $target.parents('li'),
-                mark = $target.attr('data-mark'),
-                area = $target.attr('data-area'),
-                loca = null,
-                _this = this;
-
-            if (area === 'self') {
-                this.findIndex(this.filesArray, mark);
-            } else {
-                this.findIndex(this.official, mark);
-            }
-            $.ajax({
-                url: Pathurl.remove,
-                type: 'POST',
-                data: {
-                    mark: mark
-                }
-            }).then(function (data) {
-                if (data.success) {
-                    prompt.changeInfo('删除成功!');
-                    error.removeLi(li); //删除指定元素
-                    console.log(li);
-                    _this.changeInputText(-1);
-                } else {
-                    prompt.changeInfo('删除失败!');
-                }
-            });
         }
     };
-    upload.addFiles("123", '2015-12-12', '200KB', 123);
 
     /*
      * 定义购物车出现移除icon的操作
