@@ -182,6 +182,18 @@ class Api extends CI_Controller{
 	}
 	
 	/*
+	 * 验证文件是否已存在
+	 */
+	public function confirmMD5(){
+		$fileMD5 = $this->input->post('fileMD5');
+		if (empty($fileMD5)) {
+			$this->echo_msg(false);
+		}else {
+			//$bmob = new BmobObject();
+			$this->echo_msg(false);
+		}
+	}
+	/*
 	 * 上传成功，前端回调函数
 	 */
 	public function uploadACK(){
