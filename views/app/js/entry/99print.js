@@ -8,7 +8,7 @@ require.config({
         'prompt': 'entry/function/prompt', //提示模块
         'enroll': 'entry/function/enroll', //注册模块
         'SMS': 'https://cdn1.lncld.net/static/js/av-mini-0.6.1.js', //短信模块
-        'md5': "lib/jquery.md5",
+        'md5': "lib/spark-md5.min",
         'encryption':"entry/function/encryption"
     }
 })
