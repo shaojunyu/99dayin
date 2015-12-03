@@ -233,10 +233,10 @@ class Api extends CI_Controller{
 	
 	//删除购物车中的项目
 	public function deleteCartItem(){
-		$fileHash = $this->input->post('mark');
+		$fileMD5 = $this->input->post('fileMD5');
 		
 		$cart = new MY_Cart();
-		if ($cart->deleteItem($fileHash)) {
+		if ($cart->deleteItem($fileMD5)) {
 			$this->echo_msg(true,'删除成功');
 		}else {
 			$this->echo_msg(false,'删除失败，请重试');

@@ -174,3 +174,4 @@ class orderState{
 	const OTHER  = 'OTHER';//其他
 }
 
+
