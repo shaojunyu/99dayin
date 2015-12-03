@@ -51,7 +51,7 @@ gulp.task('copy', function() {
         //     .pipe(gulp.dest('../js/entry'));
         // gulp.src('app/js/lib/**/*.js')
         //     .pipe(gulp.dest('../js/lib')); 
-        gulp.src('app/js/entry1/**/prompt.js')
+        gulp.src('app/js/entry/**/prompt.js')
             .pipe(gulp.dest('app/js/entry'));
 })
 gulp.task('copyCSS',function(){
@@ -60,8 +60,8 @@ gulp.task('copyCSS',function(){
 })
 
 gulp.task('babel',['copy'],function() {
-    gulp.watch(['app/js/entry1/upload.js'],function(){
-        gulp.src(['app/js/entry1/upload.js','app/js/entry1/**/prompt.js'])
+    gulp.watch(['app/js/entry/upload.js'],function(){
+        gulp.src(['app/js/entry/upload.js','app/js/entry/**/prompt.js','app/js/entry/function/*.js'])
            .pipe(babel({
                presets: ['es2015']
            }))
@@ -71,9 +71,12 @@ gulp.task('babel',['copy'],function() {
      
 
 })
-gulp.task('copyJS', ['babel','copy'], function() {
+gulp.task('copyJS', function() {
     gulp.watch(['app/js/**/*.js'], function() {
         gulp.src('app/js/entry/**/*.js')
+            .pipe(babel({
+                presets:['es2015']
+            }))
             .pipe(gulp.dest('../js/entry'));
         gulp.src('app/js/lib/**/*.js')
             .pipe(gulp.dest('../js/lib'));

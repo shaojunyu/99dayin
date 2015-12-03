@@ -200,7 +200,7 @@ require(['jquery', 'scroll', 'checkEvent', 'prompt', 'modal', 'utility'], functi
         addLi: function(ul, data, mark) {
             var li = document.createElement('li'),
                 html = '',
-                num = Number(mark.attr('data-order'))++;
+                num = Number(mark.attr('data-order'));
             mark.attr('data-order', num); //将对应的订单数加一
             data.forEach(function(val, index) {
                 html += '<div class="order-upart">' +

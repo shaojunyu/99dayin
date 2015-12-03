@@ -1,6 +1,6 @@
 'use strict';
 
-define(['md5'], function (md5) {
+define(['md5'], function () {
 	/*
   * 加密算法
   */
@@ -10,7 +10,7 @@ define(['md5'], function (md5) {
 			date: new Date().getTime(),
 			str: '99dayin_api_secrete'
 		},
-		    str = md5.hash(obj.date + obj.str);
+		    str = SparkMD5.hash(obj.date + obj.str);
 		return url + "?time=" + obj.date + "&token=" + str;
 	}
 	return {
