@@ -117,26 +117,6 @@
 						</div>
 					</div>
 					<div class="articles">
-						<div class="article-item">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-1"></i>
-						</div>
-						<div class="article-item">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-2"></i>
-						</div>
-					</div>
-					<div class="articles">
 						<div></div>
 						<div></div>
 					</div>
@@ -173,7 +153,7 @@
 								<p class="file-header"><?php echo $item->filename?></p>
 								<p>
 									上传时间:<span class="upload-time">2015/2/19 23:04</span>大小:<span>200</span>kb
-								</p> <i class="logo-error" data-mark="<?php echo $item->fileHash?>" data-area="self"></i>
+								</p> <i class="logo-error" data-mark="<?php echo $item->fileMD5?>" data-area="self"></i>
 							</li>
                             
                             <?php }}?>
