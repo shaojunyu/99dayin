@@ -7,6 +7,7 @@ class Api extends CI_Controller{
 	private $bmobSms;
 	private $pingpp_app_id;
 	private $local_data;
+	private $post_data;//获取post数据
 	
 	public function __construct(){
 		parent::__construct();
@@ -35,7 +36,13 @@ class Api extends CI_Controller{
 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
 		\pingpp\Pingpp::setApiKey($live_key);
-		//本地用户数据保存
+		
+		//解析post数据,以json格式接收的数据
+		if($this->input->server('CONTENT_TYPE') === 'application/json'){
+			$this->post_data = json_decode($this->input->raw_input_stream);
+		}else {
+			
+		}
 		
 	}
 	public function index(){
@@ -199,11 +206,14 @@ class Api extends CI_Controller{
 	public function uploadACK(){
 		$username = $this->input->post('username');
 		$filename = $this->input->post('filename');
-		$fileMD5 = $this->input->post('fileMD5');
+// 		$fileMD5 = $this->input->post('fileMD5');
+// 		$filename = $this->post_data['filename'];
+		$fileMD5 = $this->post_data['fileMD5'];
+		$filename = $this->post_datap['filename'];
 		$uploader = $this->session->userdata('userId');
-		
+		//$this->echo_msg(false,$fileMD5);
 		if (empty($filename) or empty($fileMD5)) {
-			$this->echo_msg(false,'参数不全');
+			$this->echo_msg(false,$filename);
 			exit();
 		}
 		
@@ -235,7 +245,7 @@ class Api extends CI_Controller{
 			//$cart->increase($fileMD5);
 			//$cart->decrease($fileMD5);
 			//$cart->deleteItem($fileMD5);
-			var_dump($cart->getItems());
+			//var_dump($cart->getItems());
 			//
 			//$cart->addItem($filename, $fileHash);
 		} catch (Exception $e) {

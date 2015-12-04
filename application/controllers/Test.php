@@ -18,16 +18,9 @@ class Test extends CI_Controller{
 		$accessKeyId = "GtzMAvDTnxg72R04"; ;
 		$accessKeySecret = "VhD2czcwLVAaE7DReDG4uEVSgtaSYK";
 		$endpoint = "oss-cn-hangzhou.aliyuncs.com";
-		
-		$bmob = new BmobObject('Car');
-		
-		$item1 = new item('123', 'qweeq');
-		$item2 = new item('weq', 'daads');
-		$data = array($item1,$item2);
-		$data = json_encode($data);
-		//$bmob->create(array('items'=>$data));
-		$res = $bmob->get('6ab772aa37');
-		$items = json_decode($res->items);
-		var_dump($items);
+		//echo json_encode(array('filename'=>'123'));
+		var_dump(json_decode($this->input->raw_input_stream));
+		//echo ();
+		var_dump($this->input->server('CONTENT_TYPE'));
 	}
 }
