@@ -11,7 +11,7 @@ class MY_Cart extends MY_Base_Class{
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
-		$this->bmobObject = new BmobObject('car');
+		$this->bmobObject = new BmobObject('Cart');
 		
 		if (!empty($this->userId)) {
 			//在bmob上生成一条购物车记录
