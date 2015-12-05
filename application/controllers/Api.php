@@ -205,8 +205,8 @@ class Api extends CI_Controller{
 	 */
 	public function uploadACK(){
 		if ($this->input->server('CONTENT_TYPE') === 'application/json') {
-			$fileMD5 = $this->post_data['fileMD5'];
-			$filename = $this->post_data['filename'];
+			$fileMD5 = $this->post_data->fileMD5;
+			$filename = $this->post_data->filename;
 		}else {
 			$username = $this->input->post('username');
 			$filename = $this->input->post('filename');
