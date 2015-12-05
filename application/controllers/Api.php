@@ -204,12 +204,15 @@ class Api extends CI_Controller{
 	 * 上传成功，前端回调函数
 	 */
 	public function uploadACK(){
-		$username = $this->input->post('username');
-		$filename = $this->input->post('filename');
-// 		$fileMD5 = $this->input->post('fileMD5');
-// 		$filename = $this->post_data['filename'];
-		$fileMD5 = $this->post_data['fileMD5'];
-		$filename = $this->post_datap['filename'];
+		if ($this->input->server('CONTENT_TYPE') === 'application/json') {
+			$fileMD5 = $this->post_data['fileMD5'];
+			$filename = $this->post_datap['filename'];
+		}else {
+			$username = $this->input->post('username');
+			$filename = $this->input->post('filename');
+			$fileMD5 = $this->input->post('fileMD5');
+		}
+
 		$uploader = $this->session->userdata('userId');
 		//$this->echo_msg(false,$fileMD5);
 		if (empty($filename) or empty($fileMD5)) {
@@ -220,7 +223,7 @@ class Api extends CI_Controller{
 		//文件信息写到本地文件，供文件监听器调用
 		try {
 			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
-			file_put_contents('./file_analysis/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
+			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
@@ -251,6 +254,40 @@ class Api extends CI_Controller{
 		} catch (Exception $e) {
 			
 		}
+	}
+	
+	/*
+	 * 获取后台文件解析进程
+	 */
+	public function getProgress(){
+		header('Content-Type: text/event-stream');
+		$cart = new MY_Cart();
+		$items = $cart->getItems();
+		$num = count($items);
+		$bmobObj = new BmobObject('File_Info');
+		while ($num > 0){
+			$this->sendSSEMsg($num);
+			foreach ($items as &$item){
+				$fileMD5 = $item->FileMD5;
+				$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+				if (count($res->results) == 1) {
+					$num--;
+				}
+			}
+			$this->echo_msg(true,$num);
+			if ($num > 0) {
+				$num = count($items);
+			}
+		}
+		$this->sendSSEMsg($num);
+	}
+	
+	private function sendSSEMsg($msg){
+			//echo "id: $id" . PHP_EOL;
+			echo "data: $msg" . PHP_EOL;
+			echo PHP_EOL;
+			ob_flush();
+			flush();
 	}
 	
 	//删除购物车中的项目
