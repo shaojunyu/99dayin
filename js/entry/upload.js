@@ -148,7 +148,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         confirm: Encryption.Encryption('../index.php/api/uploadACK'), //上传成功后的给后台发送验证
         remove: Encryption.Encryption('../index.php/api/deleteCartItem'), //删除购物车
         confirmHash: Encryption.Encryption('../index.php/api/confirmMD5'),
-        SSEurl: Encryption.Encryption('index.php/api/getProgress') //解析SSE地址
+        SSEurl: Encryption.Encryption('../index.php/api/getProgress') //解析SSE地址
     };
     /*
      * 检查id是否和传入的一致
