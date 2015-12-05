@@ -263,20 +263,21 @@ class Api extends CI_Controller{
 	 */
 	public function getProgress(){
 		header('Content-Type: text/event-stream');
+		header('Cache-Control: no-cache');
+		header('Connection: keep-alive');
 		$cart = new MY_Cart();
 		$items = $cart->getItems();
 		$num = count($items);
 		$bmobObj = new BmobObject('File_Info');
 		while ($num > 0){
-			$this->sendSSEMsg($num);
 			foreach ($items as &$item){
-				$fileMD5 = $item->FileMD5;
+				$fileMD5 = $item->fileMD5;
 				$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
 				if (count($res->results) == 1) {
 					$num--;
 				}
 			}
-			$this->echo_msg(true,$num);
+			$this->sendSSEMsg($num);
 			if ($num > 0) {
 				$num = count($items);
 			}
@@ -285,8 +286,7 @@ class Api extends CI_Controller{
 	}
 	
 	private function sendSSEMsg($msg){
-			//echo "id: $id" . PHP_EOL;
-			echo "data: $msg" . PHP_EOL;
+			echo "data:$msg" . PHP_EOL;
 			echo PHP_EOL;
 			ob_flush();
 			flush();
