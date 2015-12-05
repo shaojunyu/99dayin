@@ -20,7 +20,7 @@ require.config({
 });
 "use strict";
 require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'utility', 'header'], function ($, iscroll, prompt, Encryption, md5) {
-
+    SSE.init(); //从这里开始发送SSE,用来表示后台的发送的格式是否正确
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -42,8 +42,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         prompt: $('.prompt')
     });
     /*
-    * 用来解析class后缀名
-    */
+     * 用来解析class后缀名
+     */
 
     var parseClass = (function () {
         function parseClass() {
@@ -82,6 +82,52 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
 
     var getClass = new parseClass();
 
+    /*
+    * 定义了一个发送SSE事件,用来判断文件解析是否完成
+    * 在文件开始上传的时候触发, 然后一直持续触发
+    */
+    function sendSSE(_ref) {
+        var url = _ref.url;
+        var _ref$message = _ref.message;
+        var message = _ref$message === undefined ? function () {} : _ref$message;
+        var _ref$open = _ref.open;
+        var open = _ref$open === undefined ? function () {} : _ref$open;
+        var _ref$error = _ref.error;
+        var error = _ref$error === undefined ? function () {} : _ref$error;
+
+        var source = undefined;
+        if (!!window.EventSource) {
+            source = new EventSource(url);
+        } else {}
+        // source = undefined;
+        //在这里做向下兼容
+
+        /*
+         * 绑定相关事件
+         */
+        source.addEventListener("open", open, false);
+        source.addEventListener("message", message(event), false); //message中返回的数据有,e.data服务器返回的文本数据
+        source.addEventListener("error", error, false);
+        return source;
+    }
+    var SSE = {
+        flag: 0, //设置进度条
+        source: undefined, //设置SSE对象
+        message: function message(event) {
+            this.flag = Number(event.data); //用来表示文件是否解析完成\
+        },
+        init: function init() {
+            this.source = sendSSE({ url: Pathurl.SSEurl, message: SSE.message });
+        },
+        show: function show() {
+            prompt.goPay(this.flag); //显示文件未解析数量
+        },
+        close: function close() {
+            //关闭SSE连接
+            this.source.close();
+        }
+    };
+
     function refresh() {
         Iscroll.forEach(function (val) {
             setTimeout(function () {
@@ -101,7 +147,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         search: '', //搜索
         confirm: Encryption.Encryption('../index.php/api/uploadACK'), //上传成功后的给后台发送验证
         remove: Encryption.Encryption('../index.php/api/deleteCartItem'), //删除购物车
-        confirmHash: Encryption.Encryption('../index.php/api/confirmMD5')
+        confirmHash: Encryption.Encryption('../index.php/api/confirmMD5'),
+        SSEurl: Encryption.Encryption('') //解析SSE地址
     };
     /*
      * 检查id是否和传入的一致
@@ -182,16 +229,19 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
         init: {
             /*
-            * 文件筛选,用来过滤文件内容相同的值
-            */
+             * 文件筛选,用来过滤文件内容相同的值
+             */
 
             FileFiltered: function FileFiltered(up, file) {
-                upload.fileCheck(up, { file: file, native: file.getNative() });
+                upload.fileCheck(up, {
+                    file: file,
+                    native: file.getNative()
+                });
             },
 
             /*
-            * 文件上传进度条
-            */
+             * 文件上传进度条
+             */
             UploadProgress: function UploadProgress(up, file) {
                 console.log(file.percent);
                 prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
@@ -205,15 +255,16 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             },
 
             /*
-            * 当筛选完毕后上传,新文件,并提示上传成功
-            */
+             * 当筛选完毕后上传,新文件,并提示上传成功
+             */
             FileUploaded: function FileUploaded(up, file, info) {
                 if (info.status == 200) {
                     //添加购物车数据
                     upload.addFileToken(file);
+                    SSE.init(); //从这里开始发送SSE,用来表示后台的发送的格式是否正确
                 } else {
-                    prompt.changeInfo("上传失败!");
-                }
+                        prompt.changeInfo("上传失败!");
+                    }
             }
         }
     });
@@ -273,8 +324,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
 
         /*
-        * 上传文件的token参数
-        */
+         * 上传文件的token参数
+         */
         getAjax: function getAjax(up) {
             prompt.changeInfo("文件上传中~");
             var _this = this;
@@ -322,8 +373,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
 
         /*
-        * 将添加的文件,返回给后台
-        */
+         * 将添加的文件,返回给后台
+         */
         addFileToken: function addFileToken(file) {
             $.ajax({
                 url: Pathurl.confirm,
@@ -340,8 +391,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
 
         /*
-        * 删除文件,将hash值传入,然后移出购物车
-        */
+         * 删除文件,将hash值传入,然后移出购物车
+         */
         deleteItem: function deleteItem($target) {
             var li = $target.parents('li'),
                 mark = $target.attr('data-mark'),
@@ -365,11 +416,11 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
 
         /*
-        * 传入pulpUpload对象,验证文件内容的md5值,应用到了,slice的API; 并且实现了分片解析的概念
-        */
-        fileCheck: function fileCheck(up, _ref) {
-            var file = _ref.file;
-            var native = _ref.native;
+         * 传入pulpUpload对象,验证文件内容的md5值,应用到了,slice的API; 并且实现了分片解析的概念
+         */
+        fileCheck: function fileCheck(up, _ref2) {
+            var file = _ref2.file;
+            var native = _ref2.native;
 
             // if($('#container-upload').attr('data-num')>=20){
             //     up.removeFile(file);
@@ -409,8 +460,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
 
         /*
-        * 验证文件是否存在,如果存在则直接添加,显示添加成功,如果不存在则开始上传文件
-        */
+         * 验证文件是否存在,如果存在则直接添加,显示添加成功,如果不存在则开始上传文件
+         */
         confirm: function confirm(up, hash, file) {
             //注意这里的原来的uploadfile对象     
             file.hash = hash;
@@ -663,7 +714,12 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
                     //看这里需不需要发送商品总的hash值;
-                    window.location.href = './confirm';
+
+                    if (SSE.flag === 0) {
+                        window.location.href = './confirm';
+                    } else {
+                        SSE.show();
+                    }
                 }
             });
         }
