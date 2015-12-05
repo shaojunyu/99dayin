@@ -14,7 +14,7 @@ require.config({
 });
 "use strict";
 require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5) {
-
+    SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -98,7 +98,7 @@ class parseClass {
             this.flag = Number(event.data);  //用来表示文件是否解析完成\
         },
         init(){
-            this.source = sendSSE({url:Pathurl.SSEurl,SSE.message});
+            this.source = sendSSE({url:Pathurl.SSEurl,message:SSE.message});
         },
         show(){
             prompt.goPay(this.flag);  //显示文件未解析数量
