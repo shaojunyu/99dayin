@@ -224,7 +224,7 @@ class Api extends CI_Controller{
 		//文件信息写到本地文件，供文件监听器调用
 		try {
 			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
-			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
+			file_put_contents('./file_analysis/file_json/'.'file-'.$uploader.'-'.time().'.json',json_encode($filedata));
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
