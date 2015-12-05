@@ -283,6 +283,9 @@ class parseClass {
                     _this.deleteItem($target);
                 }
             });
+            this.content_a.on('click',function(e){
+                SSE.close();
+            })
         },
         fillUpload(up, data) {
             let {
@@ -363,7 +366,7 @@ class parseClass {
                     dataType: "JSON",
                     contentType: "application/json",
                     data: JSON.stringify({
-                        filename: file.name,
+                        filename: encodeURI(file.name),
                         fileMD5: file.hash
                     })
                 })
