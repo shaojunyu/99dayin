@@ -86,8 +86,9 @@ class parseClass {
         /*
          * 绑定相关事件
          */
+         console.log(123);
         source.addEventListener("open", open, false);
-        source.addEventListener("message", message(event), false); //message中返回的数据有,e.data服务器返回的文本数据
+        source.addEventListener("message", (e)=>{console.log(`e is ${e} and data is ${e.data}`);message(e);}, false); //message中返回的数据有,e.data服务器返回的文本数据
         source.addEventListener("error", error, false);
         return source;
     }
@@ -95,10 +96,14 @@ class parseClass {
         flag:0,  //设置进度条
         source:undefined, //设置SSE对象
         message(event){
-            this.flag = Number(event.data);  //用来表示文件是否解析完成\
+            console.log(`event is ${event} and data is ${event.data}`);
+            SSE.flag = event.data;  //用来表示文件是否解析完成\
+
         },
         init(){
+
             this.source = sendSSE({url:Pathurl.SSEurl,message:SSE.message});
+
         },
         show(){
             prompt.goPay(this.flag);  //显示文件未解析数量
@@ -725,7 +730,8 @@ class parseClass {
     //             }
     //         })
     //     }
-    // }
-    // Search.init();
-SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
+//     // }
+//     // Search.init();
+// SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
+// setTimeout(()=>{SSE.close()},3000);
 })
