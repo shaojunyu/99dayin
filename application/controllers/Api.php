@@ -206,13 +206,12 @@ class Api extends CI_Controller{
 	public function uploadACK(){
 		if ($this->input->server('CONTENT_TYPE') === 'application/json') {
 			$fileMD5 = $this->post_data->fileMD5;
-			$filename = $this->post_data->filename;
+			$filename = urldecode($this->post_data->filename);
 		}else {
-			$username = $this->input->post('username');
 			$filename = $this->input->post('filename');
 			$fileMD5 = $this->input->post('fileMD5');
 		}
-
+		$username = $this->session->userdata('username');
 		$uploader = $this->session->userdata('userId');
 
 		//$this->echo_msg(false,$fileMD5);
@@ -224,7 +223,7 @@ class Api extends CI_Controller{
 		//文件信息写到本地文件，供文件监听器调用
 		try {
 			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
-			file_put_contents('./file_analysis/file_json/'.'file-'.$uploader.'-'.time().'.json',json_encode($filedata));
+			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
@@ -244,14 +243,7 @@ class Api extends CI_Controller{
 		//文件信息保存到购物车
 		try {
 			$cart = new MY_Cart();
-			//$cart->deleteAll();
 			$cart->addItem($filename, $fileMD5);
-			//$cart->increase($fileMD5);
-			//$cart->decrease($fileMD5);
-			//$cart->deleteItem($fileMD5);
-			//var_dump($cart->getItems());
-			//
-			//$cart->addItem($filename, $fileHash);
 		} catch (Exception $e) {
 			
 		}
