@@ -8978,7 +8978,7 @@ require.config({
                 dataType: "JSON",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    filename: r.name,
+                    filename: encodeURI(r.name),
                     fileMD5: r.hash
                 })
             }).then(function(e) {

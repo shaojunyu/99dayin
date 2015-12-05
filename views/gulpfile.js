@@ -7,7 +7,13 @@ var gulp = require('gulp'),
     flexpost = require('postcss-flexboxfixer'),
     rename = require('gulp-rename'),
     babel = require('gulp-babel'),
-    eslint = require('gulp-eslint');
+    eslint = require('gulp-eslint'),
+    concat = require('gulp-concat'), //合并  
+
+    uglify = require('gulp-uglify'), //压缩  
+
+    amdOptimize = require("amd-optimize"); //require优化  
+
 
 gulp.task('minify', function() {
     gulp.src('js/app.js')
@@ -99,4 +105,24 @@ gulp.task('eslint', function() {
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 })
+gulp.task('rjs', function () {  
+    gulp.src('./src/js/**/*.js')  
+        .pipe(amdOptimize("main", {  
+            paths: {  
+                "jquery": "../../libs/jquery/dist/jquery.min",  
+                "jquery.serializeJSON": "../../libs/jquery.serializeJSON/jquery.serializejson.min",  
+                "sug": "src/js/suggestion/suggestion",  
+                "validate": "../util/src/js/util/validate",  
+                "urlParam": "../util/src/js/util/url.param"  
+            },  
+            shim: {  
+                "jquery.serializeJSON": ['jquery']  
+            }  
+        }))  
+        .pipe(concat("index.js"))           //合并  
+        .pipe(gulp.dest("dist/js"))          //输出保存  
+        .pipe(rename("index.min.js"))          //重命名  
+        .pipe(uglify())                        //压缩  
+        .pipe(gulp.dest("dist/js"));         //输出保存  
+});  
 gulp.task('default', ['sync', 'watch']);
