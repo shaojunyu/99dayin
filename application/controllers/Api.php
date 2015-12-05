@@ -208,9 +208,14 @@ class Api extends CI_Controller{
 		$filename = $this->input->post('filename');
 // 		$fileMD5 = $this->input->post('fileMD5');
 // 		$filename = $this->post_data['filename'];
-		$fileMD5 = $this->post_data['fileMD5'];
-		$filename = $this->post_datap['filename'];
-		$uploader = $this->session->userdata('userId');
+		try{
+			$fileMD5 = $this->post_data->fileMD5;
+			$filename = $this->post_data->filename;
+		}catch(Exception $e){
+
+		}
+
+		$uploader = $this->session->userdata('userIde');
 		//$this->echo_msg(false,$fileMD5);
 		if (empty($filename) or empty($fileMD5)) {
 			$this->echo_msg(false,$filename);

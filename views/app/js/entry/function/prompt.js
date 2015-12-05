@@ -45,6 +45,13 @@ define(['jquery'],function($){
 			},800);  //隐藏进度条
 		}
 	}
+	Prompt.prototype.goPay = function(num){
+		this.showPrompt();
+		this.prompt_ele.text("您的未解析文件数目:"+percent);	
+		if(num===0){
+			this.prompt_ele.text("文件解析完成");
+		}
+	}
 	return {
 		Prompt:Prompt
 	}

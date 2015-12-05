@@ -37,77 +37,76 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         prompt: $('.prompt')
     });
     /*
-    * 用来解析class后缀名
-    */
-   class parseClass{
-         constructor(){
-             
-         }
-         getClass(name){
-           let className = undefined;
-             switch (name) {
-                 case 'doc':
-                     className = 'logo-word';
-                     break;
-                 case 'docx':
-                     className = 'logo-word';
-                     break;
-                 case 'ppt':
-                     className = 'logo-ppt';
-                     break;
-                 case 'pdf':
-                     className = 'logo-pdf';
-                     break;
-                 case 'xls':
-                     className = 'logo-excel';
-                     break;
-                 default:
-                     className = 'logo-ppt';
-             }
-             return className;
-         }
-     }
-    let getClass = new parseClass();
-    function process(url, opts) {
-        var xhr = new XMLHttpRequest(),
-            def = $.Deferred(),
-            $upload = $('.upload'); //上传按钮
-        xhr.open('POST', url, true);
-        xhr.upload.onprogress = function(e) { //处理进度条事件 
-            $upload.addClass('pending')
-                .prop('disabled', true);
-            if (e.lengthComputable) { //表示
-                var num = (e.loaded / e.total) * 100
-                if (num >= 100) {
-                    def.resolve();
-                }
-                prompt.changeInfo(num.toFixed(2) + '%');
-            }
-        };
-        def.done(function(e) {
-            prompt.changeInfo('上传成功！');
-            var ID = $('.name').text(); //用户ID
-            $.ajax({
-                    url: Pathurl.confirm,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        username: ID,
-                        filename: opts.name
-                    }
-                })
-                .done(function(data) {
-                    $upload.removeClass('pending')
-                        .prop('disabled', false);
-                    if (data.success) {
-                        opts.successFn();
-                    } else {
-                        prompt.changeInfo('上传失败!');
-                    }
-                })
+     * 用来解析class后缀名
+     */
+class parseClass {
+        constructor() {
 
-        });
-        xhr.send(opts.form);
+        }
+        getClass(name) {
+            let className = undefined;
+            switch (name) {
+                case 'doc':
+                    className = 'logo-word';
+                    break;
+                case 'docx':
+                    className = 'logo-word';
+                    break;
+                case 'ppt':
+                    className = 'logo-ppt';
+                    break;
+                case 'pdf':
+                    className = 'logo-pdf';
+                    break;
+                case 'xls':
+                    className = 'logo-excel';
+                    break;
+                default:
+                    className = 'logo-ppt';
+            }
+            return className;
+        }
+    }
+    let getClass = new parseClass();
+
+    /*
+    * 定义了一个发送SSE事件,用来判断文件解析是否完成
+    * 在文件开始上传的时候触发, 然后一直持续触发
+    */
+    function sendSSE({
+        url, message = () => {}, open = () => {}, error = () => {}
+    }) {
+        let source;
+        if (!!window.EventSource) {
+            source = new EventSource(url);
+        } else {
+            // source = undefined;
+            //在这里做向下兼容
+        }
+        /*
+         * 绑定相关事件
+         */
+        source.addEventListener("open", open, false);
+        source.addEventListener("message", message(event), false); //message中返回的数据有,e.data服务器返回的文本数据
+        source.addEventListener("error", error, false);
+        return source;
+    }
+    let SSE = {
+        flag:0,  //设置进度条
+        source:undefined, //设置SSE对象
+        message(event){
+            this.flag = Number(event.data);  //用来表示文件是否解析完成\
+        },
+        init(){
+            this.source = sendSSE({url:Pathurl.SSEurl,SSE.message});
+        },
+        show(){
+            prompt.goPay(this.flag);  //显示文件未解析数量
+        },
+        close(){  //关闭SSE连接
+            this.source.close();
+        }
+
     }
 
     function refresh() {
@@ -128,7 +127,9 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         pay: '', //去支付
         search: '', //搜索
         confirm: Encryption.Encryption('../index.php/api/uploadACK'), //上传成功后的给后台发送验证
-        remove: Encryption.Encryption('../index.php/api/deleteCartItem') //删除购物车
+        remove: Encryption.Encryption('../index.php/api/deleteCartItem'), //删除购物车
+        confirmHash: Encryption.Encryption('../index.php/api/confirmMD5'),
+        SSEurl:Encryption.Encryption('')  //解析SSE地址
     };
     /*
      * 检查id是否和传入的一致
@@ -204,27 +205,24 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 }
             ],
             max_file_size: "100mb", //设置最大上传文件大小
-            prevent_duplicates: true, //防止上传相同大小文件
+            prevent_duplicates: true //防止上传相同大小文件
 
         },
         init: {
-            PostInit() {
-
-                },
-                FilesAdded(up, files) {
-                    console.log(files);
-                    upload.getAjax(this); //发送请求
-                },
-                /*
-                * 文件筛选,用来过滤文件内容相同的值
-                */
-                FileFiltered(up, file) {
-                    upload.fileCheck(up,{file:file,native:file.getNative()});
+            /*
+             * 文件筛选,用来过滤文件内容相同的值
+             */
+            FileFiltered(up, file) {
+                    upload.fileCheck(up, {
+                        file: file,
+                        native: file.getNative()
+                    });
                 },
                 /*
-                * 文件上传进度条
-                */
-                 UploadProgress(up, file) {
+                 * 文件上传进度条
+                 */
+                UploadProgress(up, file) {
+                    console.log(file.percent);
                     prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
                     if (file.percent === 100) {
                         upload.flag++;
@@ -235,12 +233,13 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                     }
                 },
                 /*
-                * 当筛选完毕后上传,新文件,并提示上传成功
-                */
+                 * 当筛选完毕后上传,新文件,并提示上传成功
+                 */
                 FileUploaded(up, file, info) {
                     if (info.status == 200) {
                         //添加购物车数据
                         upload.addFileToken(file);
+                        SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
                     } else {
                         prompt.changeInfo("上传失败!");
                     }
@@ -254,7 +253,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         delete_btn: $('#scroller'), //删除Btn的ul
         content_a: $('#container-upload'),
         flag: 0, //不要删除这个flag，这个后期重构需要改,用来检测pulp上传时，两次提醒的100;
-        // hash:undefined,
         init() {
             let _this = this;
             this.addBtn.on('click', function(e) {
@@ -300,22 +298,19 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             up.start(); //触发上传
         },
         /*
-        * 上传文件的token参数
-        */
+         * 上传文件的token参数
+         */
         getAjax(up) {
+            prompt.changeInfo("文件上传中~");
             var _this = this;
             $.ajax({
                     url: Pathurl.getToken,
-                    // url: 'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
                     type: 'POST',
                     contentType: "application/json",
-                    dataType: 'json',
-                    post:{
-                        hash:upload.hash  //将文件的hash值传入
-                    }
+                    dataType: 'json'
                 })
                 .done(function(data) {
-                    _this.fillUpload(up,data);
+                    _this.fillUpload(up, data);
                 })
         },
         changeInputText(amount) {
@@ -354,25 +349,27 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             this.changeInputText(1);
         },
         /*
-        * 将添加的文件,返回给后台
-        */
-        addFileToken(file){
-            console.log(file.hash);
+         * 将添加的文件,返回给后台
+         */
+        addFileToken(file) {
             $.ajax({
-                url:Pathurl.confirm,
-                type:"POST",
-                dataType:"json",
-                contentType:"application/json",
-                data:{
-                    filename:file.name,
-                    fileMD5:file.hash
-                }
-            })
-            .then((data)=>{if(data.success)upload.addFiles(file);else prompt.changeInfo('对不起您的浏览器抽风了')});
+                    url: Pathurl.confirm,
+                    type: "POST",
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        filename: file.name,
+                        fileMD5: file.hash
+                    })
+                })
+                .then((data) => {
+                    if (data.success) upload.addFiles(file);
+                    else prompt.changeInfo('对不起您的浏览器抽风了')
+                });
         },
         /*
-        * 删除文件,将hash值传入,然后移出购物车
-        */
+         * 删除文件,将hash值传入,然后移出购物车
+         */
         deleteItem($target) {
             var li = $target.parents('li'),
                 mark = $target.attr('data-mark'),
@@ -380,9 +377,9 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             $.ajax({
                 url: Pathurl.remove,
                 type: 'POST',
-                dataType:'json',
+                dataType: 'json',
                 data: {
-                    fileMD5:mark  //发送文件的hash值 
+                    fileMD5: mark //发送文件的hash值 
                 }
             }).then(function(data) {
                 if (data.success) {
@@ -395,61 +392,71 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             })
         },
         /*
-        * 传入pulpUpload对象,验证文件内容的md5值,应用到了,slice的API; 并且实现了分片解析的概念
-        */
-        fileCheck(up,{file,native}){
+         * 传入pulpUpload对象,验证文件内容的md5值,应用到了,slice的API; 并且实现了分片解析的概念
+         */
+        fileCheck(up, {
+            file, native
+        }) {
+            // if($('#container-upload').attr('data-num')>=20){
+            //     up.removeFile(file);
+            //     prompt.changeInfo("文件上传最大数量为20~");
+            //     return false;
+            // }
             var reader = new FileReader(),
-                blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice,  //获取文件sliceAPI;
+                blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice, //获取文件sliceAPI;
                 chunkSize = 2097152,
                 chunks = Math.ceil(native.size / chunkSize),
                 currentChunk = 0,
                 spark = new md5(),
-                start,end;
-            reader.onload = function(e) {  //当完成加载时，触发相关的函数
-                //每块交由sparkMD5进行计算
-                spark.appendBinary(e.target.result);
-                currentChunk++;
-                //如果文件处理完成计算MD5，如果还有分片继续处理
-                prompt.detactInfo(Math.ceil(100*currentChunk/chunks));
-                if (currentChunk < chunks) {
-                    //开始加载下一个分片
-                     start = currentChunk * chunkSize, 
-                        end = start + chunkSize >= native.size ? native.size : start + chunkSize;
-                    reader.readAsBinaryString(blobSlice.call(native, start, end));  //读取文件
-                } else {
-                    upload.confirm(up,spark.end(),file);  //发送md5值,用来检测
-                    // console.log(spark.end());  //最后输出信息
-                    // upload.hash = spark.end();  //将读取得到的md5值，发送给ajax
+                start, end;
+            console.log(`native is ${native} and percent is ${Math.ceil(100*currentChunk/chunks)}
+                and chunks is ${chunks}
+                and currentChunk is ${currentChunk}
+                `);
+            reader.onload = function(e) { //当完成加载时，触发相关的函数
+                    //每块交由sparkMD5进行计算
+                    spark.appendBinary(e.target.result);
+                    currentChunk++;
+                    //如果文件处理完成计算MD5，如果还有分片继续处理
+                    prompt.detactInfo(Math.ceil(100 * currentChunk / chunks));
+                    if (currentChunk < chunks) {
+                        //开始加载下一个分片
+                        start = currentChunk * chunkSize,
+                            end = start + chunkSize >= native.size ? native.size : start + chunkSize;
+                        reader.readAsBinaryString(blobSlice.call(native, start, end)); //读取文件
+                    } else {
+                        upload.confirm(up, spark.end(), file); //发送md5值,用来检测
+                        // console.log(spark.end());  //最后输出信息
+                        // upload.hash = spark.end();  //将读取得到的md5值，发送给ajax
+                    }
                 }
-            }
-            //开始读取一次稳健
-            start = currentChunk * chunkSize, 
-            end = start + chunkSize >= native.size ? native.size : start + chunkSize;
-            reader.readAsBinaryString(blobSlice.call(native, start, end));  //读取文件
+                //开始读取一次稳健
+            start = currentChunk * chunkSize,
+                end = start + chunkSize >= native.size ? native.size : start + chunkSize;
+            reader.readAsBinaryString(blobSlice.call(native, start, end)); //读取文件
         },
         /*
-        * 验证文件是否存在,如果存在则直接添加,显示添加成功,如果不存在则开始上传文件
-        */
-        confirm(up,hash,file){  //注意这里的原来的uploadfile对象      
+         * 验证文件是否存在,如果存在则直接添加,显示添加成功,如果不存在则开始上传文件
+         */
+        confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
-            up.removeFile(file);  //删除队列中已经存在的文件
-            upload.addFileToken(file); 
-            // $.ajax({
-            //     url:Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-            //     type:"POST",
-            //     dataType:"json",
-            //     contentType:'application/json',
-            //     data:{
-            //         fileMD5:hash
-            //     }
-            // })
-            // .then(data=>{
-            //     if(!data.success){ //如果不存在的话
-            //        file.hash = hash;
-            //        up.removeFile(file);  //删除队列中已经存在的文件
-            //        upload.addFileToken(file);
-            //     }
-            // })
+            $.ajax({
+                    url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                    type: "POST",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        fileMD5: hash
+                    })
+                })
+                .then(data => {
+                    if (data.success) { //如果不存在的话
+                        up.removeFile(file); //删除队列中已经存在的文件
+                        upload.addFileToken(file);
+                    } else {
+                        upload.getAjax(up);
+                    }
+                })
         }
     }
     upload.init();
@@ -465,6 +472,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             },
             removeLi($target) {
                 $target.detach();
+                refresh();
             }
     }
     $('.files-content').on({
@@ -564,8 +572,10 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 console.log(article);
                 console.log(file);
                 var item = document.createElement('div'),
-                {name,date,size,area,mark,type}=file,
-                className = getClass.getClass(type); //用来解析文件类型
+                    {
+                        name, date, size, area, mark, type
+                    } = file,
+                    className = getClass.getClass(type); //用来解析文件类型
                 html = '<i class="file-logo ' + className + '"></i>' +
                     '<p class="file-header">' + name + '</p>' +
                     '<p>上传时间:<span class="upload-time">' + date + '</span>' +
@@ -661,15 +671,21 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             this.pay_btn.on('click', function() {
                 let mark = [],
                     goods = $("#scroller").find(".logo-error");
-                goods.each((val)=>{  //获取商品的hash值.
+                goods.each((val) => { //获取商品的hash值.
                     mark.push(val.attr('data-mark'));
                 })
                 let len = mark.length;
-                if (len === 0) {  //检查上平数量是否为0
+                if (len === 0) { //检查上平数量是否为0
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
                     //看这里需不需要发送商品总的hash值;
-                    window.location.href = './confirm';
+
+                     if(SSE.flag===0){
+                        window.location.href = './confirm';
+                     }else{
+                        SSE.show();
+                     }
+                    
                 }
             });
         }

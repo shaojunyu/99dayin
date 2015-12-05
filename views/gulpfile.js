@@ -6,7 +6,8 @@ var gulp = require('gulp'),
     autoprefix = require('autoprefixer'),
     flexpost = require('postcss-flexboxfixer'),
     rename = require('gulp-rename'),
-    babel = require('gulp-babel');
+    babel = require('gulp-babel'),
+    eslint = require('gulp-eslint');
 
 gulp.task('minify', function() {
     gulp.src('js/app.js')
@@ -51,17 +52,17 @@ gulp.task('copy', function() {
         //     .pipe(gulp.dest('../js/entry'));
         // gulp.src('app/js/lib/**/*.js')
         //     .pipe(gulp.dest('../js/lib')); 
-        gulp.src('app/js/entry/**/prompt.js')
+       return gulp.src('app/js/entry/**/prompt.js')
             .pipe(gulp.dest('app/js/entry'));
 })
 gulp.task('copyCSS',function(){
-    gulp.src('app/styles/**/*.css')
+   return gulp.src('app/styles/**/*.css')
         .pipe(gulp.dest('../styles'));
-})
+});
 
 gulp.task('babel',['copy'],function() {
     gulp.watch(['app/js/entry/upload.js'],function(){
-        gulp.src(['app/js/entry/upload.js','app/js/entry/**/prompt.js','app/js/entry/function/*.js'])
+       return gulp.src(['app/js/entry/upload.js','app/js/entry/**/prompt.js','app/js/entry/function/*.js'])
            .pipe(babel({
                presets: ['es2015']
            }))
@@ -70,7 +71,7 @@ gulp.task('babel',['copy'],function() {
     })
      
 
-})
+});
 gulp.task('copyJS', function() {
     gulp.watch(['app/js/**/*.js'], function() {
         gulp.src('app/js/entry/**/*.js')
@@ -86,5 +87,24 @@ gulp.task('copyJS', function() {
         //         .pipe(rename("index.ejs"))
         //         .pipe(gulp.dest('../h5Games/views'));
     });
+});
+gulp.task('eslint',function(){
+    return gulp.src(['app/js/entry/upload.js'])
+    .pipe(eslint({
+        extends: 'eslint:recommended',
+        rules: {
+            'my-custom-rule': 1,
+            'strict': 2
+        },
+        globals: {
+            'jQuery':false,
+            '$':true
+        },
+        envs: [
+            'browser','babel-eslint'
+        ]
+    }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 })
 gulp.task('default', ['sync', 'watch']);
