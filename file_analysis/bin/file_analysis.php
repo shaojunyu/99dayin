@@ -30,11 +30,11 @@ if ($is_inner) {
 //循环脚本
 while(1){
 	//print "wating....\n";
-	$handle = opendir('../');
+	$handle = opendir('../file_json/');
 	while ($file = readdir($handle) ){
 		//找出json数据文件
 		if ($file!='.' && $file!='..' && strpos($file,'.json')) {
-			$json = file_get_contents('../'.$file);
+			$json = file_get_contents('../file_json/'.$file);
 			$filedata = json_decode($json,true);
 			
 			//引入aliyun oss
@@ -52,7 +52,7 @@ while(1){
 				if ($exist) {
 					print "find file info\n";
 					//下载文件
-					$localfile = "../local-".$filedata['uploader'].'-'.$filedata['filename'];
+					$localfile = "../file_download/local-".$filedata['uploader'].'-'.$filedata['filename'];
 					//var_dump(realpath($localfile));
 					$options = array(
 							OssClient::OSS_FILE_DOWNLOAD => $localfile,
@@ -145,7 +145,7 @@ while(1){
 				}else {
 					try {
 						//文件不存在oss
-						unlink('../'.$file);
+						unlink('../file_json/'.$file);
 						print "delete file $file\n";
 					} catch (Exception $e) {}
 
