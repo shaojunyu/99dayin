@@ -8917,6 +8917,8 @@ require.config({
             }), this.delete_btn.on("click", function(t) {
                 var r = e(t.target);
                 r.hasClass("logo-error") && n.deleteItem(r)
+            }), this.content_a.on("click", function(e) {
+                c.close()
             })
         },
         fillUpload: function(t, n) {

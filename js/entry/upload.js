@@ -305,6 +305,9 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                     _this.deleteItem($target);
                 }
             });
+            this.content_a.on('click', function (e) {
+                SSE.close();
+            });
         },
         fillUpload: function fillUpload(up, data) {
             var dir = data.dir;
