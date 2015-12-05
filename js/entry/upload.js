@@ -81,45 +81,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
     })();
 
     var getClass = new parseClass();
-    function process(url, opts) {
-        var xhr = new XMLHttpRequest(),
-            def = $.Deferred(),
-            $upload = $('.upload'); //上传按钮
-        xhr.open('POST', url, true);
-        xhr.upload.onprogress = function (e) {
-            //处理进度条事件
-            $upload.addClass('pending').prop('disabled', true);
-            if (e.lengthComputable) {
-                //表示
-                var num = e.loaded / e.total * 100;
-                if (num >= 100) {
-                    def.resolve();
-                }
-                prompt.changeInfo(num.toFixed(2) + '%');
-            }
-        };
-        def.done(function (e) {
-            prompt.changeInfo('上传成功！');
-            var ID = $('.name').text(); //用户ID
-            $.ajax({
-                url: Pathurl.confirm,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    username: ID,
-                    filename: opts.name
-                }
-            }).done(function (data) {
-                $upload.removeClass('pending').prop('disabled', false);
-                if (data.success) {
-                    opts.successFn();
-                } else {
-                    prompt.changeInfo('上传失败!');
-                }
-            });
-        });
-        xhr.send(opts.form);
-    }
 
     function refresh() {
         Iscroll.forEach(function (val) {
@@ -139,7 +100,8 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         pay: '', //去支付
         search: '', //搜索
         confirm: Encryption.Encryption('../index.php/api/uploadACK'), //上传成功后的给后台发送验证
-        remove: Encryption.Encryption('../index.php/api/deleteCartItem') //删除购物车
+        remove: Encryption.Encryption('../index.php/api/deleteCartItem'), //删除购物车
+        confirmHash: Encryption.Encryption('../index.php/api/confirmMD5')
     };
     /*
      * 检查id是否和传入的一致
@@ -215,19 +177,14 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
             }],
             max_file_size: "100mb", //设置最大上传文件大小
-            prevent_duplicates: true },
-        //防止上传相同大小文件
+            prevent_duplicates: true //防止上传相同大小文件
 
+        },
         init: {
-            PostInit: function PostInit() {},
-            FilesAdded: function FilesAdded(up, files) {
-                console.log(files);
-                upload.getAjax(this); //发送请求
-            },
-
             /*
             * 文件筛选,用来过滤文件内容相同的值
             */
+
             FileFiltered: function FileFiltered(up, file) {
                 upload.fileCheck(up, { file: file, native: file.getNative() });
             },
@@ -236,6 +193,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             * 文件上传进度条
             */
             UploadProgress: function UploadProgress(up, file) {
+                console.log(file.percent);
                 prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
                 if (file.percent === 100) {
                     upload.flag++;
@@ -266,7 +224,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         delete_btn: $('#scroller'), //删除Btn的ul
         content_a: $('#container-upload'),
         flag: 0, //不要删除这个flag，这个后期重构需要改,用来检测pulp上传时，两次提醒的100;
-        // hash:undefined,
         init: function init() {
             var _this = this;
             this.addBtn.on('click', function (e) {
@@ -319,16 +276,13 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         * 上传文件的token参数
         */
         getAjax: function getAjax(up) {
+            prompt.changeInfo("文件上传中~");
             var _this = this;
             $.ajax({
                 url: Pathurl.getToken,
-                // url: 'http://localhost/99dayin/index.php/api/getUploadToken?time=1448892600604&token=b41e8a32ebd7af896fb16c44fad31808',
                 type: 'POST',
                 contentType: "application/json",
-                dataType: 'json',
-                post: {
-                    hash: upload.hash //将文件的hash值传入
-                }
+                dataType: 'json'
             }).done(function (data) {
                 _this.fillUpload(up, data);
             });
@@ -371,16 +325,15 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         * 将添加的文件,返回给后台
         */
         addFileToken: function addFileToken(file) {
-            console.log(file.hash);
             $.ajax({
                 url: Pathurl.confirm,
                 type: "POST",
-                dataType: "json",
+                dataType: "JSON",
                 contentType: "application/json",
-                data: {
+                data: JSON.stringify({
                     filename: file.name,
                     fileMD5: file.hash
-                }
+                })
             }).then(function (data) {
                 if (data.success) upload.addFiles(file);else prompt.changeInfo('对不起您的浏览器抽风了');
             });
@@ -418,6 +371,11 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             var file = _ref.file;
             var native = _ref.native;
 
+            // if($('#container-upload').attr('data-num')>=20){
+            //     up.removeFile(file);
+            //     prompt.changeInfo("文件上传最大数量为20~");
+            //     return false;
+            // }
             var reader = new FileReader(),
                 blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice,
                 //获取文件sliceAPI;
@@ -427,6 +385,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 spark = new md5(),
                 start,
                 end;
+            console.log('native is ' + native + ' and percent is ' + Math.ceil(100 * currentChunk / chunks) + '\n                and chunks is ' + chunks + '\n                and currentChunk is ' + currentChunk + '\n                ');
             reader.onload = function (e) {
                 //当完成加载时，触发相关的函数
                 //每块交由sparkMD5进行计算
@@ -455,24 +414,23 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         confirm: function confirm(up, hash, file) {
             //注意这里的原来的uploadfile对象     
             file.hash = hash;
-            up.removeFile(file); //删除队列中已经存在的文件
-            upload.addFileToken(file);
-            // $.ajax({
-            //     url:Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-            //     type:"POST",
-            //     dataType:"json",
-            //     contentType:'application/json',
-            //     data:{
-            //         fileMD5:hash
-            //     }
-            // })
-            // .then(data=>{
-            //     if(!data.success){ //如果不存在的话
-            //        file.hash = hash;
-            //        up.removeFile(file);  //删除队列中已经存在的文件
-            //        upload.addFileToken(file);
-            //     }
-            // })
+            $.ajax({
+                url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    fileMD5: hash
+                })
+            }).then(function (data) {
+                if (data.success) {
+                    //如果不存在的话
+                    up.removeFile(file); //删除队列中已经存在的文件
+                    upload.addFileToken(file);
+                } else {
+                    upload.getAjax(up);
+                }
+            });
         }
     };
     upload.init();
@@ -488,6 +446,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
         removeLi: function removeLi($target) {
             $target.detach();
+            refresh();
         }
     };
     $('.files-content').on({

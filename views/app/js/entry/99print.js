@@ -224,6 +224,8 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                 $.ajax({
                         url: Pathurl.username,
                         type:'POST',
+                        dataType:"json",
+                        contentType:"application/json",
                         data: {
                             mobilePhoneNumber: phone, //手机号
                             smsCode: code // 验证码

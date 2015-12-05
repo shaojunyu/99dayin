@@ -204,6 +204,7 @@ class Api extends CI_Controller{
 	 * 上传成功，前端回调函数
 	 */
 	public function uploadACK(){
+
 		if ($this->input->server('CONTENT_TYPE') === 'application/json') {
 			$fileMD5 = $this->post_data['fileMD5'];
 			$filename = $this->post_datap['filename'];
@@ -214,6 +215,7 @@ class Api extends CI_Controller{
 		}
 
 		$uploader = $this->session->userdata('userId');
+
 		//$this->echo_msg(false,$fileMD5);
 		if (empty($filename) or empty($fileMD5)) {
 			$this->echo_msg(false,$filename);

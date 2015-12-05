@@ -1,14 +1,15 @@
 'use strict';
 
-define(['jquery'], function ($) {
+define(['jquery', 'encryption'], function ($, Encryption) {
+
     var Pathurl = {
-        getToken: '../index.php/api/getUploadToken', //得到上传口令
-        getOfficial: '', //得到文库数据
-        pay: '', //去支付
-        search: '', //搜索
-        logout: '../index.php/api/logout',
-        confirm: '../index.php/api/uploadACK', //上传成功后的给后台发送验证
-        remove: '../index.php/api/deleteCartItem' //删除购物车
+        login: Encryption.Encryption('/99dayin/index.php/api/login'),
+        sigin: Encryption.Encryption('/99dayin/index.php/api/signup'),
+        Linklogin: '', //以QQ方式登录
+        username: Encryption.Encryption('/99dayin/index.php/api/verifySmsCode'), //验证用户名的url
+        CF_url: Encryption.Encryption('/99dayin/index.php/api/sendSmsCode'), //验证码发送的url
+        upload: '', //上传文件的地址
+        logout: Encryption.Encryption('/99dayin/index.php/api/logout')
     };
     var login = {
         $username: $('.login-account'),
