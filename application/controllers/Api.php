@@ -208,13 +208,12 @@ class Api extends CI_Controller{
 			$fileMD5 = $this->post_data->fileMD5;
 			$filename = urldecode($this->post_data->filename);
 		}else {
-			$filename = $this->input->post('filename');
+			$filename = ($this->input->post('filename'));
 			$fileMD5 = $this->input->post('fileMD5');
 		}
 		$username = $this->session->userdata('username');
 		$uploader = $this->session->userdata('userId');
 
-		//$this->echo_msg(false,$fileMD5);
 		if (empty($filename) or empty($fileMD5)) {
 			$this->echo_msg(false,$filename);
 			exit();
@@ -222,7 +221,8 @@ class Api extends CI_Controller{
 		
 		//文件信息写到本地文件，供文件监听器调用
 		try {
-			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
+			//注意
+			$filedata = array('uploader'=>$uploader,'filename'=>urlencode($filename));
 			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
@@ -235,7 +235,6 @@ class Api extends CI_Controller{
 					'filename'=>$filename,
 					'uploader'=>$uploader
 			));
-			$this->echo_msg(true,'');
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
@@ -247,6 +246,7 @@ class Api extends CI_Controller{
 		} catch (Exception $e) {
 			
 		}
+		$this->echo_msg(true,$filename);
 	}
 	
 	/*

@@ -26,7 +26,15 @@ if ($is_inner) {
 	$endpoint = "oss-cn-hangzhou.aliyuncs.com";
 }
 
-
+//引入aliyun oss
+$bucket = '99dayin';
+try {
+	$oss_client = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+} catch (Exception $e) {
+	var_dump($e);
+}
+$oss_client->setTimeout(240);
+$oss_client->setConnectTimeout(30);
 //循环脚本
 while(1){
 	//print "wating....\n";
@@ -34,26 +42,16 @@ while(1){
 	while ($file = readdir($handle) ){
 		//找出json数据文件
 		if ($file!='.' && $file!='..' && strpos($file,'.json')) {
-			$json = file_get_contents('../file_json/'.$file);
-			$filedata = json_decode($json,true);
-			
+			$jsonfile = file_get_contents('../file_json/'.$file);
+			$filedata = json_decode($jsonfile,true);
 			//引入aliyun oss
-			$bucket = '99dayin';
-			try {
-				$oss_client = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-			} catch (Exception $e) {
-				var_dump($e);
-			}
-			$oss_client->setTimeout(240);
-			$oss_client->setConnectTimeout(30);
-			$object = "user_upload/".$filedata['uploader'].'/'.$filedata['filename'];
+			$object = "user_upload/".$filedata['uploader'].'/'.urldecode($filedata['filename']);
 			try {
 				$exist = $oss_client->doesObjectExist($bucket,$object);
 				if ($exist) {
 					print "find file info\n";
 					//下载文件
-					$localfile = "../file_download/local-".$filedata['uploader'].'-'.$filedata['filename'];
-					//var_dump(realpath($localfile));
+					$localfile = "../file_download/local-".$filedata['uploader'].'-'.($filedata['filename']);
 					$options = array(
 							OssClient::OSS_FILE_DOWNLOAD => $localfile,
 					);
@@ -66,7 +64,10 @@ while(1){
 						var_dump($e);
 					}
 					
-					//开始分析
+					//下载完之后先计算MD5,否则后面会出错
+					$MD5 =  md5_file($localfile);
+					
+					//开始分析页数
 					print "complete download, start analysising ".realpath($localfile)."\n";
 					$extension = substr(strrchr($localfile,'.'),1);
 					
@@ -125,7 +126,7 @@ while(1){
 						$bmobObj = new BmobObject("File_Info");
 						$res = $bmobObj->create(array(
 								'filename'=>$filedata['filename'],
-								'fileMD5'=>md5($localfile),
+								'fileMD5'=>$MD5,
 								'type'=>$type,
 								'pages'=>"$page"
 						));
@@ -135,9 +136,9 @@ while(1){
 					
 					//分析完成后删除本地文件
 					try {
-						print "deleting files...\n";
-						unlink('../'.$file);
-						unlink($localfile);
+						print "compelete anaysis, deleting files...\n";
+						unlink('../file_json/'.$file);
+						unlink(($localfile));
 					} catch (Exception $e) {
 					}
 	
@@ -146,7 +147,7 @@ while(1){
 					try {
 						//文件不存在oss
 						unlink('../file_json/'.$file);
-						print "delete file $file\n";
+						print "can not find file in oss,delete file $file\n";
 					} catch (Exception $e) {}
 
 					

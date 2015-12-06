@@ -18,7 +18,7 @@ class Test extends CI_Controller{
 		$accessKeyId = "GtzMAvDTnxg72R04"; ;
 		$accessKeySecret = "VhD2czcwLVAaE7DReDG4uEVSgtaSYK";
 		$endpoint = "oss-cn-hangzhou.aliyuncs.com";
-		echo urldecode('\u5206\u5b50\u751f\u7269\u5b66\u5b9e\u9a8c \u5fc3\u5f97\u4f53\u4f1a.doc');
-		
+		//echo json_encode('%E5%88%86%E5%AD%90%E7%94%9F%E7%89%A9%E5%AD%A6%E5%AE%9E%E9%AA%8C%20%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A.doc');
+		echo '实打实';
 	}
 }
