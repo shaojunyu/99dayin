@@ -1,1 +1,0 @@
-define(["md5"],function(e){function t(t){var n=(new Date).getTime(),r={date:(new Date).getTime(),str:"99dayin_api_secrete"},i=e.hash(r.date+r.str);return t+"?time="+r.date+"&token="+i}return{Encryption:function(n){return t(n)}}});
