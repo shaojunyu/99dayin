@@ -86,7 +86,7 @@ class parseClass {
         /*
          * 绑定相关事件
          */
-         console.log(123);
+         
         source.addEventListener("open", open, false);
         source.addEventListener("message", (e)=>{console.log(`e is ${e} and data is ${e.data}`);message(e);}, false); //message中返回的数据有,e.data服务器返回的文本数据
         source.addEventListener("error", error, false);
@@ -96,14 +96,14 @@ class parseClass {
         flag:0,  //设置进度条
         source:undefined, //设置SSE对象
         message(event){
-            console.log(`event is ${event} and data is ${event.data}`);
             SSE.flag = event.data;  //用来表示文件是否解析完成\
+            if(SSE.flag ==0){
+                SSE.close();
+            }
 
         },
         init(){
-
             this.source = sendSSE({url:Pathurl.SSEurl,message:SSE.message});
-
         },
         show(){
             prompt.goPay(this.flag);  //显示文件未解析数量
@@ -233,7 +233,6 @@ class parseClass {
                         upload.flag++;
                     }
                     if (upload.flag === 2) {
-                        prompt.changeInfo("上传成功~");
                         upload.flag = 0;
                     }
                 },
@@ -241,10 +240,12 @@ class parseClass {
                  * 当筛选完毕后上传,新文件,并提示上传成功
                  */
                 FileUploaded(up, file, info) {
+                    console.log(`promot is ${info.status} and loading is here`);
                     if (info.status == 200) {
                         //添加购物车数据
+                        prompt.loading(100);
                         upload.addFileToken(file);
-                        SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
+                        // SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
                     } else {
                         prompt.changeInfo("上传失败!");
                     }
@@ -309,7 +310,7 @@ class parseClass {
          * 上传文件的token参数
          */
         getAjax(up) {
-            prompt.changeInfo("文件上传中~");
+            prompt.loading("文件上传中~");
             var _this = this;
             $.ajax({
                     url: Pathurl.getToken,
@@ -331,6 +332,7 @@ class parseClass {
          * 当上传完成时,将上传的文件添加给购物车
          */
         addFiles(file) {
+
             console.log(file.hash);
             var file_date = new Date(), //添加日期
                 date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
@@ -355,6 +357,7 @@ class parseClass {
                 })
                 //完成添加操作后,将Input的图标改为+1;
             this.changeInputText(1);
+            prompt.changeInfo("文件上传成功~");
         },
         /*
          * 将添加的文件,返回给后台
@@ -679,17 +682,21 @@ class parseClass {
             this.pay_btn.on('click', function() {
                 let mark = [],
                     goods = $("#scroller").find(".logo-error");
-                goods.each((val) => { //获取商品的hash值.
-                    mark.push(val.attr('data-mark'));
+
+                goods.each((index,val) => { //获取商品的hash值.
+                    console.log(`val is ${val} and goods is ${goods}`);
+                    mark.push($(val).attr('data-mark'));
                 })
                 let len = mark.length;
                 if (len === 0) { //检查上平数量是否为0
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
                     //看这里需不需要发送商品总的hash值;
-
+                    SSE.init();
                      if(SSE.flag===0){
-                        window.location.href = './confirm';
+                        SSE.close();
+                        console.log("now go to");
+                        window.location.href = '../confirm';
                      }else{
                         SSE.show();
                      }

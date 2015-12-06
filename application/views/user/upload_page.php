@@ -164,7 +164,7 @@
 		</div>
 	</div>
 
-	<script src="js/lib/require.js" data-main="js/out/entry/upload.js"></script>
+	<script src="js/lib/require.js" data-main="js/entry/upload.js"></script>
 	
 
 </body>

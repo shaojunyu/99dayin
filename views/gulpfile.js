@@ -66,33 +66,30 @@ gulp.task('copyCSS', function() {
         .pipe(gulp.dest('../styles'));
 });
 
-gulp.task('babel', ['copy'], function() {
-    gulp.watch(['app/js/entry/upload.js'], function() {
-        return gulp.src(['app/js/entry/upload.js', 'app/js/entry/**/prompt.js', 'app/js/entry/function/*.js'])
-            .pipe(babel({
-                presets: ['es2015']
-            }))
-            .pipe(gulp.dest('../js/entry'));
+gulp.task('babel', function() {
+    // gulp.watch(['app/js/entry/upload.js'], function() {
+    return gulp.src(['app/js/entry/**/*.js'])
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('../js/entry'));
 
-    })
+    // })
 
 
 });
 gulp.task('copyJS', function() {
-    gulp.watch(['app/js/**/*.js'], function() {
-        gulp.src('app/js/entry/**/*.js')
-            .pipe(babel({
-                presets: ['es2015']
-            }))
-            .pipe(gulp.dest('../js/entry'));
-        gulp.src('app/js/lib/**/*.js')
-            .pipe(gulp.dest('../js/lib'));
-        // gulp.src('app/styles/**/*.css')
-        //     .pipe(gulp.dest('../h5Games/styles'));
-        //     gulp.src('app/index.html')
-        //         .pipe(rename("index.ejs"))
-        //         .pipe(gulp.dest('../h5Games/views'));
-    });
+    // gulp.watch(['app/js/**/*.js'], function() {
+    //     gulp.src('app/js/entry/**/*.js')
+    //         .pipe(babel({
+    //             presets: ['es2015']
+    //         }))
+    //         .pipe(gulp.dest('../js/entry'));
+    //     gulp.src('app/js/lib/**/*.js')
+    //         .pipe(gulp.dest('../js/lib'));
+    return gulp.src('app/js/lib/**/*.js')
+        .pipe(gulp.dest('../js/lib'))
+
 });
 gulp.task('eslint', function() {
     return gulp.src(['app/js/entry/upload.js'])
@@ -105,24 +102,28 @@ gulp.task('eslint', function() {
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 })
-gulp.task('rjs', function () {  
-    gulp.src('./src/js/**/*.js')  
-        .pipe(amdOptimize("main", {  
-            paths: {  
-                "jquery": "../../libs/jquery/dist/jquery.min",  
-                "jquery.serializeJSON": "../../libs/jquery.serializeJSON/jquery.serializejson.min",  
-                "sug": "src/js/suggestion/suggestion",  
-                "validate": "../util/src/js/util/validate",  
-                "urlParam": "../util/src/js/util/url.param"  
-            },  
-            shim: {  
-                "jquery.serializeJSON": ['jquery']  
-            }  
-        }))  
-        .pipe(concat("index.js"))           //合并  
-        .pipe(gulp.dest("dist/js"))          //输出保存  
-        .pipe(rename("index.min.js"))          //重命名  
-        .pipe(uglify())                        //压缩  
-        .pipe(gulp.dest("dist/js"));         //输出保存  
-});  
+gulp.task('rjs', function() {
+    return gulp.src('../js/**/*.js')
+        .pipe(amdOptimize("../js/entry/upload", {
+            paths: {
+                'jquery': '../js/lib/jQuery',
+                'iscroll': '../js/lib/iscroll',
+                'modal': '../js/lib/jquery.simplemodal',
+                'prompt': '../js/entry/function/prompt', //提示模块
+                'utility': '../js/entry/utility/utility', //基本工具函数
+                'header': '../js/entry/header', 
+                'fileupload': "../js/lib/plupload.full.min",
+                'md5': "../js/lib/spark-md5.min",
+                'encryption': "../js/entry/function/encryption"
+            }
+        }))
+        .pipe(concat("upload.js")) //合并  
+        .pipe(rename("upload.js")) //重命名  
+        // .pipe(uglify()) //压缩  
+        .pipe(gulp.dest('../js/entry')) //输出保存 
+
+});
+gulp.task('compile', function() {
+    gulp.watch(['app/js/**/*.js'], ['babel', 'rjs']);
+});
 gulp.task('default', ['sync', 'watch']);

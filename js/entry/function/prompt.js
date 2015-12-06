@@ -31,9 +31,12 @@ define(['jquery'], function ($) {
  */
 	Prompt.prototype.loading = function (percent) {
 		this.showPrompt();
-		var _percent = Number(percent),
-		    _this = this;
-		this.prompt_ele.text(_percent + "%");
+		if (typeof percent === "number") {
+			percent = String(percent) + "%";
+		} else {
+			percent = String(percent);
+		}
+		this.prompt_ele.text(percent);
 	};
 	Prompt.prototype.detactInfo = function (percent) {
 		this.showPrompt();
