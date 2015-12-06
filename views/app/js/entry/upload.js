@@ -96,8 +96,10 @@ class parseClass {
         flag:0,  //设置进度条
         source:undefined, //设置SSE对象
         message(event){
-            console.log(`event is ${event} and data is ${event.data}`);
             SSE.flag = event.data;  //用来表示文件是否解析完成\
+            if(SSE.flag ==0){
+                SSE.close();
+            }
 
         },
         init(){
@@ -680,17 +682,21 @@ class parseClass {
             this.pay_btn.on('click', function() {
                 let mark = [],
                     goods = $("#scroller").find(".logo-error");
-                goods.each((val) => { //获取商品的hash值.
-                    mark.push(val.attr('data-mark'));
+
+                goods.each((index,val) => { //获取商品的hash值.
+                    console.log(`val is ${val} and goods is ${goods}`);
+                    mark.push($(val).attr('data-mark'));
                 })
                 let len = mark.length;
                 if (len === 0) { //检查上平数量是否为0
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
                     //看这里需不需要发送商品总的hash值;
-
+                    SSE.init();
                      if(SSE.flag===0){
-                        window.location.href = './confirm';
+                        SSE.close();
+                        console.log("now go to");
+                        window.location.href = '../confirm';
                      }else{
                         SSE.show();
                      }

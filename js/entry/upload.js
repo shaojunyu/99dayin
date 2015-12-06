@@ -10443,8 +10443,10 @@ require([
         flag: 0,
         source: undefined,
         message: function message(event) {
-            console.log('event is ' + event + ' and data is ' + event.data);
             SSE.flag = event.data;
+            if (SSE.flag == 0) {
+                SSE.close();
+            }
         },
         init: function init() {
             this.source = sendSSE({
@@ -10855,15 +10857,19 @@ require([
         init: function init() {
             this.pay_btn.on('click', function () {
                 var mark = [], goods = $('#scroller').find('.logo-error');
-                goods.each(function (val) {
-                    mark.push(val.attr('data-mark'));
+                goods.each(function (index, val) {
+                    console.log('val is ' + val + ' and goods is ' + goods);
+                    mark.push($(val).attr('data-mark'));
                 });
                 var len = mark.length;
                 if (len === 0) {
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
+                    SSE.init();
                     if (SSE.flag === 0) {
-                        window.location.href = './confirm';
+                        SSE.close();
+                        console.log('now go to');
+                        window.location.href = '../confirm';
                     } else {
                         SSE.show();
                     }
