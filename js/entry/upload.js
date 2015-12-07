@@ -4646,7 +4646,7 @@ define('prompt', ['jquery'], function ($) {
         this.showPrompt();
         this.prompt_ele.text('您的未解析文件数目:' + num);
         if (num === 0) {
-            this.prompt_ele.text('文件解析完成,请再次点击');
+            this.prompt_ele.text('文件解析完成');
         }
     };
     return { Prompt: Prompt };
@@ -10461,9 +10461,6 @@ require([
                 message: SSE.message
             });
         },
-        show: function show() {
-            prompt.goPay(this.flag);
-        },
         close: function close() {
             this.source.close();
         }
@@ -10600,11 +10597,13 @@ require([
             var accessid = data.accessid;
             var policy = data.policy;
             var host = data.host;
+            var callback = data.callback;
             var new_multipart_params = {
                 'key': dir + '${filename}',
                 'policy': policy,
                 'OSSAccessKeyId': accessid,
                 'success_action_status': '200',
+                'callback': callback,
                 'signature': signature
             };
             up.setOption({
@@ -10700,25 +10699,20 @@ require([
         },
         confirm: function confirm(up, hash, file) {
             file.hash = hash;
-            var sign = parseSuffix(file.native());
-            if (sign) {
-                $.ajax({
-                    url: Pathurl.confirmHash,
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ fileMD5: hash })
-                }).then(function (data) {
-                    if (data.success) {
-                        up.removeFile(file);
-                        upload.addFileToken(file);
-                    } else {
-                        upload.getAjax(up);
-                    }
-                });
-            } else {
-                up.removeFile(file);
-            }
+            $.ajax({
+                url: Pathurl.confirmHash,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ fileMD5: hash })
+            }).then(function (data) {
+                if (data.success) {
+                    up.removeFile(file);
+                    upload.addFileToken(file);
+                } else {
+                    upload.getAjax(up);
+                }
+            });
         }
     };
     upload.init();
@@ -10868,7 +10862,7 @@ require([
         flag: 0,
         init: function init() {
             this.pay_btn.on('click', function () {
-                var mark = [], goods = $('#scroller').find('.logo-error');
+                var mark = [], goods = $('#scroller').find('.logo-error'), time1 = undefined, time2 = undefined;
                 goods.each(function (index, val) {
                     mark.push($(val).attr('data-mark'));
                 });
@@ -10879,21 +10873,28 @@ require([
                     new Promise(function (res, rej) {
                         SSE.init();
                         res();
+                    }).then(function () {
+                        if (Pay.flag > 0)
+                            SSE.close();
+                        Pay.flag++;
+                        return undefined;
+                    }).then(function () {
+                        if (SSE.flag == 0) {
+                            window.location.href = '../user/confirm';
+                        } else if (SSE.flag === undefined) {
+                            clearInterval(time1);
+                            time1 = setInterval(function () {
+                                if (SSE.flag == 0) {
+                                    window.location.href = '../user/confirm';
+                                }
+                            }, 1500);
+                        } else if (SSE.flag != 0) {
+                            clearInterval(time2);
+                            time2 = setInterval(function () {
+                                prompt.goPay(SSE.flag);
+                            });
+                        }
                     });
-                    if (Pay.flag > 0) {
-                        SSE.close();
-                    } else if (Pay.flag === 0) {
-                        SSE.init();
-                    } else if (SSE.flag != 0) {
-                        SSE.init();
-                    }
-                    Pay.flag++;
-                    console.log('SSE.flag is ' + SSE.flag);
-                    if (SSE.flag == 0) {
-                        window.location.href = '../user/confirm';
-                    } else {
-                        SSE.show();
-                    }
                 }
             });
         }

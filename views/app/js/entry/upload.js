@@ -301,14 +301,14 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         },
         fillUpload(up, data) {
             let {
-                dir, signature, accessid, policy, host,callback
+                dir, signature, accessid, policy, host, callback
             } = data;
             let new_multipart_params = {
                 'key': dir + '${filename}', //获得文件名
                 'policy': policy,
                 'OSSAccessKeyId': accessid,
                 'success_action_status': '200', //让服务端返回200,不然，默认会返回204
-                'callback' : callback,
+                'callback': callback,
                 'signature': signature //由后台获得的签名
             }
             up.setOption({ //设置上传参数
@@ -459,45 +459,45 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
             //验证文件尾缀
-              $.ajax({
-                        url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                        type: "POST",
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            fileMD5: hash
-                        })
+            $.ajax({
+                    url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                    type: "POST",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        fileMD5: hash
                     })
-                    .then(data => {
-                        if (data.success) { //如果不存在的话
-                            up.removeFile(file); //删除队列中已经存在的文件
-                            upload.addFileToken(file);
-                        } else {
-                            upload.getAjax(up);
-                        }
-                    })
-            // var sign = parseSuffix(file.native());
-            // if (sign) {
-            //     $.ajax({
-            //             url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-            //             type: "POST",
-            //             dataType: "json",
-            //             contentType: 'application/json',
-            //             data: JSON.stringify({
-            //                 fileMD5: hash
-            //             })
-            //         })
-            //         .then(data => {
-            //             if (data.success) { //如果不存在的话
-            //                 up.removeFile(file); //删除队列中已经存在的文件
-            //                 upload.addFileToken(file);
-            //             } else {
-            //                 upload.getAjax(up);
-            //             }
-            //         })
-            // } else {
-            //     up.removeFile(file); //删除队列中已经存在的文件
-            // }
+                })
+                .then(data => {
+                    if (data.success) { //如果不存在的话
+                        up.removeFile(file); //删除队列中已经存在的文件
+                        upload.addFileToken(file);
+                    } else {
+                        upload.getAjax(up);
+                    }
+                })
+                // var sign = parseSuffix(file.native());
+                // if (sign) {
+                //     $.ajax({
+                //             url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                //             type: "POST",
+                //             dataType: "json",
+                //             contentType: 'application/json',
+                //             data: JSON.stringify({
+                //                 fileMD5: hash
+                //             })
+                //         })
+                //         .then(data => {
+                //             if (data.success) { //如果不存在的话
+                //                 up.removeFile(file); //删除队列中已经存在的文件
+                //                 upload.addFileToken(file);
+                //             } else {
+                //                 upload.getAjax(up);
+                //             }
+                //         })
+                // } else {
+                //     up.removeFile(file); //删除队列中已经存在的文件
+                // }
 
         }
     }
@@ -714,7 +714,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             this.pay_btn.on('click', function() {
                 let mark = [],
                     goods = $("#scroller").find(".logo-error"),
-                    time1,  //验证SSE.flag
+                    time1, //验证SSE.flag
                     time2;
 
                 goods.each((index, val) => { //获取商品的hash值.
@@ -735,22 +735,26 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                             Pay.flag++;
                             return undefined;
                         })
-                        .then(()=>{
-                            if(SSE.flag ==0){
-                                window.location.href = '../user/confirm';        
-                            }else if(SSE.flag===undefined){
+                        .then(() => {
+                            if (SSE.flag == 0) {
+                                window.location.href = '../user/confirm';
+                            } else if (SSE.flag === undefined) {
                                 //当请求未返回时,进行判断
-                                clearInterval(time);
-                                time = setInterval(()=>{
-                                    if(SSE.flag==0){
-                                        window.location.href = '../user/confirm';     
+                                clearInterval(time1);
+                                time1 = setInterval(() => {
+                                    if (SSE.flag == 0) {
+                                        window.location.href = '../user/confirm';
                                     }
-                                },1500);
-                            }else if(SSE.flag!=0){
-                                prompt.goPay(SSE.flag);
+                                }, 1500);
+                            } else if (SSE.flag != 0) {
+                                clearInterval(time2);
+                                time2 = setInterval(() => {
+                                    prompt.goPay(SSE.flag);
+                                })
+
                             }
                         })
-                    
+
 
                 }
             });

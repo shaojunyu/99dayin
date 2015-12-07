@@ -4692,7 +4692,7 @@ define('prompt', ['jquery'], function ($) {
         this.showPrompt();
         this.prompt_ele.text('您的未解析文件数目:' + num);
         if (num === 0) {
-            this.prompt_ele.text('文件解析完成,请再次点击');
+            this.prompt_ele.text('文件解析完成');
         }
     };
     return { Prompt: Prompt };
