@@ -43,6 +43,11 @@ foreach ($res as &$user){
 	$userId = $user->objectId;
 	//循环每个用户文件夹
 	
+	
+	
+	
+	
+	
 }
 
 
