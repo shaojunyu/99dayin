@@ -123,7 +123,24 @@ gulp.task('rjs', function() {
         .pipe(gulp.dest('../js/entry')) //输出保存 
 
 });
+gulp.task('rjs1',function(){
+      return gulp.src('../js/**/*.js')
+        .pipe(amdOptimize("../js/entry/store", {
+            paths: {
+               'jquery': '../js/lib/jQuery',
+            'scroll': '../js/lib/iscroll',
+            'modal': '../js/lib/jquery.simplemodal',
+            'utility': '../js/entry/utility/utility',
+            'checkEvent': '../js/entry/function/checkAll',
+            'prompt': '../js/entry/function/prompt' //提示模块
+            }
+        }))
+        .pipe(concat("store.js")) //合并  
+        .pipe(rename("store.js")) //重命名  
+        // .pipe(uglify()) //压缩  
+        .pipe(gulp.dest('../js/entry')) //输出保存 
+})
 gulp.task('compile', function() {
-    gulp.watch(['app/js/**/*.js'], ['babel', 'rjs']);
+    gulp.watch(['app/js/**/*.js'], ['babel','rjs','rjs1']);
 });
 gulp.task('default', ['sync', 'watch']);

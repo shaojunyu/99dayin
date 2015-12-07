@@ -14,7 +14,7 @@ require.config({
 });
 "use strict";
 require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5) {
-    
+
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -39,7 +39,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
     /*
      * 用来解析class后缀名
      */
-class parseClass {
+    class parseClass {
         constructor() {
 
         }
@@ -68,11 +68,20 @@ class parseClass {
         }
     }
     let getClass = new parseClass();
-
     /*
-    * 定义了一个发送SSE事件,用来判断文件解析是否完成
-    * 在文件开始上传的时候触发, 然后一直持续触发
-    */
+     * 用来检测尾缀,是否符合标准,如果符合返回true; 如果不符合返回false;
+     */
+    function parseSuffix(file, reg = new RegExp(/[ppt|pptx|doc|docx|word]$/)) {
+        if (reg.test(file.name)) {
+            return true; //符合标准返回true
+        } else {
+            return false; //不符合标准返回false;
+        }
+    }
+    /*
+     * 定义了一个发送SSE事件,用来判断文件解析是否完成
+     * 在文件开始上传的时候触发, 然后一直持续触发
+     */
     function sendSSE({
         url, message = () => {}, open = () => {}, error = () => {}
     }) {
@@ -86,29 +95,31 @@ class parseClass {
         /*
          * 绑定相关事件
          */
-         
+
         source.addEventListener("open", open, false);
-        source.addEventListener("message", (e)=>{console.log(`e is ${e} and data is ${e.data}`);message(e);}, false); //message中返回的数据有,e.data服务器返回的文本数据
+        source.addEventListener("message", (e) => {
+            message(e);
+        }, false); //message中返回的数据有,e.data服务器返回的文本数据
         source.addEventListener("error", error, false);
         return source;
     }
     let SSE = {
-        flag:0,  //设置进度条
-        source:undefined, //设置SSE对象
-        message(event){
-            SSE.flag = event.data;  //用来表示文件是否解析完成\
-            if(SSE.flag ==0){
+        flag: undefined, //设置进度条
+        source: undefined, //设置SSE对象
+        message(event) {
+            SSE.flag = event.data; //用来表示文件是否解析完成\
+            if (SSE.flag == 0) {
                 SSE.close();
             }
 
         },
-        init(){
-            this.source = sendSSE({url:Pathurl.SSEurl,message:SSE.message});
+        init() {
+            this.source = sendSSE({
+                url: Pathurl.SSEurl,
+                message: SSE.message
+            });
         },
-        show(){
-            prompt.goPay(this.flag);  //显示文件未解析数量
-        },
-        close(){  //关闭SSE连接
+        close() { //关闭SSE连接
             this.source.close();
         }
 
@@ -134,7 +145,7 @@ class parseClass {
         confirm: Encryption.Encryption('../index.php/api/uploadACK'), //上传成功后的给后台发送验证
         remove: Encryption.Encryption('../index.php/api/deleteCartItem'), //删除购物车
         confirmHash: Encryption.Encryption('../index.php/api/confirmMD5'),
-        SSEurl:Encryption.Encryption('../index.php/api/getProgress')  //解析SSE地址
+        SSEurl: Encryption.Encryption('../index.php/api/getProgress') //解析SSE地址
     };
     /*
      * 检查id是否和传入的一致
@@ -206,7 +217,7 @@ class parseClass {
                 // { title : "Image files", extensions : "jpg,gif,png" },
                 {
                     title: "document",
-                    extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
+                    extensions: 'doc,ppt,pptx,docx,pdf'
                 }
             ],
             max_file_size: "100mb", //设置最大上传文件大小
@@ -284,20 +295,20 @@ class parseClass {
                     _this.deleteItem($target);
                 }
             });
-            this.content_a.on('click',function(e){
+            this.content_a.on('click', function(e) {
                 SSE.close();
             })
         },
         fillUpload(up, data) {
             let {
-                dir, signature, accessid, policy, host
+                dir, signature, accessid, policy, host,callback
             } = data;
             let new_multipart_params = {
                 'key': dir + '${filename}', //获得文件名
                 'policy': policy,
                 'OSSAccessKeyId': accessid,
                 'success_action_status': '200', //让服务端返回200,不然，默认会返回204
-                // 'callback' : callbackbody,
+                'callback' : callback,
                 'signature': signature //由后台获得的签名
             }
             up.setOption({ //设置上传参数
@@ -420,10 +431,6 @@ class parseClass {
                 currentChunk = 0,
                 spark = new md5(),
                 start, end;
-            console.log(`native is ${native} and percent is ${Math.ceil(100*currentChunk/chunks)}
-                and chunks is ${chunks}
-                and currentChunk is ${currentChunk}
-                `);
             reader.onload = function(e) { //当完成加载时，触发相关的函数
                     //每块交由sparkMD5进行计算
                     spark.appendBinary(e.target.result);
@@ -451,23 +458,30 @@ class parseClass {
          */
         confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
-            $.ajax({
-                    url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                    type: "POST",
-                    dataType: "json",
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        fileMD5: hash
+            //验证文件尾缀
+            var sign = parseSuffix(file.native());
+            if (sign) {
+                $.ajax({
+                        url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                        type: "POST",
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            fileMD5: hash
+                        })
                     })
-                })
-                .then(data => {
-                    if (data.success) { //如果不存在的话
-                        up.removeFile(file); //删除队列中已经存在的文件
-                        upload.addFileToken(file);
-                    } else {
-                        upload.getAjax(up);
-                    }
-                })
+                    .then(data => {
+                        if (data.success) { //如果不存在的话
+                            up.removeFile(file); //删除队列中已经存在的文件
+                            upload.addFileToken(file);
+                        } else {
+                            upload.getAjax(up);
+                        }
+                    })
+            } else {
+                up.removeFile(file); //删除队列中已经存在的文件
+            }
+
         }
     }
     upload.init();
@@ -678,13 +692,13 @@ class parseClass {
      */
     var Pay = {
         pay_btn: $('#show-shopping'), //前去结算按钮
+        flag: 0,
         init() {
             this.pay_btn.on('click', function() {
                 let mark = [],
                     goods = $("#scroller").find(".logo-error");
 
-                goods.each((index,val) => { //获取商品的hash值.
-                    console.log(`val is ${val} and goods is ${goods}`);
+                goods.each((index, val) => { //获取商品的hash值.
                     mark.push($(val).attr('data-mark'));
                 })
                 let len = mark.length;
@@ -692,15 +706,32 @@ class parseClass {
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
                     //看这里需不需要发送商品总的hash值;
-                    SSE.init();
-                     if(SSE.flag===0){
-                        SSE.close();
-                        console.log("now go to");
-                        window.location.href = '../confirm';
-                     }else{
-                        SSE.show();
-                     }
+
+                    new Promise((res, rej) => {
+                            SSE.init();
+                            res();
+                        })
+                        .then(() => {
+                            if (Pay.flag > 0) SSE.close();
+                            Pay.flag++;
+                            return undefined;
+                        })
+                        .then(()=>{
+                            if(SSE.flag ==0){
+                                window.location.href = '../user/confirm';        
+                            }else if(SSE.flag===undefined){
+                                //当请求未返回时,进行判断
+                                
+                            }
+                        })
                     
+                    console.log(`SSE.flag is ${SSE.flag}`);
+                    if (SSE.flag == 0) {
+                        window.location.href = '../user/confirm';
+                    } else {
+                        SSE.show();
+                    }
+
                 }
             });
         }
@@ -740,8 +771,8 @@ class parseClass {
     //             }
     //         })
     //     }
-//     // }
-//     // Search.init();
-// SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
-// setTimeout(()=>{SSE.close()},3000);
+    //     // }
+    //     // Search.init();
+    // SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
+    // setTimeout(()=>{SSE.close()},3000);
 })

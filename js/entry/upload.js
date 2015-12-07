@@ -4644,9 +4644,9 @@ define('prompt', ['jquery'], function ($) {
     };
     Prompt.prototype.goPay = function (num) {
         this.showPrompt();
-        this.prompt_ele.text('您的未解析文件数目:' + percent);
+        this.prompt_ele.text('您的未解析文件数目:' + num);
         if (num === 0) {
-            this.prompt_ele.text('文件解析完成');
+            this.prompt_ele.text('文件解析完成,请再次点击');
         }
     };
     return { Prompt: Prompt };
@@ -10415,6 +10415,14 @@ require([
         return parseClass;
     }();
     var getClass = new parseClass();
+    function parseSuffix(file) {
+        var reg = arguments.length <= 1 || arguments[1] === undefined ? new RegExp(/[ppt|pptx|doc|docx|word]$/) : arguments[1];
+        if (reg.test(file.name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     function sendSSE(_ref) {
         var url = _ref.url;
         var _ref$message = _ref.message;
@@ -10433,14 +10441,13 @@ require([
         }
         source.addEventListener('open', open, false);
         source.addEventListener('message', function (e) {
-            console.log('e is ' + e + ' and data is ' + e.data);
             message(e);
         }, false);
         source.addEventListener('error', error, false);
         return source;
     }
     var SSE = {
-        flag: 0,
+        flag: undefined,
         source: undefined,
         message: function message(event) {
             SSE.flag = event.data;
@@ -10524,7 +10531,7 @@ require([
         filters: {
             mime_types: [{
                     title: 'document',
-                    extensions: 'txt,doc,ppt,docx,wps,rtf,pdf,xls'
+                    extensions: 'doc,ppt,pptx,docx,pdf'
                 }],
             max_file_size: '100mb',
             prevent_duplicates: true
@@ -10677,7 +10684,6 @@ require([
             var file = _ref2.file;
             var native = _ref2.native;
             var reader = new FileReader(), blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice, chunkSize = 2097152, chunks = Math.ceil(native.size / chunkSize), currentChunk = 0, spark = new md5(), start, end;
-            console.log('native is ' + native + ' and percent is ' + Math.ceil(100 * currentChunk / chunks) + '\n                and chunks is ' + chunks + '\n                and currentChunk is ' + currentChunk + '\n                ');
             reader.onload = function (e) {
                 spark.appendBinary(e.target.result);
                 currentChunk++;
@@ -10694,20 +10700,25 @@ require([
         },
         confirm: function confirm(up, hash, file) {
             file.hash = hash;
-            $.ajax({
-                url: Pathurl.confirmHash,
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({ fileMD5: hash })
-            }).then(function (data) {
-                if (data.success) {
-                    up.removeFile(file);
-                    upload.addFileToken(file);
-                } else {
-                    upload.getAjax(up);
-                }
-            });
+            var sign = parseSuffix(file.native());
+            if (sign) {
+                $.ajax({
+                    url: Pathurl.confirmHash,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ fileMD5: hash })
+                }).then(function (data) {
+                    if (data.success) {
+                        up.removeFile(file);
+                        upload.addFileToken(file);
+                    } else {
+                        upload.getAjax(up);
+                    }
+                });
+            } else {
+                up.removeFile(file);
+            }
         }
     };
     upload.init();
@@ -10854,22 +10865,32 @@ require([
     });
     var Pay = {
         pay_btn: $('#show-shopping'),
+        flag: 0,
         init: function init() {
             this.pay_btn.on('click', function () {
                 var mark = [], goods = $('#scroller').find('.logo-error');
                 goods.each(function (index, val) {
-                    console.log('val is ' + val + ' and goods is ' + goods);
                     mark.push($(val).attr('data-mark'));
                 });
                 var len = mark.length;
                 if (len === 0) {
                     prompt.changeInfo('购物车为0,不能结算!');
                 } else if (len > 0) {
-                    SSE.init();
-                    if (SSE.flag === 0) {
+                    new Promise(function (res, rej) {
+                        SSE.init();
+                        res();
+                    });
+                    if (Pay.flag > 0) {
                         SSE.close();
-                        console.log('now go to');
-                        window.location.href = '../confirm';
+                    } else if (Pay.flag === 0) {
+                        SSE.init();
+                    } else if (SSE.flag != 0) {
+                        SSE.init();
+                    }
+                    Pay.flag++;
+                    console.log('SSE.flag is ' + SSE.flag);
+                    if (SSE.flag == 0) {
+                        window.location.href = '../user/confirm';
                     } else {
                         SSE.show();
                     }

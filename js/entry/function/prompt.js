@@ -51,9 +51,9 @@ define(['jquery'], function ($) {
 	};
 	Prompt.prototype.goPay = function (num) {
 		this.showPrompt();
-		this.prompt_ele.text("您的未解析文件数目:" + percent);
+		this.prompt_ele.text("您的未解析文件数目:" + num);
 		if (num === 0) {
-			this.prompt_ele.text("文件解析完成");
+			this.prompt_ele.text("文件解析完成,请再次点击");
 		}
 	};
 	return {
