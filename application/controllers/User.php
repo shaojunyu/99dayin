@@ -7,6 +7,9 @@ require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
 
 class User extends CI_Controller{
 	var $userId;
+	var $cart;
+	var $user;
+	var $order;
 	
 	function __construct(){
 		parent::__construct();
@@ -15,12 +18,20 @@ class User extends CI_Controller{
 			exit();
 		}
 		$this->userId = $this->session->userdata('userId');
+		$this->cart = new MY_Cart();
+		$this->order = new MY_Order();
 	}
 	
+	/**
+	 * 上传页面
+	 */
 	function upload(){
 		$this->load->view('user/upload_page');
 	}
 	
+	/**
+	 * 订单确认页面
+	 */
 	function confirm(){
 		$bmobObj = new BmobObject('Cart');
 		$res = $bmobObj->get('',array('where={"userId":"'.$this->userId.'"}','limit=1'));
@@ -31,7 +42,24 @@ class User extends CI_Controller{
 		if (empty($items)) {
 			header('Location: '.base_url('user/upload'));
 		}else {
-			$this->load->view('user/confirm_page',array('items'=>$items));
+			//检测文件是否解析完成，若未完成，则返回
+			$bmobObj = new BmobObject('File_Info');
+			$num = count($this->cart->getItems());
+			
+			foreach ($this->cart->getItems() as &$item){
+				$fileMD5 = $item->fileMD5;
+				$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+				if (count($res->results) == 1) {
+					$num--;
+				}
+			}
+			if ($num == 0) {//剩余数量为0
+				$this->load->view('user/confirm_page',array('items'=>$items));
+			}else {
+				//echo $num;
+				header('Location: '.base_url('user/upload'));
+			}
+			
 		}
 	}
 	
