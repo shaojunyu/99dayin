@@ -459,9 +459,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
             //验证文件尾缀
-            var sign = parseSuffix(file.native());
-            if (sign) {
-                $.ajax({
+              $.ajax({
                         url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
                         type: "POST",
                         dataType: "json",
@@ -478,9 +476,28 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                             upload.getAjax(up);
                         }
                     })
-            } else {
-                up.removeFile(file); //删除队列中已经存在的文件
-            }
+            // var sign = parseSuffix(file.native());
+            // if (sign) {
+            //     $.ajax({
+            //             url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+            //             type: "POST",
+            //             dataType: "json",
+            //             contentType: 'application/json',
+            //             data: JSON.stringify({
+            //                 fileMD5: hash
+            //             })
+            //         })
+            //         .then(data => {
+            //             if (data.success) { //如果不存在的话
+            //                 up.removeFile(file); //删除队列中已经存在的文件
+            //                 upload.addFileToken(file);
+            //             } else {
+            //                 upload.getAjax(up);
+            //             }
+            //         })
+            // } else {
+            //     up.removeFile(file); //删除队列中已经存在的文件
+            // }
 
         }
     }
@@ -696,7 +713,9 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         init() {
             this.pay_btn.on('click', function() {
                 let mark = [],
-                    goods = $("#scroller").find(".logo-error");
+                    goods = $("#scroller").find(".logo-error"),
+                    time1,  //验证SSE.flag
+                    time2;
 
                 goods.each((index, val) => { //获取商品的hash值.
                     mark.push($(val).attr('data-mark'));
@@ -721,16 +740,17 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                                 window.location.href = '../user/confirm';        
                             }else if(SSE.flag===undefined){
                                 //当请求未返回时,进行判断
-                                
+                                clearInterval(time);
+                                time = setInterval(()=>{
+                                    if(SSE.flag==0){
+                                        window.location.href = '../user/confirm';     
+                                    }
+                                },1500);
+                            }else if(SSE.flag!=0){
+                                prompt.goPay(SSE.flag);
                             }
                         })
                     
-                    console.log(`SSE.flag is ${SSE.flag}`);
-                    if (SSE.flag == 0) {
-                        window.location.href = '../user/confirm';
-                    } else {
-                        SSE.show();
-                    }
 
                 }
             });
