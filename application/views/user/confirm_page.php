@@ -90,10 +90,10 @@
                                 <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
                             </td>
                             <td role="gross">
-                                <span class="gross-price"><?php echo $item->count?></span>
+                                <span class="gross-price"><?php echo $item->printSettings->amount?></span>
                             </td>
                             <td role="delete">
-                                <a class="delete-btns" data-mark="<?php echo $item->fileHash?>" href="javascript:void(0)">删除</a>
+                                <a class="delete-btns" data-mark="<?php echo $item->fileMD5?>" href="javascript:void(0)">删除</a>
                             </td>
                         </tr>
                      <?php }?>

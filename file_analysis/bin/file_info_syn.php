@@ -4,6 +4,7 @@
  */
 use OSS\OssClient;
 require_once './bmob/lib/BmobObject.class.php';
+require_once './bmob/lib/BmobUser.class.php';
 require_once './aliyun_oss/vendor/autoload.php';
 require_once './pdfParser/vendor/autoload.php';
 //aliyun 授权信息
@@ -32,11 +33,34 @@ try {
 } catch (Exception $e) {
 	print $e;
 }
-
 $bucket = '99dayin';
 
+//获取所有用户信息
+$bmobUser = new BmobUser();
+$res = $bmobUser->get();
+$res = $res->results;
+foreach ($res as &$user){
+	$userId = $user->objectId;
+	//循环每个用户文件夹
+	
+}
 
-listAllObjects($oss_client, $bucket);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * 列出Bucket内所有目录和文件， 根据返回的nextMarker循环调用listObjects接口得到所有文件和目录
@@ -49,7 +73,7 @@ function listAllObjects($ossClient, $bucket)
 {
     $prefix = 'user_upload/';
     $delimiter = '/';
-    $nextMarker = '';
+    $nextMarker = 'a';
     $maxkeys = 30;
     while (true) {
         $options = array(
@@ -70,8 +94,8 @@ function listAllObjects($ossClient, $bucket)
         $nextMarker = $listObjectInfo->getNextMarker();
         $listObject = $listObjectInfo->getObjectList();
         $listPrefix = $listObjectInfo->getPrefixList();
-        var_dump(($listObject));
         var_dump(($listPrefix));
+        var_dump(($nextMarker));
         if ($nextMarker === '') {
             break;
         }

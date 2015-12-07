@@ -2,6 +2,17 @@
 use Pingpp\Transfer;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+//引入bomb
+require_once APPPATH.'third_party/bmob/lib/BmobObject.class.php';
+require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
+require_once APPPATH.'third_party/bmob/lib/BmobSms.class.php';
+
+//引入ping++
+require_once APPPATH.'third_party/pingpp/init.php';
+$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
+$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
+$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
+
 class Api extends CI_Controller{
 	private $bmobUser;
 	private $bmobSms;
@@ -24,17 +35,8 @@ class Api extends CI_Controller{
 			exit('加密错误！');
 		}
 		
-		//引入bomb
-		require_once APPPATH.'third_party/bmob/lib/BmobObject.class.php';
-		require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
-		require_once APPPATH.'third_party/bmob/lib/BmobSms.class.php';
 		$this->bmobUser = new BmobUser();
 		
-// 		//引入ping++
-		require_once APPPATH.'third_party/pingpp/init.php';
-		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
-		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
-		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
 		\pingpp\Pingpp::setApiKey($live_key);
 		
 		//解析post数据,以json格式接收的数据

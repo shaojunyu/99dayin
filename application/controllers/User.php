@@ -1,6 +1,8 @@
 <?php
 
-use leancloud\AVQuery;
+//引入bomb
+require_once APPPATH.'third_party/bmob/lib/BmobObject.class.php';
+require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
 //普通用户控制器
 
 class User extends CI_Controller{
@@ -12,11 +14,7 @@ class User extends CI_Controller{
 			header('Location: '.base_url());
 			exit();
 		}
-		
 		$this->userId = $this->session->userdata('userId');
-		//引入leancloud
-		require_once APPPATH.'/third_party/leancloud/AV.php';
-		
 	}
 	
 	function upload(){
@@ -24,14 +22,16 @@ class User extends CI_Controller{
 	}
 	
 	function confirm(){
-		$AVQuery = new AVQuery('Cart');
-		$AVQuery->where('userId', $this->userId);
-		$items = $AVQuery->find()->results[0]->items;
+		$bmobObj = new BmobObject('Cart');
+		$res = $bmobObj->get('',array('where={"userId":"'.$this->userId.'"}','limit=1'));
+		$res = $res->results[0];
+		$items = $res->items;
+		//json字符串转数组
+		$items = json_decode($items);
 		if (empty($items)) {
 			header('Location: '.base_url('user/upload'));
 		}else {
 			$this->load->view('user/confirm_page',array('items'=>$items));
-			//var_dump($items);$
 		}
 	}
 	
