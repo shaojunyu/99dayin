@@ -5327,12 +5327,6 @@ require([
             var decision = confirm('确认删除吗\uFF1F');
             if (decision) {
                 var mark = $target.attr('data-mark'), signal = -1;
-                FileMarks.forEach(function (val, index) {
-                    if (Number(mark) === Number(index)) {
-                        signal = index;
-                    }
-                });
-                FileMarks.splice(index, 1);
                 $target.parents('tr').detach();
                 $all_gross = $('.gross-price');
                 totalPrice($all_gross, $total_price);
@@ -5341,7 +5335,10 @@ require([
                         val.refresh();
                     });
                 }, 0);
-                $.ajax({ url: Pathurl.delete }).done();
+                $.ajax({
+                    url: Pathurl.delete,
+                    data: { hash: mark }
+                }).done();
             }
         },
         init: function init() {
