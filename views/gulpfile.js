@@ -149,7 +149,9 @@ gulp.task('confirmRjs',function(){
             'modal': '../js/lib/jquery.simplemodal',
             'utility': '../js/entry/utility/utility',
             'checkEvent': '../js/entry/function/checkAll',
-            'prompt': '../js/entry/function/prompt' //提示模块
+            'prompt': '../js/entry/function/prompt', //提示模块
+            'md5': "../js/lib/spark-md5.min",
+            'encryption': "../js/entry/function/encryption"
             }
         }))
         .pipe(concat("99shopping.js")) //合并  

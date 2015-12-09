@@ -23,7 +23,7 @@
                     <thead>
                         <th class="order">序号</th>
                         <th class="file-name">文件名</th>
-                        <th class="share">共享</th>
+                        <th class="share">页数</th>
                         <th class="leaf">单/双面</th>
                         <th class="direction">横/竖</th>
                         <th class="ppt-mount">每面PPT的数量</th>
@@ -67,9 +67,8 @@
                                         <input type="radio" name="direction1" role="direction" value="row">横</div>
                                 </div>
                             </td>
-                            <td >
-                            无
-                             
+                            <td  role="ppt-mount">
+                             "无"
                             </td>
                             <td >
                                 <select  role="size" class="page-size">
@@ -99,13 +98,8 @@
                             <td role="file-name">
                                 <div><i class="logo-ppt"></i><span class="file-name"><?php echo $item->filename?></span></td>
                             </div>
-                           <td  role="share">
-                                <div>
-                                    <div>
-                                        <input type="radio" name="share1"value="yes" data-role="share"  checked>是</div>
-                                    <div>
-                                        <input type="radio" name="share1" data-role="share" value="no">否</div>
-                                </div>
+                           <td  role="share pages-amount">
+                                1
                             </td>
                             <td role="page">
                                 <div>
