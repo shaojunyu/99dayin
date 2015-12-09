@@ -10416,7 +10416,7 @@ require([
     }();
     var getClass = new parseClass();
     function parseSuffix(file) {
-        var reg = arguments.length <= 1 || arguments[1] === undefined ? new RegExp(/[ppt|pptx|doc|docx|word]$/) : arguments[1];
+        var reg = arguments.length <= 1 || arguments[1] === undefined ? /[.](doc|docx|ppt|pdf|pptx|word)$/ : arguments[1];
         if (reg.test(file.name)) {
             return true;
         } else {
@@ -10699,20 +10699,25 @@ require([
         },
         confirm: function confirm(up, hash, file) {
             file.hash = hash;
-            $.ajax({
-                url: Pathurl.confirmHash,
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({ fileMD5: hash })
-            }).then(function (data) {
-                if (data.success) {
-                    up.removeFile(file);
-                    upload.addFileToken(file);
-                } else {
-                    upload.getAjax(up);
-                }
-            });
+            var sign = parseSuffix(file.getNative());
+            if (sign) {
+                $.ajax({
+                    url: Pathurl.confirmHash,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ fileMD5: hash })
+                }).then(function (data) {
+                    if (data.success) {
+                        up.removeFile(file);
+                        upload.addFileToken(file);
+                    } else {
+                        upload.getAjax(up);
+                    }
+                });
+            } else {
+                up.removeFile(file);
+            }
         }
     };
     upload.init();
@@ -10885,14 +10890,13 @@ require([
                             clearInterval(time1);
                             time1 = setInterval(function () {
                                 if (SSE.flag == 0) {
+                                    clearInterval(time1);
                                     window.location.href = '../user/confirm';
                                 }
-                            }, 1500);
+                            }, 100);
                         } else if (SSE.flag != 0) {
                             clearInterval(time2);
-                            time2 = setInterval(function () {
-                                prompt.goPay(SSE.flag);
-                            });
+                            prompt.goPay(SSE.flag);
                         }
                     });
                 }

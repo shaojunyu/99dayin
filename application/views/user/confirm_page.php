@@ -19,7 +19,7 @@
             <div class="upload"><a href="javascript:void(0)">重新上传</a></div>
             <div class="add"><a href="javascript:void(0)">去文库添加</a></div>
             <div class="files container" id="container">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="table">
                     <thead>
                         <th class="order">序号</th>
                         <th class="file-name">文件名</th>
@@ -38,62 +38,118 @@
                     //传值，array,$items 
                     	foreach ($items as $item){
                     ?>
-                      <tr>
+                   <!--    <tr>
                             <td role="order">1</td>
-                            <td role="file-name">
-                                <div><i class="logo-ppt"></i><span class="file-name"><?php echo $item->filename?></span></td>
+                            <td >
+                                <div><i class="logo-ppt"></i><span class="file-name" role="file-name">2015年春微积分模拟卷(启明)</span></td>
                             </div>
-                            <td role="share">
+                            <td>
                                 <div>
                                     <div>
-                                        <input type="radio" name="share1" value="yes" checked>是</div>
+                                        <input type="radio" name="share1" role="share" value="yes" checked>是</div>
                                     <div>
-                                        <input type="radio" name="share1" value="no">否</div>
+                                        <input type="radio" name="share1" role="share" value="no">否</div>
                                 </div>
                             </td>
-                            <td role="page">
+                            <td>
                                 <div>
                                     <div>
-                                        <input type="radio" name="page1" value="single" checked>单</div>
+                                        <input type="radio" name="page1" role="page" value="single" checked>单</div>
                                     <div>
-                                        <input type="radio" name="page1" value="double">双</div>
+                                        <input type="radio" name="page1" role="page" value="double">双</div>
                                 </div>
                             </td>
                             <td role="direction">
                                 <div>
                                     <div>
-                                        <input type="radio" name="direction1" value="column" checked>竖</div>
+                                        <input type="radio" name="direction1"  role="direction" value="column" checked>竖</div>
                                     <div>
-                                        <input type="radio" name="direction1" value="row">横</div>
+                                        <input type="radio" name="direction1" role="direction" value="row">横</div>
                                 </div>
                             </td>
-                            <td role="ppt-mount">
-                                <select>
-                                    <option value="1">1</option>
-                                    <option value="4">4</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select>
+                            <td >
+                            无
+                             
                             </td>
-                            <td role="size">
-                                <select class="page-size">
+                            <td >
+                                <select  role="size" class="page-size">
                                     <option value="A1">A1</option>
                                     <option value="A2">A2</option>
                                     <option value="A3">A3</option>
                                     <option value="A4">A4</option>
                                 </select>
                             </td>
-                            <td role="single-price">
-                                <span class="single">1.5</span>
+                            <td >
+                                <span role="single-price" class="single">1.5</span>
                             </td>
-                            <td role="copies">
-                                <button class="plus"></button><input class="pages" type="text" value="1"><button class="minus"></button>
+                            <td >
+                                <button class="plus" role="copies"></button><input class="pages" type="text" value="1"><button class="minus" role="copies"></button>
                             </td>
-                            <td role="gross">
-                                <span class="gross-price"><?php echo $item->printSettings->amount?></span>
+                            <td >
+                                <span class="gross-price" role="gross"> 1</span>
+                            </td>
+                            <td 
+                                <a class="delete-btns" data-mark="123671278391" role="delete"> href="javascript:void(0)">删除</a>
+                            </td>
+                        </tr> -->
+
+
+                      <tr>
+                            <td role="order">1</td>
+                            <td role="file-name">
+                                <div><i class="logo-ppt"></i><span class="file-name"><?php echo $item->filename?></span></td>
+                            </div>
+                           <td  role="share">
+                                <div>
+                                    <div>
+                                        <input type="radio" name="share1"value="yes" data-role="share"  checked>是</div>
+                                    <div>
+                                        <input type="radio" name="share1" data-role="share" value="no">否</div>
+                                </div>
+                            </td>
+                            <td role="page">
+                                <div>
+                                    <div>
+                                        <input type="radio" name="page1"  data-role="page" value="single" checked>单</div>
+                                    <div>
+                                        <input type="radio" name="page1" data-role="page" value="double">双</div>
+                                </div>
+                            </td>
+                            <td role="direction">
+                                <div>
+                                    <div>
+                                        <input type="radio" name="direction1" data-role="direction"  value="column" checked>竖</div>
+                                    <div>
+                                        <input type="radio" name="direction1" data-role="direction" value="row">横</div>
+                                </div>
+                            </td>
+                            <td  role="ppt-mount">
+                                <select data-role="ppt-mount">
+                                    <option value="1">1</option>
+                                    <option value="4">4</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                </select>
+                            </td>
+                            <td  role="size">
+                                <select class="page-size"  data-role="size">
+                                    <option value="A1">A1</option>
+                                    <option value="A2">A2</option>
+                                    <option value="A3">A3</option>
+                                    <option value="A4">A4</option>
+                                </select>
+                            </td>
+                            <td  role="single-price" >
+                                <span class="single" data-role="single-price">1.5</span>
+                            </td>
+                            <td  role="copies">
+                                <button class="plus"  data-role="copies-btn"></button><input class="pages" type="text" value="1"><button class="minus" role="copies-btn"></button>
+                            </td>
+                            <td  role="gross">
+                                <span class="gross-price" data-role="gross"><?php echo $item->printSettings->amount?></span>
                             </td>
                             <td role="delete">
-                                <a class="delete-btns" data-mark="<?php echo $item->fileMD5?>" href="javascript:void(0)">删除</a>
+                                <a class="delete-btns" data-role="delete" data-mark="<?php echo $item->fileMD5?>" href="javascript:void(0)">删除</a>
                             </td>
                         </tr>
                      <?php }?>
