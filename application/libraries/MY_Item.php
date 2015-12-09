@@ -75,7 +75,8 @@ class printSettings{
 		$this->amount = 1;
 		$this->isColor = false;
 		$this->pptPerPage = 1;
-		$this->direction = printDirection::$horizontal;
+		$this->direction = printDirection::$vertical;
+		$this->remark = '';
 	}
 	
 	public function __set($key,$value){
@@ -88,6 +89,9 @@ class printSize{
 	static $B4 = 'B4';
 }
 
+/*
+ * ppt多页打印方向
+ */
 class printDirection{
 	static $horizontal = 'horizontal';
 	static $vertical = 'vertical';

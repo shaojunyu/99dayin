@@ -21,7 +21,11 @@ class User extends CI_Controller{
 		$this->cart = new MY_Cart();
 		$this->order = new MY_Order();
 	}
-	
+
+	public function index(){
+		header('Location: '.base_url('user/upload'));
+	}
+
 	/**
 	 * 上传页面
 	 */
