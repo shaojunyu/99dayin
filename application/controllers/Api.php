@@ -286,11 +286,10 @@ class Api extends CI_Controller{
 			ob_flush();
 			flush();
 	}
-	
+
 	//删除购物车中的项目
 	public function deleteCartItem(){
 		$fileMD5 = $this->input->post('fileMD5');
-		
 		$cart = new MY_Cart();
 		if ($cart->deleteItem($fileMD5)) {
 			$this->echo_msg(true,'删除成功');
@@ -298,7 +297,14 @@ class Api extends CI_Controller{
 			$this->echo_msg(false,'删除失败，请重试');
 		}
 	}
-	
+
+	/*
+	 * 获取购物车总价
+	 */
+	public function getTotalPrice(){
+		$cart = new MY_Cart();
+		//
+	}
 	//获取文件列表
 	public function getFileList(){
 		$bucket = 'dayin';

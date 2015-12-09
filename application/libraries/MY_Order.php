@@ -67,9 +67,6 @@ class MY_Order extends MY_Base_Class{
 	 * return int
 	 * 计价单位 分
 	 */
-	public function test(){
-		$this->get_price($this->cart->getItems());
-	}
 	private function get_price($items){
 		$total_price = 0;
 		foreach ($items as &$item){
