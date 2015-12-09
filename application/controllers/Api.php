@@ -91,7 +91,7 @@ class Api extends CI_Controller{
 			$this->echo_msg(true,'登录成功');
 			exit();
 		} catch (Exception $e) {
-			$this->echo_msg(false,'用户名或密码错误'.$e->error_msg);
+			$this->echo_msg(false,'用户名或密码错误');
 			exit();
 		}
 		
@@ -147,7 +147,7 @@ class Api extends CI_Controller{
     	$id= 'GtzMAvDTnxg72R04';
     	$key= 'VhD2czcwLVAaE7DReDG4uEVSgtaSYK';
     	$host = 'http://99dayin.oss-cn-hangzhou.aliyuncs.com';
-    	$callback_body = '{"callbackUrl":"http://www.99dayin.com:12345","callbackHost":"99dayin.oss-cn-hangzhou.aliyuncs.com","callbackBody":"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}","callbackBodyType":"application/x-www-form-urlencoded"}';
+    	$callback_body = '{"callbackUrl":"http://www.99dayin.com:12345","callbackHost":"www.99dayin.com","callbackBody":"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}","callbackBodyType":"application/x-www-form-urlencoded"}';
     	$base64_callback_body = base64_encode($callback_body);
     	$now = time();
     	$expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
@@ -187,16 +187,21 @@ class Api extends CI_Controller{
     	echo json_encode($response);
 	}
 	
-	/*
+	/**
 	 * 验证文件是否已存在
 	 */
 	public function confirmMD5(){
-		$fileMD5 = $this->input->post('fileMD5');
+		$fileMD5 = $this->post_data->fileMD5;
 		if (empty($fileMD5)) {
 			$this->echo_msg(false);
 		}else {
-			//$bmob = new BmobObject();
-			$this->echo_msg(false);
+			$bmobObj = new BmobObject('File_Info');
+			$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+			if (count($res->results) == 1) {
+				$this->echo_msg(true);
+			}else {
+				$this->echo_msg(false);
+			}
 		}
 	}
 	/*
@@ -231,7 +236,7 @@ class Api extends CI_Controller{
 		try {
 			$bmobObj = new BmobObject("User_Upload");
 			$res = $bmobObj->create(array(
-					'filename'=>$filename,
+					'filename'=>urldecode($filename),
 					'uploader'=>$uploader
 			));
 		} catch (Exception $e) {
@@ -341,7 +346,10 @@ class Api extends CI_Controller{
 		}
 
 	}
-	
+
+	/*
+	 * 取人订单是否已支付
+	 */
 	function isPaid(){
 		$chargeId = $this->input->post('chargeId');
 		try {
