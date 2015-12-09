@@ -71,7 +71,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
     /*
      * 用来检测尾缀,是否符合标准,如果符合返回true; 如果不符合返回false;
      */
-    function parseSuffix(file, reg = new RegExp(/[ppt|pptx|doc|docx|word]$/)) {
+    function parseSuffix(file, reg= /[.](doc|docx|ppt|pdf|pptx|word)$/ ) {
         if (reg.test(file.name)) {
             return true; //符合标准返回true
         } else {
@@ -459,45 +459,29 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
         confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
             //验证文件尾缀
-            $.ajax({
-                    url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                    type: "POST",
-                    dataType: "json",
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        fileMD5: hash
+
+            var sign = parseSuffix(file.getNative());
+            if (sign) {
+                $.ajax({
+                        url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                        type: "POST",
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            fileMD5: hash
+                        })
                     })
-                })
-                .then(data => {
-                    if (data.success) { //如果不存在的话
-                        up.removeFile(file); //删除队列中已经存在的文件
-                        upload.addFileToken(file);
-                    } else {
-                        upload.getAjax(up);
-                    }
-                })
-                // var sign = parseSuffix(file.native());
-                // if (sign) {
-                //     $.ajax({
-                //             url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                //             type: "POST",
-                //             dataType: "json",
-                //             contentType: 'application/json',
-                //             data: JSON.stringify({
-                //                 fileMD5: hash
-                //             })
-                //         })
-                //         .then(data => {
-                //             if (data.success) { //如果不存在的话
-                //                 up.removeFile(file); //删除队列中已经存在的文件
-                //                 upload.addFileToken(file);
-                //             } else {
-                //                 upload.getAjax(up);
-                //             }
-                //         })
-                // } else {
-                //     up.removeFile(file); //删除队列中已经存在的文件
-                // }
+                    .then(data => {
+                        if (data.success) { //如果不存在的话
+                            up.removeFile(file); //删除队列中已经存在的文件
+                            upload.addFileToken(file);
+                        } else {
+                            upload.getAjax(up);
+                        }
+                    })
+            } else {
+                up.removeFile(file); //删除队列中已经存在的文件
+            }
 
         }
     }
@@ -743,14 +727,14 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                                 clearInterval(time1);
                                 time1 = setInterval(() => {
                                     if (SSE.flag == 0) {
+                                        clearInterval(time1);
                                         window.location.href = '../user/confirm';
+
                                     }
-                                }, 1500);
+                                }, 100);
                             } else if (SSE.flag != 0) {
                                 clearInterval(time2);
-                                time2 = setInterval(() => {
                                     prompt.goPay(SSE.flag);
-                                })
 
                             }
                         })
