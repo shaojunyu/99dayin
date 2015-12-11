@@ -289,7 +289,7 @@ class Api extends CI_Controller{
 
 	//删除购物车中的项目
 	public function deleteCartItem(){
-		$fileMD5 = $this->input->post('fileMD5');
+		$fileMD5 = $this->post_data->fileMD5;
 		$cart = new MY_Cart();
 		if ($cart->deleteItem($fileMD5)) {
 			$this->echo_msg(true,'删除成功');
@@ -297,7 +297,27 @@ class Api extends CI_Controller{
 			$this->echo_msg(false,'删除失败，请重试');
 		}
 	}
+	
+	/*
+	 * 打印设置
+	 */
+	public function printSetting(){
+		if(!empty($this->post_data)){
+			$fileMD5 = $this->post_data->fileMD5;
+			$option = $this->post_data->option;
+			$option_value = $this->post_data->option_value;
+			$cart = new MY_Cart();
+			try {
+				$res = $cart->changePrintSetting($fileMD5, $option, $option_value);
+				echo json_encode(array("success"=>true,"single"=>$res['unitPrice'],"gross"=>$res['subtotal']));
+			} catch (Exception $e) {
+				$this->echo_msg(false);
+			}
+		}
 
+		
+	}
+	
 	/*
 	 * 获取购物车总价
 	 */

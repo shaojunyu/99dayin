@@ -61,7 +61,7 @@ class MY_Cart extends MY_Base_Class{
 
 		
 		if (!$isIn) {
-			$item = new item($filename, $fileMD5);
+			$item = new MY_Item($filename, $fileMD5);
 			$items[] = $item;
 			//更新购物车
 			try {
@@ -178,6 +178,63 @@ class MY_Cart extends MY_Base_Class{
 				return true;
 			} catch (Exception $e) {
 			}
+		}
+	}
+	
+	/**
+	 * 更改打印设定
+	 * 返回单价
+	 */
+	public function changePrintSetting($fileMD5,$option,$optionValue){
+		//找到item
+		$items = $this->getItems();
+		$key = 0;
+		foreach ($items as $one){
+			if ($one->fileMD5 == $fileMD5) {
+				$isIn = true;
+				break;
+			}
+			$key++;
+		}
+		switch ($option){
+			case 'paperSize':
+				if (in_array($optionValue,paperSize::getPaperSize())) {
+					$items[$key]->printSettings->paperSize = $optionValue;
+				}
+				break;
+			case 'TwoSides':
+				if (in_array($optionValue,array(true,false))) {
+					$items[$key]->printSettings->isTwoSides = $optionValue;
+				}
+				break;
+			case 'pptPerPage':
+				if (in_array($optionValue,pptPerPAge::getPptPerPage())) {
+					$items[$key]->printSettings->pptPerPAge = $optionValue;
+				}
+				break;
+			case 'amount':
+				if ($optionValue  > 0) {
+					$items[$key]->printSettings->amount = $optionValue;
+				}
+				break;
+			case 'direction':
+				if (in_array($optionValue,printDirection::getPrintDirection())) {
+					$items[$key]->printSettings->direction = $optionValue;
+				}
+				break;
+			default:
+				break;
+		}
+		$newItem = new MY_Item(($items[$key]->filename), ($items[$key]->fileMD5));
+		$newItem->printSettings = $items[$key]->printSettings;
+		//返回单价和小记
+		return array('unitPrice'=>$newItem->get_price_per_copy()/100,'subtotal'=>$newItem->get_price_per_copy()*$items[$key]->printSettings->amount/100);
+		//更新数据库
+		try {
+			$items = json_encode($items);
+			$this->bmobObject->update($this->cartId,array('items'=>$items));;
+		} catch (Exception $e) {
+			throw new MY_Exception($e->error_msg);
 		}
 	}
 	
