@@ -36,7 +36,6 @@ class MY_Cart extends MY_Base_Class{
 	public function getItems(){
 		$res = $this->bmobObject->get($this->cartId);
 		return json_decode($res->items);
-
 	}
 	
 	/*
@@ -247,6 +246,14 @@ class MY_Cart extends MY_Base_Class{
 		return array('unitPrice'=>$newItem->get_price_per_copy()/100,'subtotal'=>$newItem->get_price_per_copy()*$items[$key]->printSettings->amount/100);
 	}
 	
+	/**
+	 * 更新数据
+	 * 接受array,items数据
+	 */
+	public function update($data){
+		$this->bmobObject->update($this->cartId,array('items'=>json_encode($data)));;
+	}
+	
 	/*
 	 * 生成订单，清空删除购物车
 	 */
@@ -254,7 +261,7 @@ class MY_Cart extends MY_Base_Class{
 		try {
 			$this->bmobObject->update($this->cartId,array('items'=>''));
 			return true;
-		} catch (AVLibraryException $e) {
+		} catch (Exception $e) {
 			echo $e->error_msg;
 			return false;
 		}

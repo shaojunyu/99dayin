@@ -8,6 +8,7 @@ class MY_Order extends MY_Base_Class{
 	private $pingpp_app_id;
 	private $bmobOrder;
 	private $address;
+	private $totalPrice;
 	
 	public function __construct(){
 		parent::__construct();
@@ -40,7 +41,15 @@ class MY_Order extends MY_Base_Class{
 			throw new MY_Exception('存在未支付订单,无法创建新订单!');
 			return;
 		}
-		
+		foreach ($items as &$item){
+		}
+		try {
+			$this->bmobOrder->create(array(
+					'userId'=>$this->userId,
+					'items'=>$items
+			));
+		} catch (Exception $e) {
+		}
 		
 	}
 	

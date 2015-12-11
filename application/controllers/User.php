@@ -57,7 +57,22 @@ class User extends CI_Controller{
 					$num--;
 				}
 			}
-			if ($num == 0) {//剩余数量为0
+			if ($num == 0) {//剩余数量为0,载入页面
+				//载入之前，将page,subtotal信息录入到bmob
+				$k = 0;
+				while (isset($items[$k])){
+					$item = new MY_Item($items[$k]->filename, $items[$k]->fileMD5);
+					$item->printSettings = $items[$k]->printSettings;
+					$items[$k]->pages = $item->get_pages();
+					$items[$k]->subtotal = $item->get_subtotal();
+					$k++;
+				}
+				$this->cart->update($items);
+				//更新到数据库
+				try {
+					
+				} catch (Exception $e) {
+				}
 				$this->load->view('user/confirm_page',array('items'=>$items));
 			}else {
 				//echo $num;
