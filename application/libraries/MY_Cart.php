@@ -208,12 +208,14 @@ class MY_Cart extends MY_Base_Class{
 				}
 				break;
 			case 'pptPerPage':
-				if (in_array($optionValue,pptPerPAge::getPptPerPage())) {
-					$items[$key]->printSettings->pptPerPAge = $optionValue;
+				$optionValue = intval($optionValue);
+				if (in_array($optionValue,pptPerPage::getPptPerPage())) {
+					$items[$key]->printSettings->pptPerPage = $optionValue;
 				}
 				break;
 			case 'amount':
-				if ($optionValue  > 0) {
+				$optionValue = intval($optionValue);
+				if ($optionValue > 0) {
 					$items[$key]->printSettings->amount = $optionValue;
 				}
 				break;
@@ -225,17 +227,19 @@ class MY_Cart extends MY_Base_Class{
 			default:
 				break;
 		}
+		
 		$newItem = new MY_Item(($items[$key]->filename), ($items[$key]->fileMD5));
 		$newItem->printSettings = $items[$key]->printSettings;
-		//返回单价和小记
-		return array('unitPrice'=>$newItem->get_price_per_copy()/100,'subtotal'=>$newItem->get_price_per_copy()*$items[$key]->printSettings->amount/100);
-		//更新数据库
+		//更新bmob数据,加入价格信息
 		try {
-			$items = json_encode($items);
-			$this->bmobObject->update($this->cartId,array('items'=>$items));;
+			$items[$key]->subtotal = $newItem->get_subtotal();
+			$items[$key]->pages = $newItem->get_pages();
+			$this->bmobObject->update($this->cartId,array('items'=>json_encode($items)));;
 		} catch (Exception $e) {
 			throw new MY_Exception($e->error_msg);
 		}
+		//返回单价和小记
+		return array('unitPrice'=>$newItem->get_price_per_copy()/100,'subtotal'=>$newItem->get_price_per_copy()*$items[$key]->printSettings->amount/100);
 	}
 	
 	/*

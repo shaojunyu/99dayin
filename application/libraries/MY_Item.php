@@ -3,14 +3,14 @@ class MY_Item{
 	var $filename;
 	var $fileMD5;
 	var $fileType;
-	var $printSettings;
 	var $pages;
+	var $subtotal;
+	var $printSettings;
 	
 	public function __construct($filename,$fileMD5){
 		$this->filename = $filename;
 		$this->fileMD5 = $fileMD5;
 		$this->printSettings = new printSettings();
-		
 		$extension = substr(strrchr($filename,'.'),1);
 		switch ($extension){
 			case 'pdf':
@@ -27,7 +27,6 @@ class MY_Item{
 			default:
 				break;
 		}
-		$this->get_pages();
 	}
 
 	public function __set($key,$value){
@@ -66,18 +65,27 @@ class MY_Item{
 	 * 得到一份的价格
 	 */
 	public function get_price_per_copy(){
-		if (empty($this->pages)) {
-			$this->get_pages();
-		}
-		return ceil(($this->pages * $this->get_price_per_page())/10)*10;
+		$pages = $this->pages = $this->get_pages();
+		return ceil(($pages * $this->get_price_per_page())/10)*10;
 	}
 	
+	/**
+	 * 获取页数
+	 */
 	public function get_pages(){
 		$bombObj = new BmobObject('File_Info');
 		$res = $bombObj->get('',array('where={"fileMD5":"'.$this->fileMD5.'"}','limit=1'));
 		$res = $res->results[0];
 		$this->pages = $res->pages;
 		return $res->pages;
+	}
+	
+	/**
+	 * 获取小计
+	 */
+	public function get_subtotal(){
+		$this->subtotal = ($this->get_price_per_copy()*$this->printSettings->amount);
+		return $this->subtotal;
 	}
 }
 
@@ -100,7 +108,7 @@ class printSettings{
 		$this->isTwoSides = false;
 		$this->amount = 1;
 		$this->isColor = false;
-		$this->pptPerPAge = pptPerPAge::$onePerPage;
+		$this->pptPerPage = pptPerPage::$onePerPage;
 		$this->direction = printDirection::$vertical;
 		$this->remark = '';
 	}
@@ -129,7 +137,7 @@ class printDirection{
 	}
 }
 
-class pptPerPAge{
+class pptPerPage{
 	static $onePerPage = 1;
 	static $fourPerPage = 4;
 	static $sixPerPage = 6;

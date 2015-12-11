@@ -4,19 +4,17 @@ require_once 'MY_Base_Class.php';
 //自定义订单类
 class MY_Order extends MY_Base_Class{
 	private $userId;
-	private $order;
 	private $cart;
 	private $pingpp_app_id;
-	private $bombObj;
+	private $bmobOrder;
+	private $address;
 	
 	public function __construct(){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		$this->cart = new MY_Cart();
-		try {
-			$this->bombObj = new BmobObject('Order');
-		} catch (Exception $e) {
-		}
+		$this->bmobOrder = new BmobObject('Order');
+		
 		//引入ping++
 		require_once APPPATH.'third_party/pingpp/init.php';
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
@@ -29,17 +27,6 @@ class MY_Order extends MY_Base_Class{
 	 * 创建成功，返回订单号
 	 */
 	public function createOrder(){
-		$res = $this->bombObj->get('',array('where={"uesrId":"'.$this->userId.'"}','where={"state":"'.orderState::UNPAID.'"}'));
-		//var_dump($res);
-
-// 		$this->AVQuery->where('userId', $this->userId);
-// 		$this->AVQuery->where('state', orderState::UNPAID);
-// 		$res = $this->AVQuery->find()->results;
-		if (!empty($res->results)) {
-			throw new MY_Exception('存在未支付订单，无法创建新订单！');
-			return;
-		}
-		
 		//创建订单
 		$items = $this->cart->getItems();
 		if (empty($items)) {
@@ -47,18 +34,11 @@ class MY_Order extends MY_Base_Class{
 			return;
 		}
 		
-		$price = $this->get_price($items);
-		$items = json_encode($items);
-		try {
-			$res = $this->bombObj->create(array(
-					'userId'=>$this->userId,
-					'items'=>$items,
-					'price'=>$price,
-					'state'=>orderState::UNPAID
-			));
-			$this->cart->deleteAll();
-			return $res->objectId;
-		} catch (Exception $e) {
+		//查询是否存在未支付订单
+		$res = $this->bmobOrder->get('',array('where={"orderState":"'.orderState::UNPAID.'"}','limit=1'));
+		if (!empty($res->results)) {
+			throw new MY_Exception('存在未支付订单,无法创建新订单!');
+			return;
 		}
 	}
 	
@@ -67,25 +47,8 @@ class MY_Order extends MY_Base_Class{
 	 * return int
 	 * 计价单位 分
 	 */
-	private function get_price($items){
-		$total_price = 0;
-		foreach ($items as &$item){
-			$fileMD5 = $item->fileMD5;
-			try {
-				$bmob = new BmobObject('File_Info');
-				$res = $bmob->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
-				if (!empty($res->results)) {
-					$res = $res->results[0];
-					$total_price = $total_price + (int)($res->pages) * (int)($item->amount);
-					var_dump($res);
-				}else {
-					$this->cart->deleteItem($fileMD5);
-				}
-			} catch (Exception $e) {
-			}
-		}
-		var_dump($total_price);
-		return $total_price;
+	private function get_total($items){
+		
 	}
 	
 	//ping++

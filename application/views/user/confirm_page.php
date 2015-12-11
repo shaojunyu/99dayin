@@ -41,7 +41,6 @@
                     	foreach ($items as $one){
                     	$item = new MY_Item($one->filename,$one->fileMD5);
                     	$item->printSettings = $one->printSettings;
-                    	
                     ?>
                    <!--    <tr>
                             <td role="order">1</td>
@@ -145,7 +144,7 @@
                                 </select>
                             </td>
                             <td  role="single-price" >
-                                <span class="single" data-role="single-price"><?php $price=ceil($item->get_price_per_copy())/100; echo $price;?></span>
+                                <span class="single" data-role="single-price"><?php $price=$item->get_price_per_copy()/100; echo $price;?></span>
                             </td>
                             <td  role="copies">
                                 <button class="plus"  data-role="copies-btn"></button><input class="pages" readonly type="text" value="<?php echo $item->printSettings->amount;?>"><button class="minus" data-role="copies-btn"></button>
