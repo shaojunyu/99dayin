@@ -148,7 +148,7 @@
                                 <span class="single" data-role="single-price"><?php $price=ceil($item->get_price_per_copy())/100; echo $price;?></span>
                             </td>
                             <td  role="copies">
-                                <button class="plus"  data-role="copies-btn"></button><input class="pages" type="text" value="<?php echo $item->printSettings->amount;?>"><button class="minus" role="copies-btn"></button>
+                                <button class="plus"  data-role="copies-btn"></button><input class="pages" readonly type="text" value="<?php echo $item->printSettings->amount;?>"><button class="minus" data-role="copies-btn"></button>
                             </td>
                             <td  role="gross">
                                 <span class="gross-price" data-role="gross"><?php  $subtotal = $price*$item->printSettings->amount; echo $subtotal; $total = $total+$subtotal;?></span>

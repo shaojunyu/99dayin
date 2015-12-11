@@ -5336,9 +5336,11 @@ require([
             var _this = this;
             this.$plus.on('click', function () {
                 _this.addText($(this));
+                $('.pages').trigger('change');
             });
             this.$minus.on('click', function () {
                 _this.decrease($(this));
+                $('.pages').trigger('change');
             });
         }
     };
@@ -5477,13 +5479,14 @@ require([
                     break;
                 }
                 if (Object.keys(data).length !== 0) {
+                    data = JSON.stringify(data);
                     $.ajax({
                         url: Pathurl.print,
                         dataType: 'JSON',
                         type: 'post',
                         contentType: 'application/json',
-                        data: JSON.parse(data)
-                    }).then(function ($target, data) {
+                        data: data
+                    }).then(function (data) {
                         syncInfo.fillInfo($target, data);
                     }, function () {
                         prompt.changeInfo('信息有误~');
@@ -5518,7 +5521,7 @@ require([
                 sum += Number(smallGross.eq(i).text());
             });
             console.log(sum);
-            this.totlePrice.text(sum);
+            this.totlePrice.text(sum.toFixed(1));
         }
     };
     syncInfo.init();
