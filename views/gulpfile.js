@@ -161,6 +161,6 @@ gulp.task('confirmRjs',function(){
         .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('compile', function() {
-    gulp.watch(['app/js/**/*.js'], ['babel','confirmRjs','rjs','rjs1']); //'rjs','rjs1'
+    gulp.watch(['app/js/**/*.js'], ['babel','confirmRjs']); //'rjs','rjs1'
 });
 gulp.task('default', ['sync', 'watch']);
