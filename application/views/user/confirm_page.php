@@ -37,10 +37,11 @@
                     <?php 
                     //传值，array,$items 
                     $num = 1;
+                    $total = 0;
                     	foreach ($items as $one){
                     	$item = new MY_Item($one->filename,$one->fileMD5);
                     	$item->printSettings = $one->printSettings;
-                    	$total = 0;
+                    	
                     ?>
                    <!--    <tr>
                             <td role="order">1</td>
@@ -108,27 +109,28 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page<?php echo $num;?>"  data-role="page" value="single" checked>单</div>
+                                        <input type="radio" name="page<?php echo $num;?>"  data-role="page" value="single" <?php if (!$item->printSettings->isTwoSides){echo 'checked';}?>>单</div>
                                     <div>
-                                        <input type="radio" name="page<?php echo $num;?>" data-role="page" value="double">双</div>
+                                        <input type="radio" name="page<?php echo $num;?>" data-role="page" value="double"<?php if ($item->printSettings->isTwoSides){echo 'checked';}?>>双</div>
                                 </div>
                             </td>
                             <td role="direction">
                             	<div>
                             	<div>
-                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction"  value="column" checked>竖</div>
+                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction"  value="column" <?php if (!$item->printSettings->direction == printDirection::$vertical ){echo 'checked';}?>>竖</div>
                             	<div>
-                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction" value="row">横</div>
+                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction" value="row" <?php if (!$item->printSettings->direction == printDirection::$horizontal ){echo 'checked';}?>>横</div>
                             	</div>
                             	</td>
                             <?php if ($item->fileType == 'PPT') {
+                            	
                             	?>
                             	<td  role="ppt-mount">
                             	<select data-role="ppt-mount">
-                            	<option value="1">1</option>
-                            	<option value="4">4</option>
-                            	<option value="6">6</option>
-                            	<option value="9">9</option>
+                            	<option value="1"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$onePerPage){echo 'selected';}?>>1</option>
+                            	<option value="4"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$fourPerPage){echo 'selected';}?>>4</option>
+                            	<option value="6"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$sixPerPage){echo 'selected';}?>>6</option>
+                            	<option value="9"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$ninePerPage){echo 'selected';}?>>9</option>
                             	</select>
                             	</td>
                             <?php }else {?>
@@ -138,18 +140,18 @@
 							<?php }?>
                             <td  role="size">
                                 <select class="page-size"  data-role="size">
-                                    <option value="A4">A4</option>
-                                    <option value="B4">B4</option>
+                                    <option value="A4"<?php if($item->printSettings->paperSize == paperSize::$A4){echo 'selected';}?>>A4</option>
+                                    <option value="B4"<?php if($item->printSettings->paperSize == paperSize::$B4){echo 'selected';}?>>B4</option>
                                 </select>
                             </td>
                             <td  role="single-price" >
-                                <span class="single" data-role="single-price"><?php $price=ceil($item->get_price_per_copy())/100; echo $price; $total+=$price;?></span>
+                                <span class="single" data-role="single-price"><?php $price=ceil($item->get_price_per_copy())/100; echo $price;?></span>
                             </td>
                             <td  role="copies">
                                 <button class="plus"  data-role="copies-btn"></button><input class="pages" type="text" value="<?php echo $item->printSettings->amount;?>"><button class="minus" role="copies-btn"></button>
                             </td>
                             <td  role="gross">
-                                <span class="gross-price" data-role="gross"><?php echo $price*$item->printSettings->amount;?></span>
+                                <span class="gross-price" data-role="gross"><?php  $subtotal = $price*$item->printSettings->amount; echo $subtotal; $total = $total+$subtotal;?></span>
                             </td>
                             <td role="delete">
                                 <a class="delete-btns" data-role="delete" data-mark="<?php echo $item->fileMD5?>" href="javascript:void(0)">删除</a>
