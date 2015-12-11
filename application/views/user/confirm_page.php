@@ -117,9 +117,9 @@
                             <td role="direction">
                             	<div>
                             	<div>
-                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction"  value="column" <?php if (!$item->printSettings->direction == printDirection::$vertical ){echo 'checked';}?>>竖</div>
+                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction"  value="column" <?php if ($item->printSettings->direction == printDirection::$vertical ){echo 'checked';}?>>竖</div>
                             	<div>
-                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction" value="row" <?php if (!$item->printSettings->direction == printDirection::$horizontal ){echo 'checked';}?>>横</div>
+                            	<input type="radio" name="direction<?php echo $num;?>" data-role="direction" value="row" <?php if ($item->printSettings->direction == printDirection::$horizontal ){echo 'checked';}?>>横</div>
                             	</div>
                             	</td>
                             <?php if ($item->fileType == 'PPT') {
