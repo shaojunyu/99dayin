@@ -5332,15 +5332,20 @@ require([
             var num = this.getInput($target);
             num.val(Number(num.val()) - 1);
         },
+        getResult: function getResult($target) {
+            var tr = $target.parents('tr'), pages = Number(tr.find('.pages').val()).toFixed(0), single_price = Number(tr.find('.single').text()).toFixed(1), gross = tr.find('.gross-price');
+            gross.text(Number(single_price * pages).toFixed(1));
+        },
         init: function init() {
             var _this = this;
             this.$plus.on('click', function () {
                 _this.addText($(this));
-                $('.pages').trigger('change');
+                Operator.getResult($(this));
             });
             this.$minus.on('click', function () {
                 _this.decrease($(this));
                 $('.pages').trigger('change');
+                Operator.getResult($(this));
             });
         }
     };
@@ -5444,7 +5449,7 @@ require([
                 switch (role) {
                 case 'page':
                     data = {
-                        option: 'paperSize',
+                        option: 'TwoSides',
                         option_value: syncInfo.getValue($target),
                         fileMD5: syncInfo.Hash($target)
                     };
@@ -5465,7 +5470,7 @@ require([
                     break;
                 case 'size':
                     data = {
-                        option: 'size',
+                        option: 'paperSize',
                         option_value: $target.val(),
                         fileMD5: syncInfo.Hash($target)
                     };
@@ -5494,6 +5499,8 @@ require([
                 }
             });
         },
+        bindCopies: function bindCopies() {
+        },
         Hash: function Hash($target) {
             return $target.parents('tr').find('.delete-btns').attr('data-mark');
         },
@@ -5510,9 +5517,12 @@ require([
             $target.text(data);
         },
         fillInfo: function fillInfo($target, data) {
-            var $tr = this.getTr($target), single = $tr.find('.single'), gross = $tr.find('.gross-price');
-            this.fillText(single, data.single);
-            this.fillText(gross, data.gross);
+            var $tr = this.getTr($target), single = $tr.find('.single'), single_price = single.text();
+            gross = $tr.find('.gross-price');
+            if (single_price != data.single) {
+                this.fillText(single, data.single);
+                this.fillText(gross, date.gross);
+            }
             this.fillGross();
         },
         fillGross: function fillGross() {
