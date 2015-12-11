@@ -5256,54 +5256,15 @@ require([
         print: Encryption.Encryption('../index.php/api/printSetting')
     };
     var Iscroll = bindScroll($('.container'));
-    var $all_gross = $('.gross-price'), $total_price = $('.total-price');
-    function changeGross($single, $gross, pages) {
-        var single_price = Number($single.html());
-        $gross.html(Number(pages) * single_price);
-    }
-    function totalPrice($gross, $total) {
-        var temp = 0;
-        for (var i = 0; i < $gross.length; i++) {
-            temp += Number($gross.eq(i).html());
-            console.log(1);
-        }
-        $total.html(temp);
-    }
-    setTimeout(function () {
-        totalPrice($all_gross, $total_price);
-    }, 1000);
     $('.pages').on('change blur', function () {
-        var $tr = $(this).parent().parent(), $single = $tr.find('.single'), $gross = $tr.find('.gross-price'), reg = /^\d+$/, pages = $(this).val().trim();
+        var reg = /^\d+$/, pages = $(this).val().trim();
         if (!reg.test(pages)) {
             prompt.changeInfo('输入的份数必须为整数且大于0');
             $(this).val(1);
         } else if (Number(pages) === 0) {
             prompt.changeInfo('小朋友不可以是0哦~~');
             $(this).val(1);
-        } else {
-            changeGross($single, $gross, pages);
-            totalPrice($all_gross, $total_price);
         }
-    });
-    $('.page-size').on('change', function () {
-        var single_price, $tr = $(this).parent().parent(), $single = $tr.find('.single'), $gross = $tr.find('.gross-price'), pages = $tr.find('.pages').val();
-        switch ($(this).val()) {
-        case 'A1':
-            single_price = 3;
-            break;
-        case 'A2':
-            single_price = 2.5;
-            break;
-        case 'A3':
-            single_price = 2;
-            break;
-        case 'A4':
-            single_price = 1.5;
-            break;
-        }
-        $single.html(single_price);
-        changeGross($single, $gross, pages);
-        totalPrice($all_gross, $total_price);
     });
     var Delete_btn = {
         $delete_btns: $('.delete-btns'),
@@ -5313,7 +5274,7 @@ require([
             $.ajax({
                 url: Pathurl.remove,
                 type: 'POST',
-                data: { mark: mark }
+                data: { fileMD5: mark }
             }).then(function (data) {
                 if (data.success) {
                     prompt.changeInfo('删除成功!');
@@ -5327,18 +5288,23 @@ require([
             var decision = confirm('确认删除吗\uFF1F');
             if (decision) {
                 var mark = $target.attr('data-mark'), signal = -1;
-                $target.parents('tr').detach();
-                $all_gross = $('.gross-price');
-                totalPrice($all_gross, $total_price);
-                setTimeout(function () {
-                    Iscroll.forEach(function (val) {
-                        val.refresh();
-                    });
-                }, 0);
                 $.ajax({
                     url: Pathurl.delete,
-                    data: { hash: mark }
-                }).done();
+                    data: { fileMD5: mark }
+                }).done(function () {
+                    orders = $('td[role="order"]');
+                    $target.parents('tr').detach();
+                    orders.each(function (i, val) {
+                        val.text(i + 1);
+                    });
+                    setTimeout(function () {
+                        Iscroll.forEach(function (val) {
+                            val.refresh();
+                        });
+                    }, 0);
+                }).fail(function () {
+                    prompt.changeInfo('删除失败');
+                });
             }
         },
         init: function init() {
@@ -5370,13 +5336,10 @@ require([
             var _this = this;
             this.$plus.on('click', function () {
                 _this.addText($(this));
-                $('.pages').trigger('change');
             });
             this.$minus.on('click', function () {
                 _this.decrease($(this));
-                $('.pages').trigger('change');
             });
-            $('.pages').trigger('change');
         }
     };
     Operator.init();
@@ -5472,51 +5435,58 @@ require([
     });
     var syncInfo = {
         table: $('#table'),
-        getHash: function getHash(target) {
-            var hash = target.parents('tr').find('.delete-btns').attr('data-mark');
-        },
+        totlePrice: $('.total-price'),
         init: function init() {
             this.table.on('click', function (e) {
-                var $target = $(e.target), role = $target.attr('data-role'), data = new Object();
+                var $target = $(e.target), role = $target.attr('data-role'), data = new Object(), $tr = $target.parents('tr'), $single = $tr.find();
                 switch (role) {
                 case 'page':
                     data = {
-                        page: syncInfo.getValue($target),
-                        hash: syncInfo.Hash($target)
+                        option: 'paperSize',
+                        option_value: syncInfo.getValue($target),
+                        fileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'direction':
                     data = {
-                        direction: syncInfo.getValue($target),
-                        hash: syncInfo.Hash($target)
+                        option: 'direction',
+                        option_value: syncInfo.getValue($target),
+                        fileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'ppt-mount':
                     data = {
-                        pptAmount: $target.val(),
-                        hash: syncInfo.Hash($target)
+                        option: 'pptPerPage',
+                        option_value: $target.val(),
+                        fileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'size':
                     data = {
-                        size: $target.val(),
-                        hash: syncInfo.Hash($target)
+                        option: 'size',
+                        option_value: $target.val(),
+                        fileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'copies-btn':
                     data = {
-                        pptAmount: $('.pages').val(),
-                        hash: syncInfo.Hash($target)
+                        option: 'amount',
+                        option_value: $target.parents('tr').find('.pages').val(),
+                        fileMD5: syncInfo.Hash($target)
                     };
                     break;
                 }
                 if (Object.keys(data).length !== 0) {
                     $.ajax({
                         url: Pathurl.print,
-                        dataType: 'json',
+                        dataType: 'JSON',
                         type: 'post',
                         contentType: 'application/json',
-                        data: data
+                        data: JSON.parse(data)
+                    }).then(function ($target, data) {
+                        syncInfo.fillInfo($target, data);
+                    }, function () {
+                        prompt.changeInfo('信息有误~');
                     });
                 }
             });
@@ -5526,6 +5496,29 @@ require([
         },
         getValue: function getValue($target) {
             return $target.attr('value');
+        },
+        getName: function getName($target) {
+            return $target.parents('tr').find('.file-name').html();
+        },
+        getTr: function getTr($target) {
+            return $target.parents('tr');
+        },
+        fillText: function fillText($target, data) {
+            $target.text(data);
+        },
+        fillInfo: function fillInfo($target, data) {
+            var $tr = this.getTr($target), single = $tr.find('.single'), gross = $tr.find('.gross-price');
+            this.fillText(single, data.single);
+            this.fillText(gross, data.gross);
+            this.fillGross();
+        },
+        fillGross: function fillGross() {
+            var smallGross = this.table.find('.gross-price'), sum = 0;
+            smallGross.each(function (i) {
+                sum += Number(smallGross.eq(i).text());
+            });
+            console.log(sum);
+            this.totlePrice.text(sum);
         }
     };
     syncInfo.init();
