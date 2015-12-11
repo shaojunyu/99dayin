@@ -203,6 +203,11 @@ class MY_Cart extends MY_Base_Class{
 				}
 				break;
 			case 'TwoSides':
+				if ($optionValue == 'double') {
+					$optionValue = true;
+				}else {
+					$optionValue = false;
+				}
 				if (in_array($optionValue,array(true,false))) {
 					$items[$key]->printSettings->isTwoSides = $optionValue;
 				}
