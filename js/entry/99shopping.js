@@ -5290,12 +5290,15 @@ require([
                 var mark = $target.attr('data-mark'), signal = -1;
                 $.ajax({
                     url: Pathurl.delete,
+                    async: true,
                     data: { fileMD5: mark }
                 }).done(function () {
-                    orders = $('td[role="order"]');
                     $target.parents('tr').detach();
+                    var orders = $('td[role="order"]');
+                    syncInfo.fillGross();
                     orders.each(function (i, val) {
-                        val.text(i + 1);
+                        orders.eq(i).text(i + 1);
+                        console.log(val.innerHTML);
                     });
                     setTimeout(function () {
                         Iscroll.forEach(function (val) {
@@ -5487,6 +5490,7 @@ require([
                     data = JSON.stringify(data);
                     $.ajax({
                         url: Pathurl.print,
+                        async: true,
                         dataType: 'JSON',
                         type: 'post',
                         contentType: 'application/json',
