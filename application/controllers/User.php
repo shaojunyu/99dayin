@@ -84,11 +84,15 @@ class User extends CI_Controller{
 	
 	//订单页面
 	function order() {
-		$AVQuery = new AVQuery('Order');
-		$AVQuery->where('userId', $this->userId);
-		$orders = $AVQuery->find()->results;
-		$this->load->view('user/order_page',array('orders'=>$orders));
-		//var_dump($orders);
+		$bmobOrder = new BmobObject('Order');
+		$res = $bmobOrder->get('','',array('where={"userId":"'.$this->userId.'"}'));
+		$orders = $res->results;
+		//$this->load->view('user/order_page',array('orders'=>$orders));
+		try {
+			($this->order->createPingPay());
+		} catch (Exception $e) {
+			echo $e;
+		}
 	}
 	
 	
