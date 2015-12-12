@@ -165,8 +165,8 @@
                     <span class="receiving">收货方式:</span>
                     <input type="radio" name="method" id="self-picking" value="到店自取">
                     <label for="self-picking"><span class="logo-radio"></span>到店自取</label>
-                    <input type="radio" name="method" id="deliver" value="送货上门">
-                    <label for="deliver"><span class="logo-radio"></span>送货上门</label>
+                    <!-- <input type="radio" name="method" id="deliver" value="送货上门">
+                    <label for="deliver"><span class="logo-radio"></span>送货上门</label> -->
                 </div>
                 <div class="middle-part">
                     <div class="pick">

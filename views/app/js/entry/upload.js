@@ -400,9 +400,10 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 url: Pathurl.remove,
                 type: 'POST',
                 dataType: 'json',
-                data: {
+                contentType:'application/json',
+                data: JSON.stringify({
                     fileMD5: mark //发送文件的hash值 
-                }
+                })
             }).then(function(data) {
                 if (data.success) {
                     prompt.changeInfo('删除成功!');

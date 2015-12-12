@@ -32,8 +32,7 @@ gulp.task('prefix', function() {
     ];
     return gulp.src('./app/**/*.css')
         .pipe(postcss(processors))
-
-    .pipe(gulp.dest('app/'));
+        .pipe(gulp.dest('app/'));
 })
 
 gulp.task('watch', function() {
@@ -41,7 +40,7 @@ gulp.task('watch', function() {
 })
 gulp.task('sync', function() {
     var files = [
-        'app/**/upload.html',
+        'app/**/*.html',
         'app/styles/**/*.css',
         'app/img/**/*.png',
         'app/js/**/*.js'
@@ -144,7 +143,7 @@ gulp.task('confirmRjs',function(){
       return gulp.src('../js/**/*.js')
         .pipe(amdOptimize("../js/entry/99shopping", {
             paths: {
-               'jquery': '../js/lib/jQuery',
+            'jquery': '../js/lib/jQuery',
             'scroll': '../js/lib/iscroll',
             'modal': '../js/lib/jquery.simplemodal',
             'utility': '../js/entry/utility/utility',
