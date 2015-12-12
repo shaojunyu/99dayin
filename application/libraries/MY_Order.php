@@ -8,6 +8,7 @@ class MY_Order extends MY_Base_Class{
 	private $pingpp_app_id;
 	private $bmobOrder;
 	private $address;
+	private $totalPrice;
 	
 	public function __construct(){
 		parent::__construct();
@@ -35,12 +36,23 @@ class MY_Order extends MY_Base_Class{
 		}
 		
 		//查询是否存在未支付订单
-		$res = $this->bmobOrder->get('',array('where={"orderState":"'.orderState::UNPAID.'"}','limit=1'));
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','limit=1'));
 		if (!empty($res->results)) {
 			throw new MY_Exception('存在未支付订单,无法创建新订单!');
 			return;
 		}
-		
+		try {
+			$this->bmobOrder->create(array(
+					'userId'=>$this->userId,
+					'items'=>json_encode($items),
+					'totalPrice'=>$this->get_total($items),
+					'state'=>orderState::UNPAID,
+					'shop'=>'韵苑打印店'
+			));
+			$this->cart->deleteAll();
+		} catch (Exception $e) {
+			echo $e;
+		}
 		
 	}
 	
@@ -50,19 +62,24 @@ class MY_Order extends MY_Base_Class{
 	 * 计价单位 分
 	 */
 	private function get_total($items){
-		
+		$k=0;
+		$total = 0;
+		while (isset($items[$k])){
+			$total += $items[$k]->subtotal;
+			$k++;
+		}
+		return $total;
 	}
 	
 	//ping++
 	public function createPingPay(){
-		$this->AVQuery->where('userId', $this->userId);
-		$this->AVQuery->where('state', orderState::UNPAID);
-		
-		$res = $this->AVQuery->find()->results;
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','where={"userId":"'.$this->userId.'"}','limit=1'));
 		if (empty($res)) {
 			throw new MY_Exception('暂无未支付订单！');
 		}
-		$orderId = $res[0]->objectId;
+		$res = $res->results[0];
+		var_dump($res);
+		$orderId = $res->objectId;
 		//return $orderId;
 		//支付渠道 wx_pub_qr
 		$channel = 'wx_pub_qr';
@@ -84,8 +101,8 @@ class MY_Order extends MY_Base_Class{
 			$ch = Pingpp\Charge::create(array(
 					'subject' => '99打印在线支付',
 					'body' => '文档打印',
-					'amount'=>1,
-					'order_no'=>$orderId,
+					'amount'=>$res->totalPrice,
+					'order_no'=>$orderId.time(),
 					'currency'  => 'cny',
 					'extra'     => $extra,
 					'channel'   => $channel,
@@ -94,10 +111,8 @@ class MY_Order extends MY_Base_Class{
 			));
 			
 			//更新订单的信息
-			
+			//var_dump($ch);
 			return ($ch);
-			
-			
 			
 		} catch (\Pingpp\Error\Base $e) {
     		header('Status: ' . $e->getHttpStatus());
@@ -114,16 +129,15 @@ class MY_Order extends MY_Base_Class{
 		return $ch;
 	}
 	
-	public function payOrder(){
-		
-	}
-	
-	public function getOders() {
-		
-	}
-	
-	public function confirmOrder(){
-		
+	public function cancle_order(){
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','limit=1'));
+		$res = $res->results[0];
+		$orderId = $res->ObjectId;
+		try {
+			$this->bmobOrder->update($orderId,array('state'=>orderState::CANCELED));
+		}catch (Exception $e){
+			
+		}
 	}
 }
 
