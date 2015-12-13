@@ -136,7 +136,7 @@ gulp.task('rjs1',function(){
         }))
         .pipe(concat("store.js")) //合并  
         .pipe(rename("store.js")) //重命名  
-        // .pipe(uglify()) //压缩  
+        .pipe(uglify()) //压缩  
         .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('confirmRjs',function(){
@@ -158,6 +158,27 @@ gulp.task('confirmRjs',function(){
 
         // .pipe(uglify()) //压缩  
         .pipe(gulp.dest('../js/entry')) //输出保存 
+})
+gulp.task('centerRjs',function(){
+    return gulp.src('../js/**/*.js')
+      .pipe(amdOptimize("../js/entry/center.js", {
+          paths: {
+          'jquery': '../js/lib/jQuery',
+          'scroll': '../js/lib/iscroll',
+          'modal': '../js/lib/jquery.simplemodal',
+          'utility': '../js/entry/utility/utility',
+          'checkEvent': '../js/entry/function/checkAll',
+          'prompt': '../js/entry/function/prompt', //提示模块
+          'md5': "../js/lib/spark-md5.min",
+          'encryption': "../js/entry/function/encryption",
+          'ping++': '../js/lib/pingpp-pc', //ping++插件
+          'img': '../js/entry/function/deal-img'        
+          }
+      }))
+      .pipe(concat("center.js")) //合并  
+      .pipe(rename("center.js")) //重命名 
+      .pipe(uglify()) //压缩  
+      .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('compile', function() {
     gulp.watch(['app/js/**/*.js'], ['babel','rjs','rjs1','confirmRjs']); //'rjs','rjs1'
