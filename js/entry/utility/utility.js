@@ -72,6 +72,7 @@ function sendAjax(opts) {
 function openModal(target, close) {
     //打开弹窗效果   
     $.modal.close();
+    console.log(close);
     target.modal({
         overlayClose: close,
         onOpen: function onOpen(dialog) {
