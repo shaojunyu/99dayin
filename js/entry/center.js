@@ -111,6 +111,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal'], 
         fillInfo: function fillInfo() {},
         init: function init() {
             var _this = this;
+            openModal(this.orderPage, true);
             //未处理订单页的应用
             this.pre.on('click', function (e) {
                 var $target = $(e.target);
