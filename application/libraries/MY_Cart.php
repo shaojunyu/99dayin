@@ -202,14 +202,16 @@ class MY_Cart extends MY_Base_Class{
 				}
 				break;
 			case 'TwoSides':
+				
 				if ($optionValue == 'double') {
 					$optionValue = true;
 				}else {
 					$optionValue = false;
 				}
-				if (in_array($optionValue,array(true,false))) {
+				echo $optionValue;
+				//if (in_array($optionValue,array(true,false))) {
 					$items[$key]->printSettings->isTwoSides = $optionValue;
-				}
+				//}
 				break;
 			case 'pptPerPage':
 				$optionValue = intval($optionValue);
@@ -238,8 +240,11 @@ class MY_Cart extends MY_Base_Class{
 		try {
 			$items[$key]->subtotal = $newItem->get_subtotal();
 			$items[$key]->pages = $newItem->get_pages();
-			$this->bmobObject->update($this->cartId,array('items'=>json_encode($items)));;
+			$this->bmobObject->update($this->cartId,array('items'=>json_encode($items)));
+			//var_dump($items);
+			//var_dump($this->getItems());
 		} catch (Exception $e) {
+			
 			throw new MY_Exception($e->error_msg);
 		}
 		//返回单价和小记
