@@ -139,8 +139,8 @@
 							<?php }?>
                             <td  role="size">
                                 <select class="page-size"  data-role="size">
-                                    <option value="A4"<?php if($item->printSettings->paperSize == paperSize::$A4){echo 'selected';}?>>A4</option>
-                                    <option value="B4"<?php if($item->printSettings->paperSize == paperSize::$B4){echo 'selected';}?>>B4</option>
+                                    <option value="A4" selected="<?php if($item->printSettings->paperSize == paperSize::$A4){echo 'selected';}?>">A4</option>
+                                    <option value="B4" selected="<?php if($item->printSettings->paperSize == paperSize::$B4){echo 'selected';}?>">B4</option>
                                 </select>
                             </td>
                             <td  role="single-price" >
