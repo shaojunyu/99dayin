@@ -166,10 +166,12 @@ require(['jquery', 'utility', 'scroll', 'prompt', 'encryption'], function ($, ut
         init: function init() {
             var _this = this;
             this.checkout.on('click', function () {
+                var _this2 = this;
+
                 //异步发送订单，跳转到个人中心页面
                 var method = $('input[name="method"]:checked').val(),
-                    totle = $('.total-price').html();
-                info = {};
+                    totle = $('.total-price').html(),
+                    info = {};
                 if (method == null || method == '') {
                     prompt.changeInfo("请选择收货方式!");
                 } else {
@@ -185,14 +187,13 @@ require(['jquery', 'utility', 'scroll', 'prompt', 'encryption'], function ($, ut
                     $.ajax({
                         url: Pathurl.checkout,
                         dataType: 'JSON',
-                        type: 'GET',
-                        success: function success(data) {
-                            if (data.success) {
-                                window.location.href = '../user/orders';
-                            } else {
-                                prompt.changeInfo(data.msg);
-                                $(this).removeClass('sending').prop('disabled', false);
-                            }
+                        type: 'GET'
+                    }).then(function (data) {
+                        if (data.success) {
+                            window.location.href = '../user/orders';
+                        } else {
+                            prompt.changeInfo(data.msg);
+                            $(_this2).removeClass('sending').prop('disabled', false);
                         }
                     });
                 }
