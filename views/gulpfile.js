@@ -113,6 +113,7 @@ gulp.task('rjs', function() {
                 'header': '../js/entry/header', 
                 'fileupload': "../js/lib/plupload.full.min",
                 'md5': "../js/lib/spark-md5.min",
+                'header':'../js/entry/header',
                 'encryption': "../js/entry/function/encryption"
             }
         }))
@@ -131,6 +132,7 @@ gulp.task('rjs1',function(){
             'modal': '../js/lib/jquery.simplemodal',
             'utility': '../js/entry/utility/utility',
             'checkEvent': '../js/entry/function/checkAll',
+            'header':'../js/entry/header',
             'prompt': '../js/entry/function/prompt' //提示模块
             }
         }))
@@ -150,6 +152,7 @@ gulp.task('confirmRjs',function(){
             'checkEvent': '../js/entry/function/checkAll',
             'prompt': '../js/entry/function/prompt', //提示模块
             'md5': "../js/lib/spark-md5.min",
+            'header':'../js/entry/header',
             'encryption': "../js/entry/function/encryption"
             }
         }))
@@ -172,6 +175,7 @@ gulp.task('centerRjs',function(){
           'prompt': '../js/entry/function/prompt', //提示模块
           'md5': "../js/lib/spark-md5.min",
           'encryption': "../js/entry/function/encryption",
+          'header':'../js/entry/header',
           'ping++': '../js/lib/pingpp-pc', //ping++插件
           'img': '../js/entry/function/deal-img'        
           }
@@ -182,6 +186,6 @@ gulp.task('centerRjs',function(){
       .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('compile', function() {
-    gulp.watch(['app/js/**/*.js'], ['babel','centerRjs']); //'rjs','rjs1','confirmRjs'
+    gulp.watch(['app/js/**/*.js'], ['babel','centerRjs','rjs','rjs1','confirmRjs']); //'rjs','rjs1','confirmRjs'
 });
 gulp.task('default', ['sync', 'watch']);
