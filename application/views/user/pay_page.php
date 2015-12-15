@@ -1,7 +1,8 @@
 <?php 
 //获取charge信息,穿过来charge对象
-//$wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
-//var_dump($charge['credential']->__toArray());
+$wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
+//var_dump($orderInfo);
+
 ?>
 <html><head>
   <meta charset="utf-8">
@@ -55,7 +56,7 @@
           </div>
 
           <div class="area_bd" id="qr_normal">
-            <span class="qr_img_wrapper"><img class="qrcode" alt="二维码" id="QRcode" src="http://qr.liantu.com/api.php?el=h&text=<?php ?>"><img class="guide pngFix" src="./img/pay/webpay_guide.png" alt="" id="guide" style="left: 50%; opacity: 0;"></span>
+            <span class="qr_img_wrapper"><img class="qrcode" alt="二维码" id="QRcode" src="http://qr.liantu.com/api.php?el=h&text=<?php echo $wx_qr; ?>"><img class="guide pngFix" src="./img/pay/webpay_guide.png" alt="" id="guide" style="left: 50%; opacity: 0;"></span>
             <div class="msg_default_box">
               <i class="icon60_qr pngFix"></i>
               <p>请使用微信扫描<br>二维码以完成支付</p>
@@ -75,15 +76,15 @@
             <span class="icon_wrapper"><i class="icon60_pay pngFix"></i></span>
           </div>
           <div class="area_bd">
-            <h3 class="pay_money"> <span>￥</span>85.00</h3>
+            <h3 class="pay_money"> <span>￥</span><?php echo $orderInfo->totalPrice/100;?></h3>
                                           <div class="pay_bill_unit no_extra">
                   <dl>
                     <dt>99打印在线支付</dt>
-                    <dd>订单编号：<?php $this->input->get('orderId');?></dd>
+                    <dd>订单编号：<?php echo $this->input->get('orderId');?></dd>
                   </dl>
                   <div class="pay_bill_info">
-                    <p><label>交易单号</label><span class="pay_bill_value">1217216701201510220123415815</span></p>
-                    <p><label>创建时间</label><span class="pay_bill_value">2015-10-22</span></p>
+                    <p><label>交易单号</label><span class="pay_bill_value"><?php echo $charge->__toArray()['id'];?></span></p>
+                    <p><label>创建时间</label><span class="pay_bill_value"><?php echo $orderInfo->createdAt;?></span></p>
                   </div>
                 </div>
                                             <!--

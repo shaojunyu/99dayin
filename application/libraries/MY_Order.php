@@ -4,13 +4,14 @@ require_once 'MY_Base_Class.php';
 //自定义订单类
 class MY_Order extends MY_Base_Class{
 	private $userId;
+	private $orderId;
 	private $cart;
 	private $pingpp_app_id;
 	private $bmobOrder;
 	private $address;
 	private $totalPrice;
 	
-	public function __construct(){
+	public function __construct($orderId = ''){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		$this->cart = new MY_Cart();
@@ -22,6 +23,14 @@ class MY_Order extends MY_Base_Class{
 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
 		\pingpp\Pingpp::setApiKey($live_key);
+		
+		//订单号不为空，则从bomb拉去信息
+		if(!empty($orderId)){
+			$this->orderId = $orderId;
+			$res = $this->bmobOrder->get($orderId);
+			$orderInfo = $res->results[0];
+			$this->totalPrice = $orderInfo->totalPrice;
+		}
 	}
 	
 	/*
@@ -71,14 +80,18 @@ class MY_Order extends MY_Base_Class{
 		return $total;
 	}
 	
-	//ping++
+	/**
+	 * 创建ping++支付
+	 * @throws MY_Exception
+	 * @return multitype:object
+	 */
 	public function createPingPay(){
 		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','where={"userId":"'.$this->userId.'"}','limit=1'));
 		if (empty($res)) {
 			throw new MY_Exception('暂无未支付订单！');
 		}
 		$res = $res->results[0];
-		var_dump($res);
+		//var_dump($res);
 		$orderId = $res->objectId;
 		//return $orderId;
 		//支付渠道 wx_pub_qr
@@ -111,7 +124,7 @@ class MY_Order extends MY_Base_Class{
 			));
 			
 			//更新订单的信息
-			//var_dump($ch);
+			//var_dump($ch->__toStdObject());
 			return ($ch);
 			
 		} catch (\Pingpp\Error\Base $e) {

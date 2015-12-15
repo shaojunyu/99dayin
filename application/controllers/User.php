@@ -105,14 +105,15 @@ class User extends CI_Controller{
 	function pay() {
 		$orderId = $this->input->get('orderId');
 		$bmobOrder = new BmobObject('Order');
-		$bmobOrder->get('',array());
-		if (empty($orderId)) {
+		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'"}'),array('where={"objectId":"'.$orderId.'"}'),array('where={"state":"'.orderState::UNPAID.'"}'));
+		if (empty($orderId) or empty($res->results)) {
 			echo '无效订单号！';
 			exit();
 		}else {
 			$order = new MY_Order();
+			$pay = $order->createPingPay();
 			//$charge = $order->getChargeInfo($chargeId);
-			$this->load->view('user/pay_page');
+			$this->load->view('user/pay_page',array('charge'=>$pay,'orderInfo'=>$res->results[0]));
 		}
 		//$this->load->view('errors/html/error_general.php');
 	}
