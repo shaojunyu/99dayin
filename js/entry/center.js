@@ -6016,13 +6016,13 @@ require([
                 contentType: 'application/json',
                 data: JSON.stringify({ orderId: orderId })
             }).then(function (data) {
-                if (!data.success) {
-                    prompt.changeInfo('您的网络又问题\uFF0C请重新删除~');
-                } else {
+                if (data.success) {
                     parent_li.detach();
                     Iscroll.forEach(function (val) {
                         val.refresh();
                     });
+                } else {
+                    prompt.changeInfo('您的网络又问题\uFF0C请重新删除~');
                 }
             });
         },
