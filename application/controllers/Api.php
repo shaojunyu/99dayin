@@ -373,6 +373,30 @@ class Api extends CI_Controller{
 		}
 
 	}
+	
+	public function getOrderInfo(){
+		$orderId =  $this->post_data->orderId;
+		$bmobObj = new BmobObject('Order');
+		try {
+			$res = $bmobObj->get($orderId);
+			$items = json_decode($res->items);
+			
+			$newItems = array();
+			$k = 0;
+			foreach ($items as $item){
+				$temp['filaName'] = $item->filename;
+				$temp['twoSide'] = $item->printSettings->isTwoSides?'double':'single';
+				$temp['direction'] = $item->printSettings->direction;
+				$temp['pptPerPage'] = $item->printSettings->pptPerPage;
+				$temp['paperSize'] = $item->printSettings->paperSize;
+				$temp['amount'] = $item->printSettings->amount;
+				$newItems[] = $temp;
+			}
+			echo json_encode($newItems);
+		} catch (Exception $e) {
+		}
+
+	}
 
 	/*
 	 * 取人订单是否已支付
