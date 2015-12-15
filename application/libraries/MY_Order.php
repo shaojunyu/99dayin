@@ -45,7 +45,7 @@ class MY_Order extends MY_Base_Class{
 		}
 		
 		//查询是否存在未支付订单
-		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','where={"userId":"'.$this->userId.'"}','limit=1'));
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"'.$this->userId.'"}','limit=1'));
 		if (!empty($res->results)) {
 			throw new MY_Exception('存在未支付订单,无法创建新订单!');
 			return;
