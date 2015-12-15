@@ -87,8 +87,9 @@ class User extends CI_Controller{
 		$bmobUser = new BmobUser();
 		$res = $bmobUser->get($this->userId);
 		$userInfo = $res;
+		
 		$bmobOrder = new BmobObject('Order');
-		$res = $bmobOrder->get('','',array('where={"userId":"'.$this->userId.'"}'));
+		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'"}'));
 		$orders = $res->results;
 		
 		$this->load->view('user/order_page',array('orders'=>$orders,'userInfo'=>$userInfo));
