@@ -4,7 +4,7 @@
 
 application/logs/
 .htaccess
-views
+views/
 file_analysis/file_json/
 file_analysis/file_download/
 .idea/.name
