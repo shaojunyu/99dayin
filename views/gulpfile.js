@@ -161,10 +161,11 @@ gulp.task('confirmRjs',function(){
 })
 gulp.task('centerRjs',function(){
     return gulp.src('../js/**/*.js')
-      .pipe(amdOptimize("../js/entry/center.js", {
+      .pipe(amdOptimize("../js/entry/center", {
           paths: {
           'jquery': '../js/lib/jQuery',
           'scroll': '../js/lib/iscroll',
+          'enroll': '../js/entry/function/enroll', //注册模块
           'modal': '../js/lib/jquery.simplemodal',
           'utility': '../js/entry/utility/utility',
           'checkEvent': '../js/entry/function/checkAll',
@@ -181,6 +182,6 @@ gulp.task('centerRjs',function(){
       .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('compile', function() {
-    gulp.watch(['app/js/**/*.js'], ['babel','rjs','rjs1','confirmRjs']); //'rjs','rjs1','confirmRjs'
+    gulp.watch(['app/js/**/*.js'], ['babel','centerRjs']); //'rjs','rjs1','confirmRjs'
 });
 gulp.task('default', ['sync', 'watch']);
