@@ -86,7 +86,7 @@ class MY_Order extends MY_Base_Class{
 	 * @return multitype:object
 	 */
 	public function createPingPay(){
-		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','where={"userId":"'.$this->userId.'"}','limit=1'));
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"'.$this->userId.'"}','limit=1'));
 		if (empty($res)) {
 			throw new MY_Exception('暂无未支付订单！');
 		}
