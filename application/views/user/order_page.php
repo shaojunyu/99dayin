@@ -164,7 +164,6 @@
                                     </div>
                                 </div>
                                 <div class="order-btns">
-                                <form action="./order" method="get" id="form" target="_blank"></form>
                                     <a class="go-pay"  target="view_window" href="./pay?orderId=<?php echo $order->objectId;?>" data-seq='1'>去付款</a>
                                     <a class="cancel" data-order="<?php echo $order->objectId;?>" href="javascript:void(0)">取消订单</a>
                                 </div>
