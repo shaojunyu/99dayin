@@ -21,5 +21,8 @@ class Test extends CI_Controller{
 		$bmobOrder = new BmobObject('Order');
 		$res = $bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"2447db529e"}','limit=1'));
 		var_dump($res);
+		
+		$order = new MY_Order();
+		$order->createOrder();
 	}
 }
