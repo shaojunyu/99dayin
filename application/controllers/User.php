@@ -105,7 +105,7 @@ class User extends CI_Controller{
 	function pay() {
 		$orderId = $this->input->get('orderId');
 		$bmobOrder = new BmobObject('Order');
-		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'"}'),array('where={"objectId":"'.$orderId.'"}'),array('where={"state":"'.orderState::UNPAID.'"}'));
+		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'","objectId":"'.$orderId.'","state":"'.orderState::UNPAID.'"}'));
 		if (empty($orderId) or empty($res->results)) {
 			echo '无效订单号！';
 			exit();
