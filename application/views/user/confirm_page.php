@@ -108,9 +108,9 @@
                             <td role="page">
                                 <div>
                                     <div>
-                                        <input type="radio" name="page<?php echo $num;?>"  data-role="page" value="single" <?php if (!$item->printSettings->isTwoSides){echo 'checked';}?>>单</div>
+                                        <input type="radio" name="page<?php echo $num;?>"  data-role="page" value="single"<?php if(!$item->printSettings->isTwoSides){echo 'checked';}?>>单</div>
                                     <div>
-                                        <input type="radio" name="page<?php echo $num;?>" data-role="page" value="double"<?php if ($item->printSettings->isTwoSides){echo 'checked';}?>>双</div>
+                                        <input type="radio" name="page<?php echo $num;?>" data-role="page" value="double" <?php if($item->printSettings->isTwoSides){echo 'checked';}?>>双</div>
                                 </div>
                             </td>
                             <td role="direction">
@@ -139,8 +139,8 @@
 							<?php }?>
                             <td  role="size">
                                 <select class="page-size"  data-role="size">
-                                    <option value="A4" selected="<?php if($item->printSettings->paperSize == paperSize::$A4){echo 'selected';}?>">A4</option>
-                                    <option value="B4" selected="<?php if($item->printSettings->paperSize == paperSize::$B4){echo 'selected';}?>">B4</option>
+                                    <option value="A4" <?php if($item->printSettings->paperSize == paperSize::$A4){echo 'selected';}?>>A4</option>
+                                    <option value="B4" <?php if($item->printSettings->paperSize == paperSize::$B4){echo 'selected';}?>>B4</option>
                                 </select>
                             </td>
                             <td  role="single-price" >

@@ -48,8 +48,11 @@ class MY_Item{
 				}
 				break;
 			case 'B4':
-				$unitPrice = 20;
-				$this->printSettings->isTwoSides = true;
+				if ($this->printSettings->isTwoSides) {
+					$unitPrice = 20;
+				}else {
+					$unitPrice = 40;
+				}
 				break;
 			default:
 				$unitPrice = 10;
@@ -85,7 +88,7 @@ class MY_Item{
 	 */
 	public function get_subtotal(){
 		$this->subtotal = ($this->get_price_per_copy()*$this->printSettings->amount);
-		return $this->subtotal;
+		return (int)$this->subtotal;
 	}
 }
 

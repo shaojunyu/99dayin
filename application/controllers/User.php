@@ -67,7 +67,7 @@ class User extends CI_Controller{
 					$items[$k]->subtotal = $item->get_subtotal();
 					$k++;
 				}
-				$this->cart->update($items);
+				$this->cart->update_items($items);
 				//更新到数据库
 				try {
 					
@@ -83,13 +83,14 @@ class User extends CI_Controller{
 	}
 	
 	//订单页面
-	function order() {
+	function orders() {
 		$bmobOrder = new BmobObject('Order');
 		$res = $bmobOrder->get('','',array('where={"userId":"'.$this->userId.'"}'));
 		$orders = $res->results;
-		//$this->load->view('user/order_page',array('orders'=>$orders));
+		var_dump($orders);
+		$this->load->view('user/order_page',array('orders'=>$orders));
 		try {
-			($this->order->createPingPay());
+			//($this->order->createPingPay());
 		} catch (Exception $e) {
 			echo $e;
 		}

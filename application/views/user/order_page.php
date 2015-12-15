@@ -11,20 +11,7 @@
 
 <body>
     <div class="prompt"></div>
-    <div class="header">
-        <div class="setWidth">
-            <a class="logo" href="#">
-                <img class="logo-print" src="./img/logo.png" alt="logo" />
-                <span>九九打印</span>
-            </a>
-            <div class="titles">
-                <div class="title-btn homepage-btn" data-content="首页">首页</div>
-                <div class="title-btn introduction" data-content="简介">简介</div>
-                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
-                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span></div>
-            </div>
-        </div>
-    </div>
+	<?php $this->load->view('public/page_header');?>
     <div class="back-control">
         <div class="content">
             <div class="left-part basic-detail">
@@ -113,7 +100,7 @@
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href="">李广先</a>
+                        <a href=""></a>
                         <p>手机:<span>1858232323</span></p>
                         <p>账户类型:<span>管理员</span></p>
                         <p>积分:<span>123</span> 余额:<span>10</span>元</p>
@@ -169,29 +156,26 @@
                     * data-seq 是订单在原来数组中的位置                    
                     * -->
                     <div id="wrapper1" class="container pre-order">
-
                         <ul class="order-content" id="scroller">
-                   <?php 
-                    foreach ($orders as $order){
-                    	if ($order->state == 'UNPAID') {
-                    ?>
+                        <?php 
+                        	foreach ($orders as $order){
+                        		if($order->state == orderState::UNPAID){
+                        ?>
                             <li>
                                 <div class="order-details">
-                                    <div >订单编号:<span class="order-num">12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
+                                    <div >订单编号:<span class="order-num"><?php echo $order->objectId;?></span></div>
+                                    <div>取货地址:<span>韵苑按打印店</span></div>
                                     <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
                                 </div>
                                 <div class="order-btns">
-                               
+                                <form action="./order" method="get" id="form" target="_blank"></form>
                                     <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>
                                     <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
-                                        总价：<span class="money">120</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
+                                        总价：<span class="money"><?php echo $order->totalPrice/100;?></span> 收货方式：
+                                        <span>自助取货</span> 支付状态：
                                         <span>未支付</span>
                                     </div>
                                     <img src="img/divided.png">

@@ -255,7 +255,7 @@ class MY_Cart extends MY_Base_Class{
 	 * 更新数据
 	 * 接受array,items数据
 	 */
-	public function update($data){
+	public function update_items($data){
 		$this->bmobObject->update($this->cartId,array('items'=>json_encode($data)));;
 	}
 	
