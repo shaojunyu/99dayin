@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="order-btns">
                                 <form action="./order" method="get" id="form" target="_blank"></form>
-                                    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>
+                                    <a class="go-pay"  target="view_window" href="" data-seq='1'>去付款</a>
                                     <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
                                 </div>
                                 <div class="summary">
@@ -196,7 +196,7 @@
                                 </div>
                                 <div class="order-btns">
                                     <!--    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>       -->
-                                    <a class="add-print" target="view_window" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
+                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
