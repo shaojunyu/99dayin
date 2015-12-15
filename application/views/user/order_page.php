@@ -200,9 +200,9 @@
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
+                                        总价：<span><?php echo $order->totalPrice/100; ?></span> 收货方式：
                                         <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
+                                        <span>已完成</span>
                                     </div>
                                     <img src="img/divided.png">
                                 </div>
