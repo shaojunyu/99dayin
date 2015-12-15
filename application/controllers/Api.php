@@ -412,7 +412,7 @@ class Api extends CI_Controller{
 			$bmobObj->update($orderId,array('state'=>orderState::CANCELED));
 			$this->echo_msg(true);
 		} catch (Exception $e) {
-			$this->echo_msg(false,$e->error_msr);
+			$this->echo_msg(false,$e->error_msg);
 		}
 	}
 
