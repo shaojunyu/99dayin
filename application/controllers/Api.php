@@ -387,7 +387,7 @@ class Api extends CI_Controller{
 			$newItems = array();
 			$k = 0;
 			foreach ($items as $item){
-				$temp['filaName'] = $item->filename;
+				$temp['fileName'] = $item->filename;
 				$temp['twoSide'] = $item->printSettings->isTwoSides?'double':'single';
 				$temp['direction'] = $item->printSettings->direction;
 				$temp['pptPerPage'] = $item->printSettings->pptPerPage;
