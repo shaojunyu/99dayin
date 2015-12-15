@@ -103,6 +103,8 @@ class User extends CI_Controller{
 	//支付页面
 	function pay() {
 		$orderId = $this->input->get('orderId');
+		$bmobOrder = new BmobObject('Order');
+		$bmobOrder->get('',array());
 		if (empty($orderId)) {
 			echo '无效订单号！';
 			exit();
