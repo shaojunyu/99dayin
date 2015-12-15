@@ -374,6 +374,9 @@ class Api extends CI_Controller{
 
 	}
 	
+	/**
+	 * 获取订单内文件信息
+	 */
 	public function getOrderInfo(){
 		$orderId =  $this->post_data->orderId;
 		$bmobObj = new BmobObject('Order');
@@ -394,8 +397,23 @@ class Api extends CI_Controller{
 			}
 			echo json_encode($newItems);
 		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msr);
 		}
 
+	}
+	
+	/**
+	 * 取消订单
+	 */
+	public function cancelOrder(){
+		$orderId =  $this->post_data->orderId;
+		$bmobObj = new BmobObject('Order');
+		try {
+			$bmobObj->update($orderId,array('state'=>orderState::CANCELED));
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msr);
+		}
 	}
 
 	/*
