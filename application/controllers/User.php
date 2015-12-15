@@ -84,11 +84,14 @@ class User extends CI_Controller{
 	
 	//订单页面
 	function orders() {
+		$bmobUser = new BmobUser();
+		$res = $bmobUser->get($this->userId);
+		$userInfo = $res;
 		$bmobOrder = new BmobObject('Order');
 		$res = $bmobOrder->get('','',array('where={"userId":"'.$this->userId.'"}'));
 		$orders = $res->results;
-		var_dump($orders);
-		$this->load->view('user/order_page',array('orders'=>$orders));
+		
+		$this->load->view('user/order_page',array('orders'=>$orders,'userInfo'=>$userInfo));
 		try {
 			//($this->order->createPingPay());
 		} catch (Exception $e) {
@@ -99,14 +102,14 @@ class User extends CI_Controller{
 	
 	//支付页面
 	function pay() {
-		$chargeId = $this->input->get('chargeId');
-		if (empty($chargeId)) {
+		$orderId = $this->input->get('orderId');
+		if (empty($orderId)) {
 			echo '无效订单号！';
 			exit();
 		}else {
 			$order = new MY_Order();
-			$charge = $order->getChargeInfo($chargeId);
-			$this->load->view('user/pay_page',array('charge'=>$charge));
+			//$charge = $order->getChargeInfo($chargeId);
+			$this->load->view('user/pay_page');
 		}
 		//$this->load->view('errors/html/error_general.php');
 	}

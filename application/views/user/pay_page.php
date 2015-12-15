@@ -1,11 +1,11 @@
 <?php 
 //获取charge信息,穿过来charge对象
-$wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
+//$wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
 //var_dump($charge['credential']->__toArray());
 ?>
 <html><head>
   <meta charset="utf-8">
-  <title>微信支付</title>
+  <title>99打印在线支付</title>
   <link rel="stylesheet" type="text/css" href="./styles/pay.css">  
   <script type="text/javascript">
     
@@ -55,7 +55,7 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
           </div>
 
           <div class="area_bd" id="qr_normal">
-            <span class="qr_img_wrapper"><img class="qrcode" alt="二维码" id="QRcode" src="http://qr.liantu.com/api.php?el=h&text=<?php echo $wx_qr;?>"><img class="guide pngFix" src="./img/pay/webpay_guide.png" alt="" id="guide" style="left: 50%; opacity: 0;"></span>
+            <span class="qr_img_wrapper"><img class="qrcode" alt="二维码" id="QRcode" src="http://qr.liantu.com/api.php?el=h&text=<?php ?>"><img class="guide pngFix" src="./img/pay/webpay_guide.png" alt="" id="guide" style="left: 50%; opacity: 0;"></span>
             <div class="msg_default_box">
               <i class="icon60_qr pngFix"></i>
               <p>请使用微信扫描<br>二维码以完成支付</p>
@@ -78,8 +78,8 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
             <h3 class="pay_money"> <span>￥</span>85.00</h3>
                                           <div class="pay_bill_unit no_extra">
                   <dl>
-                    <dt>大众点评网</dt>
-                    <dd>团购-订单编号819637989</dd>
+                    <dt>99打印在线支付</dt>
+                    <dd>订单编号：<?php $this->input->get('orderId');?></dd>
                   </dl>
                   <div class="pay_bill_info">
                     <p><label>交易单号</label><span class="pay_bill_value">1217216701201510220123415815</span></p>
@@ -106,10 +106,6 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
           <div class="pay_widget_hd">
             <i class="icon30_add_on pngFix"></i>
           </div>
-          <div class="pay_widget_bd">
-            <strong class="widget_name">客服</strong>
-            <p class="widget_desc">0755 - 86013860</p>
-          </div>
         </div>
 <!--         
   这是另一种更简单的结构，但是扩展性较差。
@@ -126,12 +122,7 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
   </div>
 </div>
 <div class="footer">
-  <p class="linklist">
-    <a href="http://www.tencent.com/zh-cn/index.shtml">关于腾讯</a>
-    <a href="http://weixin.qq.com/cgi-bin/readtemplate?uin=&amp;stype=&amp;promote=&amp;fr=&amp;lang=zh_CN&amp;ADTAG=&amp;check=false&amp;nav=faq&amp;t=weixin_agreement&amp;s=default">服务条款</a>
-    <a href="http://kf.qq.com/product/weixin.html">反馈建议</a>
-  </p>
-  <p class="copyright">© 1998 - 2014 Tencent Inc. All reserved.</p>
+  <p class="copyright">© 武汉巧然电子科技有限公司</p>
 </div>
 <!--[if IE 6]>
 <script type="text/javascript" src="/zh_CN/htmledition/js/DD_belatedPNG1c27aa.js"></script>
