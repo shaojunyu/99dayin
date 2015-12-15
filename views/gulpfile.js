@@ -178,7 +178,7 @@ gulp.task('centerRjs',function(){
       }))
       .pipe(concat("center.js")) //合并  
       .pipe(rename("center.js")) //重命名 
-      .pipe(uglify()) //压缩  
+      // .pipe(uglify()) //压缩  
       .pipe(gulp.dest('../js/entry')) //输出保存 
 })
 gulp.task('compile', function() {

@@ -196,7 +196,7 @@
                                 </div>
                                 <div class="order-btns">
                                     <!--    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>       -->
-                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
+                                    <a class="add-print" target="view_window" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
@@ -212,6 +212,29 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+      <div class="file-info">
+        <header><span>序号</span>
+            <span>文件名</span>
+            <span>单/双面</span>
+            <span>横/竖</span>
+            <span>每页PPT数量</span>
+            <span>大小</span>
+            <span>份数</span>
+        </header>
+        <div class="container files" id="warpper2">
+            <article id="scroller">
+           <!--  <div class="row" data-num='1'>
+                    <span>1</span>
+                    <span><i class="logo-minword"></i>华科大数学竞赛</span>
+                    <span>单</span>
+                    <span>横</span>
+                    <span></span>
+                    <span>A4</span>
+                    <span>1</span>
+                </div> -->
+            </article>
         </div>
     </div>
     <div class="paying" data-num=''>
