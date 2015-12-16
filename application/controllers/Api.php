@@ -391,6 +391,9 @@ class Api extends CI_Controller{
 				$temp['twoSide'] = $item->printSettings->isTwoSides?'double':'single';
 				$temp['direction'] = $item->printSettings->direction;
 				$temp['pptPerPage'] = $item->printSettings->pptPerPage;
+				if($item->fileType != fileType::$PPT){
+					$temp['pptPerPage'] = 0;
+				}
 				$temp['paperSize'] = $item->printSettings->paperSize;
 				$temp['amount'] = $item->printSettings->amount;
 				$newItems[] = $temp;
