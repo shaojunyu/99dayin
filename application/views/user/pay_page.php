@@ -1,7 +1,7 @@
 <?php 
 //获取charge信息,穿过来charge对象
 $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
-var_dump($charge->__toArray());
+//var_dump($charge->__toArray());
 
 ?>
 <html><head>
