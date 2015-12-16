@@ -125,6 +125,7 @@ class MY_Order extends MY_Base_Class{
 			
 			//更新订单的信息
 			//var_dump($ch->__toStdObject());
+			$this->bmobOrder->update($orderId,array('pingppId'=>$ch->__toArray()['id']));
 			return ($ch);
 			
 		} catch (\Pingpp\Error\Base $e) {

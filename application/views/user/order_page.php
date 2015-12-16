@@ -35,7 +35,6 @@
                 <div class="info">
                     <p>电话：<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
                     <p>邮箱：<span><?php if (isset($userInfo->email)){echo $userInfo->email;}else{echo '暂无';}?></span></p>
-                    <p>收货地址：<span><?php if (isset($userInfo->address)){echo $userInfo->address;}else{echo '暂无';} ?></span></p>
                 </div>
                 <div class="basic-btn">
                     <button class="edit-info">编辑信息</button>
@@ -114,8 +113,6 @@
                 <div class="ps-input">
                     <input class="email" type="type" value="<?php echo isset($userInfo->email)?$userInfo->email:'';?>"><span>邮箱:</span>
                 </div>
-                <div class="ps-input">
-                    <input class="address" type="type" value="<?php echo isset($userInfo->address)?$userInfo->address:'';?>"><span>收货地址:</span></div>
                 <div class="basic-btn">
                     <button class="back">取消</button>
                     <button class="change-btn">确认</button>
@@ -200,7 +197,7 @@
                                 <div class="summary">
                                     <div class="summary-info">
                                         总价：<span><?php echo $order->totalPrice/100; ?></span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
+                                        <span>自助取货</span> 支付状态：
                                         <span>已完成</span>
                                     </div>
                                     <img src="img/divided.png">
