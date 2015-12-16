@@ -224,9 +224,8 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     url: Pathurl.username,
                     type: 'POST',
                     dataType: "json",
-                    contentType: "application/json",
                     data: {
-                        mobilePhoneNumber: phone, //手机号
+                        phone: phone, //手机号
                         smsCode: code // 验证码
                     }
                 }).done(function (data) {
@@ -324,8 +323,9 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     }
                 };
                 //发送数据
-                sendAjax({
+                $.ajax({
                     url: Pathurl.sigin,
+                    type: 'POST',
                     data: {
                         'username': username,
                         'password': pwd,
