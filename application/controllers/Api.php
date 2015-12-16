@@ -51,7 +51,7 @@ class Api extends CI_Controller{
 		$res = $b->create(array('id'=>'134'));
 		var_dump($res);
 	}
-	
+	//用户相关
 	public function signup(){
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
@@ -59,14 +59,14 @@ class Api extends CI_Controller{
 		$college = $this->input->post('college');
 		try {
 			
-			$this->bmobUser->register(array(
+			$info = $this->bmobUser->register(array(
 					'username'=>$username,
 					'password'=>$password,
 					'mobilePhoneNumber'=>$phone,
 					'college'=>$college
 			));
 			$this->session->set_userdata('username',$username);
-			
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
 			//获取userid
 			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
 			$res = $res->results[0];
@@ -82,8 +82,9 @@ class Api extends CI_Controller{
 		$username = $this->input->post('username');
 		$password = $this->input->post('ps');
 		try {
-			$this->bmobUser->login($username,$password);
+			$info = $this->bmobUser->login($username,$password);
 			$this->session->set_userdata('username',$username);
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
 			//获取userid
 			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
 			$res = $res->results[0];
@@ -101,6 +102,32 @@ class Api extends CI_Controller{
 		$this->echo_msg(true);
 	}
 	
+	public function updateUserInfo(){
+		try {
+			$name = $this->post_data->name;
+			$phone = $this->post_data->phone;
+			$email = $this->post_data->email;
+			$this->bmobUser->update($this->session->userdata('userId'), $this->session->userdata('bmobToken'),array(
+					'mobilePhoneNumber'=>$phone,
+					'name'=>$name,
+					'email'=>$email
+			));
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
+	
+	public function updatePassword(){
+		try {
+			$oldPassword = $this->post_data->oldPassword;
+			$newPasseord = $this->post_data->newPasseord;
+			$this->bmobUser->updateUserPassword($this->session->userdata('userId'), $this->session->userdata('bmobToken'), $oldPassword, $newPassword);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
 	//发送验证码
 	function sendSmsCode(){
 		$phone = $this->input->post('phone');
