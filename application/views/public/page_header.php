@@ -17,8 +17,8 @@
                 </div>
                 </div>
                  <div class="detail-btn">
-                    <a href="javascript:void(0)">个人中心</a>
-                    <a href="javascript:void(0)">打印列表</a>
+                    <a href="./orders">个人中心</a>
+                    <a href="./upload">打印列表</a>
                     <a class="logout" href="javascript:void(0)">退出登录</a>
                 </div>
          </div>
