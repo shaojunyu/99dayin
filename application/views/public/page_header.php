@@ -5,9 +5,9 @@
                 <span>99打印</span>
             </a>
             <div class="titles">
-                <div class="title-btn homepage-btn" data-content="首页">首页</div>
-                <div class="title-btn introduction" data-content="简介">简介</div>
-                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
+                <a href="javascript:void(0)" class="title-btn homepage-btn" data-content="首页">首页</a>
+                <a href="javascript:void(0)" class="title-btn introduction" data-content="简介">简介</a>
+                <!-- <div class="title-btn art-base" data-content="本校文库">本校文库</div> -->
                 <div class="title-btn">
                 <?php if ($this->session->userdata('username')) {?>
                 <a class="name"><?php echo $this->session->userdata('username')?></a>
@@ -22,7 +22,4 @@
                     <a class="logout" href="javascript:void(0)">退出登录</a>
                 </div>
          </div>
-         
-      
-        
         </div>

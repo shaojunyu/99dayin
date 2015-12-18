@@ -5905,7 +5905,8 @@ define('header', [
                     },
                     success: function success(data) {
                         if (data.success) {
-                            window.location.href = './';
+                            console.log(data.success);
+                            window.location.href = '/';
                         } else {
                             prompt.changeInfo(data.msg);
                         }
