@@ -18,7 +18,7 @@
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href=""><?php echo $this->session->userdata('username');?></a>
+                        <a href="javascript:void(0)"><?php echo $this->session->userdata('username');?></a>
                         <p>手机:<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
                         <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>

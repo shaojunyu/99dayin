@@ -5997,7 +5997,7 @@ require([
         getToken: Encryption.Encryption('../index.php/api/sendSmsCode'),
         changeInfo: Encryption.Encryption(''),
         sendImg: Encryption.Encryption(''),
-        promptPs: Encryption.Encryption(''),
+        promptPs: Encryption.Encryption('../index.php/api/updatePassword'),
         username: Encryption.Encryption(''),
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'),
         sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode')
@@ -6244,7 +6244,7 @@ require([
             this.content.on('click', function (e) {
                 var $target = $(e.target);
                 if ($target.hasClass('authentic-btn')) {
-                    prompt.changeInfo('服务器正忙~');
+                    prompt.changeInfo('正在建设中~');
                 } else if ($target.hasClass('change-ps-btn')) {
                     toggleShow(_this.changePs);
                 } else if ($target.hasClass('back')) {
@@ -6293,27 +6293,32 @@ require([
                 });
             });
             this.promptPs.on('click', function () {
-                var oldPs = _this.oldPs.val(), newPs = _this.newPs.val(), confirm = _this.confir.val(), reg = /^[a-zA-Z]\w*$/;
+                var oldPs = _this.oldPs.val(), newPs = _this.newPs.val(), confirm = _this.confir_ps.val(), reg = new RegExp(/^[a-zA-Z]\w*$/);
                 if (oldPs == '' || oldPs == null || newPs == '' || newPs == null || confirm == null || confirm == '') {
                     prompt.changeInfo('输入不能为空,请先输入!');
-                } else if (reg.test(newPs)) {
+                } else if (!reg.test(newPs)) {
                     prompt.changeInfo('密码以字母开头\uFF0C只能包含字母,数字,下划线!');
-                } else if (oldPs === confirm) {
+                } else if (newPs === oldPs) {
+                    prompt.changeInfo('修改密码不能与原始密码重复~');
+                } else if (newPs !== confirm) {
                     prompt.changeInfo('两次密码输入不一致!');
                 } else {
+                    prompt.changeInfo('正在修改中');
                     $.ajax({
                         url: Pathurl.promptPs,
                         type: 'POST',
+                        dataType: 'JSON',
                         contentType: 'application/json',
-                        data: {
-                            oldPs: oldPs,
-                            newPs: newPs
-                        },
-                        success: function success(data) {
-                            if (data.success) {
-                                _this.promptPs.parents('.change-ps').hide();
-                                prompt.changeInfo('密码修改成功!');
-                            }
+                        data: JSON.stringify({
+                            oldPassword: oldPs,
+                            newPassword: newPs
+                        })
+                    }).then(function (data) {
+                        if (data.success) {
+                            _this.promptPs.parents('.change-ps').hide();
+                            prompt.changeInfo('密码修改成功!');
+                        } else {
+                            prompt.changeInfo(data.msg);
                         }
                     });
                 }
