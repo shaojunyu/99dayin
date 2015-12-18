@@ -4704,6 +4704,14 @@ define('prompt', ['jquery'], function ($) {
             _this.hidePrompt();
         }, 1500);
     };
+    Prompt.prototype.showInfo = function (info) {
+        this.prompt_ele.text($info);
+        this.showPrompt();
+    };
+    Prompt.prototype.hideInfo = function (info) {
+        this.prompt_ele.text('');
+        this.hidePrompt();
+    };
     Prompt.prototype.loading = function (percent) {
         this.showPrompt();
         if (typeof percent === 'number') {
@@ -6303,7 +6311,7 @@ require([
                 } else if (newPs !== confirm) {
                     prompt.changeInfo('两次密码输入不一致!');
                 } else {
-                    prompt.changeInfo('正在修改中');
+                    prompt.showInfo('正在修改中');
                     $.ajax({
                         url: Pathurl.promptPs,
                         type: 'POST',
@@ -6316,9 +6324,9 @@ require([
                     }).then(function (data) {
                         if (data.success) {
                             _this.promptPs.parents('.change-ps').hide();
-                            prompt.changeInfo('密码修改成功!');
+                            prompt.showInfo('密码修改成功!');
                         } else {
-                            prompt.changeInfo(data.msg);
+                            prompt.changeInfo('密码修改失败~');
                         }
                     });
                 }
