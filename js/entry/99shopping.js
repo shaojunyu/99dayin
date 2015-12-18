@@ -4704,6 +4704,14 @@ define('prompt', ['jquery'], function ($) {
             _this.hidePrompt();
         }, 1500);
     };
+    Prompt.prototype.showInfo = function (info) {
+        this.prompt_ele.text($info);
+        this.showPrompt();
+    };
+    Prompt.prototype.hideInfo = function (info) {
+        this.prompt_ele.text('');
+        this.hidePrompt();
+    };
     Prompt.prototype.loading = function (percent) {
         this.showPrompt();
         if (typeof percent === 'number') {
