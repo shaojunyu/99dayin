@@ -122,6 +122,7 @@ class Api extends CI_Controller{
 		try {
 			$oldPassword = $this->post_data->oldPassword;
 			$newPassword = $this->post_data->newPassword;
+			//$this->bmobUser->updateUserPassword($userId, $sessionToken, $oldPassword, $newPassword)
 			$this->bmobUser->updateUserPassword($this->session->userdata('userId'), $this->session->userdata('bmobToken'), $oldPassword, $newPassword);
 			$this->echo_msg(true);
 		} catch (Exception $e) {
