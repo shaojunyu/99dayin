@@ -19,7 +19,7 @@
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
                         <a href="javascript:void(0)"><?php echo $this->session->userdata('username');?></a>
-                        <p>手机:<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
+                        
                         <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                 </div>
                 <p class="indicative">个人信息</p>
                 <div class="info">
-                    <p>电话：<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
+                    <p>手机：<span><?php echo isset($userInfo->mobilePhoneNumber)?$userInfo->mobilePhoneNumber:'暂无';?></span></p>
                     <p>邮箱：<span><?php if (isset($userInfo->email)){echo $userInfo->email;}else{echo '暂无';}?></span></p>
                 </div>
                 <div class="basic-btn">
@@ -46,7 +46,7 @@
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
                         <a href=""><?php echo $this->session->userdata('username');?></a>
-                        <p>手机:<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
+                        <p>手机:<span><?php echo isset($userInfo->mobilePhoneNumber)?$userInfo->mobilePhoneNumber:'暂无';?></span></p>
                         <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
