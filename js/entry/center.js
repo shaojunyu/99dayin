@@ -5994,12 +5994,13 @@ require([
     var Pathurl = {
         delteOrd: Encryption.Encryption('../index.php/api/cancelOrder'),
         addPrint: Encryption.Encryption(''),
-        getToken: Encryption.Encryption(''),
+        getToken: Encryption.Encryption('../index.php/api/sendSmsCode'),
         changeInfo: Encryption.Encryption(''),
         sendImg: Encryption.Encryption(''),
         promptPs: Encryption.Encryption(''),
         username: Encryption.Encryption(''),
-        sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo')
+        sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'),
+        sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode')
     };
     var Order = {
         pre: $('.order-content'),
@@ -6215,6 +6216,7 @@ require([
         CF_code: $('.confir-code'),
         address: $('.address'),
         file: new Array(),
+        security: '',
         showImg: function showImg(file, img) {
             var reader = new FileReader();
             if (!/image\/\w+/.test(file.type)) {
@@ -6226,12 +6228,23 @@ require([
             };
             reader.readAsDataURL(file);
         },
+        countDown: function countDown($ele) {
+            var i = 60;
+            var time = setInterval(function () {
+                i--;
+                $ele.text(i);
+                if (i === 0) {
+                    $ele.removeClass('sending').prop('disabled', false).text('获取验证码');
+                    clearInterval(time);
+                }
+            }, 1000);
+        },
         init: function init() {
             var _this = this;
             this.content.on('click', function (e) {
                 var $target = $(e.target);
                 if ($target.hasClass('authentic-btn')) {
-                    toggleShow(_this.authentic);
+                    prompt.changeInfo('服务器正忙~');
                 } else if ($target.hasClass('change-ps-btn')) {
                     toggleShow(_this.changePs);
                 } else if ($target.hasClass('back')) {
@@ -6288,8 +6301,10 @@ require([
                 } else if (oldPs === confirm) {
                     prompt.changeInfo('两次密码输入不一致!');
                 } else {
-                    sendAjax({
+                    $.ajax({
                         url: Pathurl.promptPs,
+                        type: 'POST',
+                        contentType: 'application/json',
                         data: {
                             oldPs: oldPs,
                             newPs: newPs
@@ -6306,23 +6321,28 @@ require([
             this.edit_btn.on('click', function () {
                 toggleShow(_this.changeInfo);
             });
-            var code = '';
             this.obtain_code.on('click', function () {
-                $(this).addClass('sending');
+                var _this2 = this;
+                $(this).addClass('sending').prop('disabled', true);
                 var phone = _this.phone.val(), iden = _this.phone.attr('data-iden') === '1' ? true : false;
                 if (!iden) {
                     prompt.changeInfo('请输入正确手机号!');
+                    $(this).removeClass('sending').prop('disabled', false);
                     return false;
                 }
-                sendAjax({
+                $.ajax({
                     url: Pathurl.getToken,
-                    data: { phone: phone },
-                    success: function success(data) {
-                        if (data.success) {
-                            code = data.msg;
-                        } else {
-                            $(this).removeClass('sending');
-                        }
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: { phone: phone }
+                }).then(function (data) {
+                    console.log(data);
+                    if (data.success) {
+                        console.log(213);
+                        Left.security = data.msg;
+                        Left.countDown(Left.obtain_code);
+                    } else {
+                        $(_this2).removeClass('sending').prop('disabled', false);
                     }
                 });
             });
@@ -6331,13 +6351,9 @@ require([
                 if (content == '' || content == null) {
                     prompt.changeInfo('验证码不能为空');
                     _this.confirm_code.addClass('error');
-                } else if (code === content) {
+                } else {
                     _this.confirm_code.attr('data-iden', '1');
                     _this.confirm_code.removeClass('error');
-                } else {
-                    prompt.changeInfo('验证码输入不正确!');
-                    _this.confirm_code.attr('data-iden', '0');
-                    _this.confirm_code.addClass('error');
                 }
             });
             InputFocus(_this.confirm_code);
@@ -6357,30 +6373,50 @@ require([
             });
             this.address.enroll({});
             this.change_btn.on('click', function () {
-                var name = _this.name.val(), phone = _this.phone.val(), email = _this.email.val(), address = _this.address.val(), confirm = _this.confirm_code.val(), mark = _this.name.attr('data-iden') === '1' ? true : false && _this.phone.attr('data-iden') === '1' ? true : false && _this.email.attr('data-iden') === '1' ? true : false && _this.addrss.attr('data-iden') === '1' ? true : false && _this.confirm_code.attr('data-iden') === '1' ? true : false ? true : false;
-                if (mark) {
-                    _this.change_btn.addClass('sending');
-                    sendAjax({
-                        url: Pathurl.changeInfo,
+                var name = _this.name.val(), phone = _this.phone.val(), email = _this.email.val(), confirm = _this.confirm_code.val(), flag = 0, ele = $('.change-info .name,.change-info .phone,.change-info .confir-code,.change-info .email');
+                for (var i = 0; i < ele.length; i++) {
+                    if (ele.eq(i).attr('data-iden') == 1) {
+                    } else {
+                        flag++;
+                    }
+                }
+                if (flag === 0) {
+                    $.ajax({
+                        url: Pathurl.sendConfirm,
+                        type: 'POST',
+                        dataType: 'JSON',
                         data: {
-                            name: name,
                             phone: phone,
-                            email: email,
-                            address: address,
-                            confirm: confirm
-                        },
-                        beforeSend: function beforeSend() {
-                            _this.change_btn.addClass('sending');
-                        },
-                        success: function success(data) {
-                            if (data.success) {
-                                prompt.changeInfo('信息修改成功,请重新登录!');
-                                _this.change_btn.parents('.left-part').hide();
-                            } else {
-                                prompt.changeInfo('信息修改失败\uFF0C请再次尝试');
-                                _this.change_btn.removeClass('sending');
-                            }
+                            smsCode: confirm
                         }
+                    }).then(function (data) {
+                        if (!data.success) {
+                            prompt.changeInfo('验证码输入错误~');
+                            return false;
+                        }
+                        _this.change_btn.addClass('sending');
+                        $.ajax({
+                            url: Pathurl.changeInfo,
+                            type: 'POST',
+                            contentType: 'JSON',
+                            data: JOSN.stringify({
+                                name: name,
+                                phone: phone,
+                                email: email
+                            }),
+                            beforeSend: function beforeSend() {
+                                _this.change_btn.addClass('sending');
+                            },
+                            success: function success(data) {
+                                if (data.success) {
+                                    prompt.changeInfo('信息修改成功,请重新登录!');
+                                    _this.change_btn.parents('.left-part').hide();
+                                } else {
+                                    prompt.changeInfo('信息修改失败\uFF0C请再次尝试');
+                                    _this.change_btn.removeClass('sending');
+                                }
+                            }
+                        });
                     });
                 } else {
                     prompt.changeInfo('您的部分信息录入不正确!');
