@@ -451,12 +451,11 @@ class Api extends CI_Controller{
 	 * 取人订单是否已支付
 	 */
 	function isPaid(){
-		$orderId = $this->post_data->orderId;
-		$bmobOrder = new BmobObject('Order');
+		$chargeId = $this->post_data->chargeId;
 		try {
-			$res = $bmobOrder->get($orderId);
-			$state = $res->state;
-			if ($state == orderState::PAID) {
+			$res = \Pingpp\Charge::retrieve($chargeId);
+			$isPaid = $res->__toArray()['paid'];
+			if ($isPaid) {
 				$this->echo_msg(true);
 			}else {
 				$this->echo_msg(false,'UNPAID');
