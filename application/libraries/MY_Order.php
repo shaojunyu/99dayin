@@ -53,6 +53,7 @@ class MY_Order extends MY_Base_Class{
 		try {
 			$this->bmobOrder->create(array(
 					'userId'=>$this->userId,
+					'username'=>$this->CI->session->userdata('username'),
 					'items'=>json_encode($items),
 					'totalPrice'=>$this->get_total($items),
 					'state'=>orderState::UNPAID,
@@ -157,7 +158,8 @@ class MY_Order extends MY_Base_Class{
 
 
 class orderState{
-	const PAID = 'PAID';//已支付
+	const PAID = 'PAID';//已支付，等待打印
+	const PRINTED = 'PRINTED';//已打印完成
 	const UNPAID = 'UNPAID';//未支付
 	const CANCELED = 'CANCELED';//取消
 	const EXPIRED = 'EXPIRED';//过期
