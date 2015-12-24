@@ -377,10 +377,20 @@ class Api extends CI_Controller{
 	 * 创建订单
 	 */
 	public function createOrder(){
+		$address = "";
+		$shop = "";
+		if (isset($this->post_data->address) and isset($this->post_data->shop)) {
+			$address = $this->post_data->address;
+			$shop = $this->post_data->shop;
+		}else {
+			$this->echo_msg(false,"参数不全");
+			exit();
+		}
 		try{
+			
 			$order = new MY_Order();
 			//$order->test();
-			$orderId = $order->createOrder();
+			$orderId = $order->createOrder($address,$shop);
 			$this->echo_msg(true,'成功');
 		}catch (MY_Exception $e){
 			$this->echo_msg(false,$e->error_msg);

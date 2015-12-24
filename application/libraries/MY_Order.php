@@ -36,7 +36,7 @@ class MY_Order extends MY_Base_Class{
 	/*
 	 * 创建成功，返回订单号
 	 */
-	public function createOrder(){
+	public function createOrder($address,$shop){
 		//创建订单
 		$items = $this->cart->getItems();
 		if (empty($items)) {
@@ -57,7 +57,8 @@ class MY_Order extends MY_Base_Class{
 					'items'=>json_encode($items),
 					'totalPrice'=>$this->get_total($items),
 					'state'=>orderState::UNPAID,
-					'shop'=>'韵苑打印店'
+					'shop'=>$shop,
+					'address'=>$address
 			));
 			$this->cart->deleteAll();
 		} catch (Exception $e) {
