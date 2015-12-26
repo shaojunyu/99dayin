@@ -4,7 +4,10 @@
 
 application/logs/
 .htaccess
-views/
+1/
+bower_components/
+dist/
+node_modules/
 file_analysis/file_json/
 file_analysis/file_download/
 .idea/.name
