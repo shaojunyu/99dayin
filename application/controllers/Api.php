@@ -146,8 +146,8 @@ class Api extends CI_Controller{
 	
 	//验证短信验证码
 	public function verifySmsCode(){
-		$phone = $this->input->post('phone');
-		$smsCode = $this->input->post('smsCode');
+		$phone = $this->post_data->phone;
+		$smsCode = $this->post_data->smsCode;
 		try {
 			$bmobSms = new BmobSms();
 			$res = $bmobSms->verifySmsCode($phone, $smsCode);
