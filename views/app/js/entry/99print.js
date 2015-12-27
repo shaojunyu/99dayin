@@ -9,11 +9,11 @@ require.config({
         'enroll': 'entry/function/enroll', //注册模块
         'SMS': 'https://cdn1.lncld.net/static/js/av-mini-0.6.1.js', //短信模块
         'md5': "lib/spark-md5.min",
-        'encryption':"entry/function/encryption"
+        'encryption': "entry/function/encryption"
     }
 })
-require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'], function($, scroll, modal, prompt, enroll,Encryption) {
-    
+require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility'], function($, scroll, modal, prompt, enroll, Encryption) {
+
     var scroll = new scroll.ScrollPage(),
         prompt = new prompt.Prompt({
             prompt: $('.prompt')
@@ -44,12 +44,12 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
     $('body').on('click', function(event) {
             var $target = $(event.target),
                 _parent = $target.parent();
-            if ($target.hasClass('login-btn')) {
-                detectShow(login_frame, true);
-            } else if ($target.hasClass('signin-btn')) {
-                console.log(1);
-                detectShow(signin_frame, true);
-            } else if ($target.hasClass('user-login')) {
+            //      ($target.hasClass('login-btn')) {
+            //     detectShow(login_frame, true);
+            // } else if ($target.hasClass('signin-btn')) {
+            //     detectShow(signin_frame, true);
+            // } else if
+            if ($target.hasClass('user-login')) {
                 toggleActive($target, 'active');
             }
             /*
@@ -57,22 +57,27 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
              */
             else if ($target.hasClass('store-login')) {
                 toggleActive($target, 'active');
+                
             } else if (_parent.hasClass('store-login')) {
                 toggleActive(_parent, 'active');
+                
             }
             /*
              * 修改登录样式,切换到用户登录
              */
             else if ($target.hasClass('user-login')) {
                 toggleActive($target, 'active');
+                
             } else if (_parent.hasClass('user-login')) {
                 toggleActive(_parent, 'active');
+                
             }
         })
         /*
          * 切换active,以及去掉siblings的active
          */
     function toggleActive($target, classname) {
+        console.log(123);
         $target.addClass(classname)
             .siblings().removeClass(classname);
     }
@@ -80,7 +85,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
             toggleActive($(this), 'active');
         })
         //发送路径的url地址
-    
+
     var Pathurl = {
         login: Encryption.Encryption('index.php/api/login'),
         sigin: Encryption.Encryption('index.php/api/signup'),
@@ -130,45 +135,52 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
         },
         init: function() {
             var _this = this;
-            $('.login-btn').on('click', function() {
-                var username = _this.getText(_this.$username),
-                    ps = _this.getText(_this.$ps),
-                    iden = _this.getIden();
-                sendAjax({
-                    url: Pathurl.login,
-                    dataType: 'json',
-                    data: {
-                        'username': username,
-                        'ps': ps
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            window.location.href = './';
-                            console.log(1);
-                            // window.open('./');
-                        } else {
-                            prompt.changeInfo(data.msg);
+            $('body').on('click', function(e) {
+                var $target = $(e.target);
+                if ($target.attr('id')=='confirm-btn') {
+                    var username = _this.getText(_this.$username),
+                        ps = _this.getText(_this.$ps),
+                        iden = _this.getIden();
+                    $.ajax({
+                        url: Pathurl.login,
+                        type:"POST",
+                        contentType:"application/json",
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            'username': username,
+                            'password': ps
+                        }),
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = './';
+                                console.log(1);
+                                // window.open('./');
+                            } else {
+                                prompt.changeInfo(data.msg);
+                            }
                         }
-                    }
-                });
-            });
-            $('.QQ-login').on('click', function() {
-                sendAjax({
+                    });
+                }else if($target.hasClass('.QQ-login')){
+                     sendAjax({
                     url: Pathurl.Linklogin,
                     data: {
                         'login_method': 'QQ'
                     },
                     success: _this.linkSuccess
-                })
-            });
+                 })
+                }
+            })
+          
             this.title.on('click', function(e) {
                 var $target = $(e.target);
                 if ($target.hasClass('name')) {
                     toggleShow(_this.detail);
                 } else if ($target.hasClass('login')) {
                     detectShow(login_frame, true);
+                    Enroll.init();
                 } else if ($target.hasClass('signin')) {
                     detectShow(signin_frame, false);
+                    Enroll.init();
                 }
             });
             this.detail.on('click', function(e) {
@@ -179,7 +191,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                         success: function(data) {
                             if (data.success)
                                 window.location.href = './';
-                             // window.open = './';
+                            // window.open = './';
                         }
                     });
                 }
@@ -212,10 +224,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
         $enroll_btn: $('.enroll'), //确认注册按钮
         $confir_btn: $('.comfir-btn'), //发送验证码button
         CF_code: '', //验证码
-        //发送验证码
-        sendCode: function() {
- 
-        },
+   
         //绑定事件，验证输入框的正确性
         addDetect: function() {
             var _this = this;
@@ -286,7 +295,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                     prompt.changeInfo('验证码输入不能为空!');
                     return false;
                 }
-                $('.username,.ps,.confir-ps,.phone,.secu-code,.college,.enroll').each(function() {
+                _this.$enroll_btn.parents('.register').find('.username,.ps,.confir-ps,.phone,.college,.enroll').each(function() {
                     sign.push($(this).attr('data-iden')); //获取标识                    
                 });
                 for (var i = 0; i < sign.length; i++) {
@@ -296,13 +305,17 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                     }
                 };
                 //发送数据
-               $.ajax({
+                $.ajax({
                         url: Pathurl.username,
-                        type:'POST',
-                        dataType:"json",
-                        data: {
+                        type: 'POST',
+                        contentType:"application/json",
+                        dataType: "json",
+                        data: JSON.stringify({
                             phone: phone, //手机号
                             smsCode: code // 验证码
+                        }),
+                        beforeSend:function(){
+                            _this.$enroll_btn.addClass("").prop("disabled",true);
                         }
                     })
                     .done(function(data) {
@@ -311,7 +324,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                             $(this).attr('data-iden', 1);
                             $.ajax({
                                 url: Pathurl.sigin,
-                                type:'POST',
+                                type: 'POST',
                                 data: {
                                     'username': username,
                                     'password': pwd,
@@ -321,19 +334,18 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
                                 success: function(data) {
                                     if (data.success) {
                                         window.location.href = './';
-
                                     } else {
                                         prompt.changeInfo('注册失败!');
+                                        _this.$enroll_btn.addClass("").prop("disabled",false);
                                     }
                                 }
                             });
-                        } else {
-                            prompt.changeInfo('验证码输入错误!');
-                            $(this).addClass('error');
-                            $(this).attr('data-iden', 0);
-                        }
+                        }else{
+                            _this.$enroll_btn.addClass("").prop("disabled",false);
+                            prompt.changeInfo("验证码输入错误!");
+                        } 
                     })
-                
+
             })
         },
         init: function() {
@@ -341,7 +353,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll','encryption', 'utility'
             this.send();
         }
     }
-    Enroll.init();
+    // Enroll.init();
     //发短信验证
     // AV.initialize('wL9slmcVqycA5k9J6wUy8U4Q', 'IRQRmm0slTOsGDH9QKd2qnhF');
     // var TestObject = AV.Object.extend('TestObject');

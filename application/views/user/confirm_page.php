@@ -165,8 +165,8 @@
                     <span class="receiving">收货方式:</span>
                     <input type="radio" name="method" id="self-picking" value="到店自取">
                     <label for="self-picking"><span class="logo-radio"></span>到店自取</label>
-                    <!-- <input type="radio" name="method" id="deliver" value="送货上门">
-                    <label for="deliver"><span class="logo-radio"></span>送货上门</label> -->
+                    <input type="radio" name="method" id="deliver" value="送货上门">
+                    <label for="deliver"><span class="logo-radio"></span>送货上门</label>
                 </div>
                 <div class="middle-part">
                     <div class="pick">
@@ -180,9 +180,8 @@
                     </div>
                     <div class="deliver">
                     <div>
-                        <label>校区:</label>
+                       <!--  <label>校区:</label>
                         <select class="school-area" type="text" placeholder="校区">
-                            <!-- <option value="null">校区</option> -->
                             <option value="1">2</option>
                             <option value="1">3</option>
                             <option value="1">4</option>
@@ -192,19 +191,18 @@
                         </select>
                        <label>楼栋:</label> 
                        <select type="text" class="building" placeholder="楼栋">
-                            <!-- <option value="null">楼栋</option> -->
                             <option value="1">1</option>
                             <option value="2">2</option>
-                        </select>
-                        <label>收货时间:</label>
+                        </select> -->
+                       <!--  <label>收货时间:</label>
                          <select class='time'>
                             <option value="12:30-13:00">12:30-13:00</option>
                             <option value="18:30-19:00">18:30-19:00</option>
                             <option value="22:30-23:00">22:30-23:00</option>
-                        </select>
+                        </select> -->
                     </div>
                         <input class="address" type="text" placeholder="请输入收货地址" />
-                       <input class="phone" type="text" placeholder="电话" />
+                       <!-- <input class="phone" type="text" placeholder="电话" /> -->
                     </div>
                 </div>
                 <div class="right-part">

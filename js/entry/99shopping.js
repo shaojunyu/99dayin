@@ -5472,7 +5472,7 @@ require([
         }
     };
     Operator.init();
-    $('input[name="method"]').on('select', function (event) {
+    $('input[name="method"]').on('change', function (event) {
         var $pick = $('.pick'), $deliver = $('.deliver'), method = $(this).val();
         if (method === '到店自取') {
             $pick.show().siblings().hide();
@@ -5491,18 +5491,25 @@ require([
                     prompt.changeInfo('请选择收货方式!');
                 } else {
                     if (method === '到店自取') {
-                        var stroe_name = $('.print-shop').val();
+                        var store_name = $('.print-shop').val();
                         info = {
-                            'method': method,
-                            'store': stroe_name,
-                            'price': totle
+                            'shop': store_name,
+                            'address': ''
+                        };
+                    } else {
+                        var address = $('.address').val();
+                        info = {
+                            'shop': '',
+                            'address': address
                         };
                     }
                     $(this).addClass('sending').prop('disabled', true);
                     $.ajax({
                         url: Pathurl.checkout,
                         dataType: 'JSON',
-                        type: 'GET'
+                        contentType: 'application/json',
+                        type: 'POST',
+                        data: JSON.stringify(info)
                     }).then(function (data) {
                         if (data.success) {
                             window.location.href = '../user/orders';

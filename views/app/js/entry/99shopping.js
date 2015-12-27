@@ -154,7 +154,9 @@
      Operator.init();
      //!计算总价 
      //结算
-     $('input[name="method"]').on('select', function(event) {
+     
+     $('input[name="method"]').on('change', function(event) {
+        
          var $pick = $('.pick'),
              $deliver = $('.deliver'),
              method = $(this).val();
@@ -163,7 +165,7 @@
          } else if (method === "送货上门") {
              $deliver.show().siblings().hide();
          }
-     })
+     });
      var PayBill = {
          checkout: $('.clearing'), //结算按钮
          init: function() {
@@ -177,18 +179,25 @@
                      prompt.changeInfo("请选择收货方式!");
                  } else {
                      if (method === "到店自取") {
-                         var stroe_name = $('.print-shop').val(); //获取打印店名称
+                         var store_name = $('.print-shop').val(); //获取打印店名称
                          info = {
-                             'method': method, //收货方式
-                             'store': stroe_name, //打印店
-                             'price': totle //总价
+                             'shop': store_name, //收货方式
+                             'address': '' //打印店
                          }
-                     } 
+                     } else{
+                        var address = $('.address').val();
+                        info = {
+                             'shop': '', //收货方式
+                             'address': address //打印店
+                        }
+                     }
                      $(this).addClass('sending').prop('disabled', true); //禁止多次点击结算按钮
                      $.ajax({
                          url: Pathurl.checkout, 
                          dataType:'JSON',
-                         type:'GET'
+                         contentType:"application/json",
+                         type:'POST',
+                         data:JSON.stringify(info)
                      })
                      .then((data)=>{
                         if (data.success) {
@@ -196,7 +205,6 @@
                              } else {
                                  prompt.changeInfo(data.msg);
                                  $(this).removeClass('sending').prop('disabled', false);
-                                 window.location.href="../user/orders";
                              }
                      })
                  }

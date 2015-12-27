@@ -62,7 +62,7 @@ gulp.task('copy', function() {
     return gulp.src('app/js/entry/**/prompt.js')
         .pipe(gulp.dest('app/js/entry'));
 })
-gulp.task('copyCSS',['prefix'] ,function() {
+gulp.task('copyCSS' ,function() {
     return gulp.src('app/styles/**/*.css')
         .pipe(gulp.dest('../styles'));
 });

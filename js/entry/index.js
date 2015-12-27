@@ -4308,12 +4308,7 @@ require([
     var login_frame = $('#login-frame'), signin_frame = $('#signin-frame');
     $('body').on('click', function (event) {
         var $target = $(event.target), _parent = $target.parent();
-        if ($target.hasClass('login-btn')) {
-            detectShow(login_frame, true);
-        } else if ($target.hasClass('signin-btn')) {
-            console.log(1);
-            detectShow(signin_frame, true);
-        } else if ($target.hasClass('user-login')) {
+        if ($target.hasClass('user-login')) {
             toggleActive($target, 'active');
         } else if ($target.hasClass('store-login')) {
             toggleActive($target, 'active');
@@ -4326,6 +4321,7 @@ require([
         }
     });
     function toggleActive($target, classname) {
+        console.log(123);
         $target.addClass(classname).siblings().removeClass(classname);
     }
     $('.user-login,.store-login').on('click', function () {
@@ -4373,31 +4369,35 @@ require([
         },
         init: function init() {
             var _this = this;
-            $('.login-btn').on('click', function () {
-                var username = _this.getText(_this.$username), ps = _this.getText(_this.$ps), iden = _this.getIden();
-                sendAjax({
-                    url: Pathurl.login,
-                    dataType: 'json',
-                    data: {
-                        'username': username,
-                        'ps': ps
-                    },
-                    success: function success(data) {
-                        if (data.success) {
-                            window.location.href = './';
-                            console.log(1);
-                        } else {
-                            prompt.changeInfo(data.msg);
+            $('body').on('click', function (e) {
+                var $target = $(e.target);
+                if ($target.attr('id') == 'confirm-btn') {
+                    var username = _this.getText(_this.$username), ps = _this.getText(_this.$ps), iden = _this.getIden();
+                    $.ajax({
+                        url: Pathurl.login,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            'username': username,
+                            'password': ps
+                        }),
+                        success: function success(data) {
+                            if (data.success) {
+                                window.location.href = './';
+                                console.log(1);
+                            } else {
+                                prompt.changeInfo(data.msg);
+                            }
                         }
-                    }
-                });
-            });
-            $('.QQ-login').on('click', function () {
-                sendAjax({
-                    url: Pathurl.Linklogin,
-                    data: { 'login_method': 'QQ' },
-                    success: _this.linkSuccess
-                });
+                    });
+                } else if ($target.hasClass('.QQ-login')) {
+                    sendAjax({
+                        url: Pathurl.Linklogin,
+                        data: { 'login_method': 'QQ' },
+                        success: _this.linkSuccess
+                    });
+                }
             });
             this.title.on('click', function (e) {
                 var $target = $(e.target);
@@ -4405,8 +4405,10 @@ require([
                     toggleShow(_this.detail);
                 } else if ($target.hasClass('login')) {
                     detectShow(login_frame, true);
+                    Enroll.init();
                 } else if ($target.hasClass('signin')) {
                     detectShow(signin_frame, false);
+                    Enroll.init();
                 }
             });
             this.detail.on('click', function (e) {
@@ -4452,8 +4454,6 @@ require([
         $enroll_btn: $('.enroll'),
         $confir_btn: $('.comfir-btn'),
         CF_code: '',
-        sendCode: function sendCode() {
-        },
         addDetect: function addDetect() {
             var _this = this;
             this.$username.enroll({
@@ -4505,7 +4505,7 @@ require([
                     prompt.changeInfo('验证码输入不能为空!');
                     return false;
                 }
-                $('.username,.ps,.confir-ps,.phone,.secu-code,.college,.enroll').each(function () {
+                _this.$enroll_btn.parents('.register').find('.username,.ps,.confir-ps,.phone,.college,.enroll').each(function () {
                     sign.push($(this).attr('data-iden'));
                 });
                 for (var i = 0; i < sign.length; i++) {
@@ -4518,10 +4518,14 @@ require([
                 $.ajax({
                     url: Pathurl.username,
                     type: 'POST',
+                    contentType: 'application/json',
                     dataType: 'json',
-                    data: {
+                    data: JSON.stringify({
                         phone: phone,
                         smsCode: code
+                    }),
+                    beforeSend: function beforeSend() {
+                        _this.$enroll_btn.addClass('').prop('disabled', true);
                     }
                 }).done(function (data) {
                     if (data.success) {
@@ -4541,13 +4545,13 @@ require([
                                     window.location.href = './';
                                 } else {
                                     prompt.changeInfo('注册失败!');
+                                    _this.$enroll_btn.addClass('').prop('disabled', false);
                                 }
                             }
                         });
                     } else {
+                        _this.$enroll_btn.addClass('').prop('disabled', false);
                         prompt.changeInfo('验证码输入错误!');
-                        $(this).addClass('error');
-                        $(this).attr('data-iden', 0);
                     }
                 });
             });
@@ -4557,7 +4561,6 @@ require([
             this.send();
         }
     };
-    Enroll.init();
 });
 define('../js/entry/99print', [
     'jquery',

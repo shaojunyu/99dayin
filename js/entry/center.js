@@ -6077,7 +6077,7 @@ require([
                     console.log(item.fileName);
                     twoSide = this.dealInfo(twoSide), direction = this.dealInfo(direction);
                     newDiv = $('<div></div>');
-                    newDiv.html('<span>' + flag + '</span>\n                                        <span><i class="logo-minword"></i>' + fileName + '</span>\n                                        <span>' + twoSide + '</span>\n                                        <span>' + direction + '</span>\n                                        <span>' + pptPerPage + '</span>\n                                        <span>' + paperSize + '</span>\n                                        <span>' + amount + '</span>\n                                        ');
+                    newDiv.html('<span>' + flag + '</span>\n                                        <span>' + fileName + '</span>\n                                        <span>' + twoSide + '</span>\n                                        <span>' + direction + '</span>\n                                        <span>' + pptPerPage + '</span>\n                                        <span>' + paperSize + '</span>\n                                        <span>' + amount + '</span>\n                                        ');
                     newDiv.attr({
                         class: 'row',
                         'data-num': flag
@@ -6111,21 +6111,6 @@ require([
                 } else if ($target.hasClass('go-pay')) {
                     var li = $target.parents('li'), num = li.find('.order-num').text(), money = li.find('.money').text();
                     openModal(_this.checkout_modal, false);
-                    $.ajax({
-                        url: Pathurl.go_pay,
-                        data: {
-                            num: num,
-                            money: money
-                        },
-                        success: function success(data) {
-                            if (data.success) {
-                                openModal(_this.checkout_modal, false);
-                                _this.checkout_modal.attr('data-num', num);
-                            } else {
-                                prompt.changeInfo('支付出错\uFF0C请重新支付!');
-                            }
-                        }
-                    });
                 } else if ($target.hasClass('showFiles')) {
                     var data = $target.data('order');
                     $.ajax({
@@ -6179,10 +6164,11 @@ require([
                         url: Pathurl.sendOrder,
                         type: 'POST',
                         dataType: 'json',
-                        data: { orderId: data }
+                        contentType: 'application/json',
+                        data: JSON.stringify({ orderId: data })
                     }).then(function (data) {
                         Order.fillInfo(data);
-                        openModal(_this.checkout_modal, true);
+                        openModal(_this.orderPage, true);
                     }).fail(function () {
                         prompt.changeInfo('请求失败,请重试~');
                     });
@@ -6481,7 +6467,9 @@ require([
         },
         init: function init() {
             var _this = this;
-            this.close.on('click', this.checkOrder);
+            $('.paying-btn button,.close').on('click', function () {
+                window.location.href = './orders';
+            });
         }
     };
     Modal.init();
