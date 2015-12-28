@@ -30,28 +30,28 @@
                 <img class="link-bg" src="./img/bg-logo.png" />
                 <div class="more">
                     <div class="column">
-                        <div class="link-header"><a style="color:#fff" target="blank" href="">关于文库</a></div>
-                        <div class="link-content"><a href="#">文库简介</a></div>
-                        <div class="link-content"><a href="">使用说明</a></div>
-                        <div class="link-content"><a href="">鼓励分享</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/base.html">关于文库</a></div>
+                        <div class="link-content"><a href="./helper/base.html">文库简介</a></div>
+                        <div class="link-content"><a href="./helper/base.html">使用说明</a></div>
+                        <div class="link-content"><a href="./helper/base.html">鼓励分享</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header"><a style="color:#fff" target="blank" href="">订单服务</a></div>
-                        <div class="link-content"><a href="">购买指南</a></div>
-                        <div class="link-content"><a href="">支付方式</a></div>
-                        <div class="link-content"><a href="">送货政策</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/orderServe.html">订单服务</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">购买指南</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">支付方式</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">送货政策</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header"><a style="color:#fff" target="blank" href="">关于公司</a></div>
-                        <div class="link-content"><a href="">公司简介</a></div>
-                        <div class="link-content"><a href="">加入我们</a></div>
-                        <div class="link-content"><a href="">联系我们</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/company.html">关于公司</a></div>
+                        <div class="link-content"><a href="./helper/company.html">公司简介</a></div>
+                        <div class="link-content"><a href="./helper/company.html">加入我们</a></div>
+                        <div class="link-content"><a href="./helper/company.html">联系我们</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header"><a style="color:#fff" target="blank" href="">关于我们</a></div>
-                        <div class="link-content"><a href="">新浪微博</a></div>
-                        <div class="link-content"><a href="">官方微信</a></div>
-                        <div class="link-content"><a href="">官方贴吧</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/followUs.html">关于我们</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">新浪微博</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">官方微信</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">官方贴吧</a></div>
                     </div>
                     <div class="column QR">
                         <img style="width:120px;height:120px;" src="./img/QR-code.png">
