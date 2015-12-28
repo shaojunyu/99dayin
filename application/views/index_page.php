@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="login-frame" id="login-frame">
-        <div class="header-btn"><span class="active login-btn">登录</span><span class="signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
+        <div class="header-btn"><span class="active login-btn">登录</span><i class="logo-close simplemodal-close"></i></div>
         <div class="portrait"><img src="./img/portrait.png"></div>
         <div class="input-frame">
             <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
@@ -71,9 +71,6 @@
         <div>
             <button class="confirm-btn login-btn" id="confirm-btn">确认</button>
         </div>
-        <div class="link-login">
-            其他方式登录:<span class="QQ" id="QQ-login"><i class="logo-QQ"></i>QQ登录</span><span class="wei"><i class="logo-wei"></i>微信登录</span>
-        </div>
         <div class="login-choice">
             <div class="user-login active">
                 <div>用</div>
@@ -81,17 +78,10 @@
                 <div>登</div>
                 <div>录</div>
             </div>
-            <div class="store-login ">                
-                <div>打</div>
-                <div>印</div>
-                <div>店</div>
-                <div>登</div>
-                <div>录</div>
-            </div>
         </div>
     </div>
    <div class="signin-frame" id="signin-frame">
-          <div class="header-btn"><span class="login-btn">登录</span><span class="active signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
+          <div class="header-btn"><span class="active signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
           <div class="register">
               <div class="row">
                   <span class="des">用户名：</span>
