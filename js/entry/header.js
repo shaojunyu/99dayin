@@ -98,7 +98,7 @@ define(['jquery', 'encryption'], function ($, Encryption) {
                     sendAjax({
                         url: Pathurl.logout,
                         success: function success(data) {
-                            if (data.success) window.location.href = '/';
+                            if (data.success) window.location.href = './';
                         }
                     });
                 }

@@ -239,7 +239,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                  */
                 UploadProgress(up, file) {
                     console.log(file.percent);
-                    prompt.loading(file.percent); //注意一下这里的Progress会提醒两次上传100%
+                    prompt.showInfo(file.percent); //注意一下这里的Progress会提醒两次上传100%
                     if (file.percent === 100) {
                         upload.flag++;
                     }
@@ -321,7 +321,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
          * 上传文件的token参数
          */
         getAjax(up) {
-            prompt.loading("文件上传中~");
+            prompt.showInfo("文件上传中~");
             var _this = this;
             $.ajax({
                     url: Pathurl.getToken,

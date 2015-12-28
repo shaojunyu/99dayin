@@ -259,6 +259,13 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
             $('.comfir-btn').on('click', function () {
                 var $this = $(this),
                     phone = _this.$phone.val();
+                if (phone == "" || phone == null) {
+                    prompt.changeInfo("请先输入手机号");
+                    return;
+                } else if (!phone_reg[0].test(phone)) {
+                    prompt.changeInfo("手机号输入不正确!");
+                    return;
+                }
                 sendAjax({
                     url: Pathurl.CF_url,
                     data: {
@@ -269,9 +276,10 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     },
                     success: function success(data) {
                         //检查验证码的输入的正确性
-                        if (data.success) {} else {
-                            $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
+                        if (data.success) {
                             prompt.changeInfo(data.msg);
+                        } else {
+                            $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
                         }
                     }
                 });
@@ -301,42 +309,46 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                 };
                 //发送数据
                 $.ajax({
-                    url: Pathurl.username,
+                    url: Pathurl.sigin,
                     type: 'POST',
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        phone: phone, //手机号
-                        smsCode: code // 验证码
-                    }),
-                    beforeSend: function beforeSend() {
-                        _this.$enroll_btn.addClass("").prop("disabled", true);
+                    data: {
+                        'username': username,
+                        'password': pwd,
+                        'phone': phone,
+                        'college': college
                     }
-                }).done(function (data) {
+                }).then(function (data) {
                     if (data.success) {
-                        $(this).removeClass('error');
-                        $(this).attr('data-iden', 1);
+                        return true;
+                    } else {
+                        prompt.changeInfo(data.msg);
+                        _this.$enroll_btn.addClass("").prop("disabled", false);
+                        return false;
+                    }
+                }).then(function (flag) {
+                    if (flag) {
                         $.ajax({
-                            url: Pathurl.sigin,
+                            url: Pathurl.username,
                             type: 'POST',
-                            data: {
-                                'username': username,
-                                'password': pwd,
-                                'phone': phone,
-                                'college': college
-                            },
-                            success: function success(data) {
-                                if (data.success) {
-                                    window.location.href = './';
-                                } else {
-                                    prompt.changeInfo('注册失败!');
-                                    _this.$enroll_btn.addClass("").prop("disabled", false);
-                                }
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                phone: phone, //手机号
+                                smsCode: code // 验证码
+                            }),
+                            beforeSend: function beforeSend() {
+                                _this.$enroll_btn.addClass("").prop("disabled", true);
+                            }
+                        }).done(function (data) {
+                            if (data.success) {
+                                $(this).removeClass('error');
+                                $(this).attr('data-iden', 1);
+                                window.location.href = "./";
+                            } else {
+                                _this.$enroll_btn.addClass("").prop("disabled", false);
+                                prompt.changeInfo("验证码输入错误!");
                             }
                         });
-                    } else {
-                        _this.$enroll_btn.addClass("").prop("disabled", false);
-                        prompt.changeInfo("验证码输入错误!");
                     }
                 });
             });

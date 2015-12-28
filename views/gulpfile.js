@@ -195,7 +195,7 @@ gulp.task('orderId', function() {
                 'encryption': "../js/entry/function/encryption"
             }
         }))
-        .pipe(concat("pay.js")) //合并  
+        .pipe(concat("pay.js")) //合并    
         .pipe(rename("pay.js")) //重命名  
         // .pipe(uglify()) //压缩  
         .pipe(gulp.dest('../js/entry')) //输出保存 

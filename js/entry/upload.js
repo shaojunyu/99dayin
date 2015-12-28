@@ -4623,7 +4623,7 @@ define('prompt', ['jquery'], function ($) {
         }, 1500);
     };
     Prompt.prototype.showInfo = function (info) {
-        this.prompt_ele.text($info);
+        this.prompt_ele.text(info);
         this.showPrompt();
     };
     Prompt.prototype.hideInfo = function (info) {
@@ -10317,7 +10317,7 @@ define('header', [
                         url: Pathurl.logout,
                         success: function success(data) {
                             if (data.success)
-                                window.location.href = '/';
+                                window.location.href = './';
                         }
                     });
                 }
@@ -10552,7 +10552,7 @@ require([
             },
             UploadProgress: function UploadProgress(up, file) {
                 console.log(file.percent);
-                prompt.loading(file.percent);
+                prompt.showInfo(file.percent);
                 if (file.percent === 100) {
                     upload.flag++;
                 }
@@ -10623,7 +10623,7 @@ require([
             up.start();
         },
         getAjax: function getAjax(up) {
-            prompt.loading('文件上传中~');
+            prompt.showInfo('文件上传中~');
             var _this = this;
             $.ajax({
                 url: Pathurl.getToken,

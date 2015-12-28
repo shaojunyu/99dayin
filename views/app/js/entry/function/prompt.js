@@ -29,7 +29,7 @@ define(['jquery'],function($){
 	* 显示进度条
 	*/
 	Prompt.prototype.showInfo = function(info){
-		this.prompt_ele.text($info);
+		this.prompt_ele.text(info);
 		this.showPrompt();
 	}
 	Prompt.prototype.hideInfo = function(info){
