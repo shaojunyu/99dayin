@@ -50,6 +50,9 @@ class MY_Order extends MY_Base_Class{
 			throw new MY_Exception('存在未支付订单,无法创建新订单!');
 			return;
 		}
+		if (empty($address)) {
+			$address = '韵苑打印店';
+		}
 		try {
 			$this->bmobOrder->create(array(
 					'userId'=>$this->userId,
@@ -58,7 +61,8 @@ class MY_Order extends MY_Base_Class{
 					'totalPrice'=>$this->get_total($items),
 					'state'=>orderState::UNPAID,
 					'shop'=>$shop,
-					'address'=>$address
+					'address'=>$address,
+					'phone'=>$this->CI->session->userdata('phone')
 			));
 			$this->cart->deleteAll();
 		} catch (Exception $e) {

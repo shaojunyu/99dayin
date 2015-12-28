@@ -71,6 +71,8 @@ class Api extends CI_Controller{
 			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
 			$res = $res->results[0];
 			$this->session->set_userdata('userId',$res->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$res->mobilePhoneNumber);
 			$this->echo_msg(true,'注册成功');
 			exit();
 		} catch (Exception $e) {
@@ -89,6 +91,8 @@ class Api extends CI_Controller{
 			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
 			$res = $res->results[0];
 			$this->session->set_userdata('userId',$res->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$res->mobilePhoneNumber);
 			$this->echo_msg(true,'登录成功');
 			exit();
 		} catch (Exception $e) {

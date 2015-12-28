@@ -3,3 +3,4 @@ file_analysis/
 pingpp_webhooks/
 .project
 .settings/
+application/logs/
