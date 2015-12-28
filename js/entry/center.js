@@ -5852,13 +5852,13 @@ define('header', [
     'encryption'
 ], function ($, Encryption) {
     var Pathurl = {
-        login: Encryption.Encryption('/99dayin/index.php/api/login'),
-        sigin: Encryption.Encryption('/99dayin/index.php/api/signup'),
+        login: Encryption.Encryption('/index.php/api/login'),
+        sigin: Encryption.Encryption('/index.php/api/signup'),
         Linklogin: '',
-        username: Encryption.Encryption('/99dayin/index.php/api/verifySmsCode'),
-        CF_url: Encryption.Encryption('/99dayin/index.php/api/sendSmsCode'),
+        username: Encryption.Encryption('/index.php/api/verifySmsCode'),
+        CF_url: Encryption.Encryption('/index.php/api/sendSmsCode'),
         upload: '',
-        logout: Encryption.Encryption('/99dayin/index.php/api/logout')
+        logout: Encryption.Encryption('/index.php/api/logout')
     };
     var login = {
         $username: $('.login-account'),
@@ -6179,7 +6179,7 @@ require([
     Order.init();
     var username_reg = [
             /^[\u4e00-\u9fa5A-Za-z0-9-_]*$/,
-            /^[\u4e00-\u9fa5A-Za-z0-9-_]{4,12}$/
+            /^[\u4e00-\u9fa5A-Za-z0-9-_]{2,12}$/
         ], username_msg = [
             '姓名只能输入中英文\uFF0C数字\uFF0C下划线和减号!',
             '用户名输入长度只能在4~12位!'

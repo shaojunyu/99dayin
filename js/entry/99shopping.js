@@ -1,269 +1,334 @@
-!function (a, b) {
-    'object' == typeof module && 'object' == typeof module.exports ? module.exports = a.document ? b(a, !0) : function (a) {
-        if (!a.document)
-            throw new Error('jQuery requires a window with a document');
-        return b(a);
-    } : b(a);
-}('undefined' != typeof window ? window : this, function (a, b) {
-    var c = [], d = c.slice, e = c.concat, f = c.push, g = c.indexOf, h = {}, i = h.toString, j = h.hasOwnProperty, k = {}, l = a.document, m = '2.1.4', n = function (a, b) {
-            return new n.fn.init(a, b);
-        }, o = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, p = /^-ms-/, q = /-([\da-z])/gi, r = function (a, b) {
-            return b.toUpperCase();
-        };
-    n.fn = n.prototype = {
-        jquery: m,
-        constructor: n,
-        selector: '',
-        length: 0,
-        toArray: function () {
-            return d.call(this);
-        },
-        get: function (a) {
-            return null != a ? 0 > a ? this[a + this.length] : this[a] : d.call(this);
-        },
-        pushStack: function (a) {
-            var b = n.merge(this.constructor(), a);
-            return b.prevObject = this, b.context = this.context, b;
-        },
-        each: function (a, b) {
-            return n.each(this, a, b);
-        },
-        map: function (a) {
-            return this.pushStack(n.map(this, function (b, c) {
-                return a.call(b, c, b);
-            }));
-        },
-        slice: function () {
-            return this.pushStack(d.apply(this, arguments));
-        },
-        first: function () {
-            return this.eq(0);
-        },
-        last: function () {
-            return this.eq(-1);
-        },
-        eq: function (a) {
-            var b = this.length, c = +a + (0 > a ? b : 0);
-            return this.pushStack(c >= 0 && b > c ? [this[c]] : []);
-        },
-        end: function () {
-            return this.prevObject || this.constructor(null);
-        },
-        push: f,
-        sort: c.sort,
-        splice: c.splice
-    }, n.extend = n.fn.extend = function () {
-        var a, b, c, d, e, f, g = arguments[0] || {}, h = 1, i = arguments.length, j = !1;
-        for ('boolean' == typeof g && (j = g, g = arguments[h] || {}, h++), 'object' == typeof g || n.isFunction(g) || (g = {}), h === i && (g = this, h--); i > h; h++)
-            if (null != (a = arguments[h]))
-                for (b in a)
-                    c = g[b], d = a[b], g !== d && (j && d && (n.isPlainObject(d) || (e = n.isArray(d))) ? (e ? (e = !1, f = c && n.isArray(c) ? c : []) : f = c && n.isPlainObject(c) ? c : {}, g[b] = n.extend(j, f, d)) : void 0 !== d && (g[b] = d));
-        return g;
-    }, n.extend({
-        expando: 'jQuery' + (m + Math.random()).replace(/\D/g, ''),
-        isReady: !0,
-        error: function (a) {
-            throw new Error(a);
-        },
-        noop: function () {
-        },
-        isFunction: function (a) {
-            return 'function' === n.type(a);
-        },
-        isArray: Array.isArray,
-        isWindow: function (a) {
-            return null != a && a === a.window;
-        },
-        isNumeric: function (a) {
-            return !n.isArray(a) && a - parseFloat(a) + 1 >= 0;
-        },
-        isPlainObject: function (a) {
-            return 'object' !== n.type(a) || a.nodeType || n.isWindow(a) ? !1 : a.constructor && !j.call(a.constructor.prototype, 'isPrototypeOf') ? !1 : !0;
-        },
-        isEmptyObject: function (a) {
-            var b;
-            for (b in a)
-                return !1;
-            return !0;
-        },
-        type: function (a) {
-            return null == a ? a + '' : 'object' == typeof a || 'function' == typeof a ? h[i.call(a)] || 'object' : typeof a;
-        },
-        globalEval: function (a) {
-            var b, c = eval;
-            a = n.trim(a), a && (1 === a.indexOf('use strict') ? (b = l.createElement('script'), b.text = a, l.head.appendChild(b).parentNode.removeChild(b)) : c(a));
-        },
-        camelCase: function (a) {
-            return a.replace(p, 'ms-').replace(q, r);
-        },
-        nodeName: function (a, b) {
-            return a.nodeName && a.nodeName.toLowerCase() === b.toLowerCase();
-        },
-        each: function (a, b, c) {
-            var d, e = 0, f = a.length, g = s(a);
-            if (c) {
-                if (g) {
-                    for (; f > e; e++)
-                        if (d = b.apply(a[e], c), d === !1)
-                            break;
-                } else
-                    for (e in a)
-                        if (d = b.apply(a[e], c), d === !1)
-                            break;
-            } else if (g) {
-                for (; f > e; e++)
-                    if (d = b.call(a[e], e, a[e]), d === !1)
-                        break;
-            } else
-                for (e in a)
-                    if (d = b.call(a[e], e, a[e]), d === !1)
-                        break;
-            return a;
-        },
-        trim: function (a) {
-            return null == a ? '' : (a + '').replace(o, '');
-        },
-        makeArray: function (a, b) {
-            var c = b || [];
-            return null != a && (s(Object(a)) ? n.merge(c, 'string' == typeof a ? [a] : a) : f.call(c, a)), c;
-        },
-        inArray: function (a, b, c) {
-            return null == b ? -1 : g.call(b, a, c);
-        },
-        merge: function (a, b) {
-            for (var c = +b.length, d = 0, e = a.length; c > d; d++)
-                a[e++] = b[d];
-            return a.length = e, a;
-        },
-        grep: function (a, b, c) {
-            for (var d, e = [], f = 0, g = a.length, h = !c; g > f; f++)
-                d = !b(a[f], f), d !== h && e.push(a[f]);
-            return e;
-        },
-        map: function (a, b, c) {
-            var d, f = 0, g = a.length, h = s(a), i = [];
-            if (h)
-                for (; g > f; f++)
-                    d = b(a[f], f, c), null != d && i.push(d);
-            else
-                for (f in a)
-                    d = b(a[f], f, c), null != d && i.push(d);
-            return e.apply([], i);
-        },
-        guid: 1,
-        proxy: function (a, b) {
-            var c, e, f;
-            return 'string' == typeof b && (c = a[b], b = a, a = c), n.isFunction(a) ? (e = d.call(arguments, 2), f = function () {
-                return a.apply(b || this, e.concat(d.call(arguments)));
-            }, f.guid = a.guid = a.guid || n.guid++, f) : void 0;
-        },
-        now: Date.now,
-        support: k
-    }), n.each('Boolean Number String Function Array Date RegExp Object Error'.split(' '), function (a, b) {
-        h['[object ' + b + ']'] = b.toLowerCase();
-    });
-    function s(a) {
-        var b = 'length' in a && a.length, c = n.type(a);
-        return 'function' === c || n.isWindow(a) ? !1 : 1 === a.nodeType && b ? !0 : 'array' === c || 0 === b || 'number' == typeof b && b > 0 && b - 1 in a;
+'use strict';
+
+require.config({
+    baseUrl: './js',
+    paths: {
+        'jquery': 'lib/jQuery',
+        'scroll': 'lib/iscroll',
+        'md5': "lib/spark-md5.min",
+        'modal': 'lib/jquery.simplemodal',
+        'utility': 'entry/utility/utility',
+        'prompt': 'entry/function/prompt', //提示模块
+        'encryption': "entry/function/encryption",
+        'header': 'entry/header'
     }
-    var t = function (a) {
-        var b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u = 'sizzle' + 1 * new Date(), v = a.document, w = 0, x = 0, y = ha(), z = ha(), A = ha(), B = function (a, b) {
-                return a === b && (l = !0), 0;
-            }, C = 1 << 31, D = {}.hasOwnProperty, E = [], F = E.pop, G = E.push, H = E.push, I = E.slice, J = function (a, b) {
-                for (var c = 0, d = a.length; d > c; c++)
-                    if (a[c] === b)
-                        return c;
-                return -1;
-            }, K = 'checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped', L = '[\\x20\\t\\r\\n\\f]', M = '(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+', N = M.replace('w', 'w#'), O = '\\[' + L + '*(' + M + ')(?:' + L + '*([*^$|!~]?=)' + L + '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' + N + '))|)' + L + '*\\]', P = ':(' + M + ')(?:\\(((\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|((?:\\\\.|[^\\\\()[\\]]|' + O + ')*)|.*)\\)|)', Q = new RegExp(L + '+', 'g'), R = new RegExp('^' + L + '+|((?:^|[^\\\\])(?:\\\\.)*)' + L + '+$', 'g'), S = new RegExp('^' + L + '*,' + L + '*'), T = new RegExp('^' + L + '*([>+~]|' + L + ')' + L + '*'), U = new RegExp('=' + L + '*([^\\]\'"]*?)' + L + '*\\]', 'g'), V = new RegExp(P), W = new RegExp('^' + N + '$'), X = {
-                ID: new RegExp('^#(' + M + ')'),
-                CLASS: new RegExp('^\\.(' + M + ')'),
-                TAG: new RegExp('^(' + M.replace('w', 'w*') + ')'),
-                ATTR: new RegExp('^' + O),
-                PSEUDO: new RegExp('^' + P),
-                CHILD: new RegExp('^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(' + L + '*(even|odd|(([+-]|)(\\d*)n|)' + L + '*(?:([+-]|)' + L + '*(\\d+)|))' + L + '*\\)|)', 'i'),
-                bool: new RegExp('^(?:' + K + ')$', 'i'),
-                needsContext: new RegExp('^' + L + '*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(' + L + '*((?:-\\d)?\\d*)' + L + '*\\)|)(?=[^-]|$)', 'i')
-            }, Y = /^(?:input|select|textarea|button)$/i, Z = /^h\d$/i, $ = /^[^{]+\{\s*\[native \w/, _ = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/, aa = /[+~]/, ba = /'|\\/g, ca = new RegExp('\\\\([\\da-f]{1,6}' + L + '?|(' + L + ')|.)', 'ig'), da = function (a, b, c) {
-                var d = '0x' + b - 65536;
-                return d !== d || c ? b : 0 > d ? String.fromCharCode(d + 65536) : String.fromCharCode(d >> 10 | 55296, 1023 & d | 56320);
-            }, ea = function () {
-                m();
-            };
-        try {
-            H.apply(E = I.call(v.childNodes), v.childNodes), E[v.childNodes.length].nodeType;
-        } catch (fa) {
-            H = {
-                apply: E.length ? function (a, b) {
-                    G.apply(a, I.call(b));
-                } : function (a, b) {
-                    var c = a.length, d = 0;
-                    while (a[c++] = b[d++]);
-                    a.length = c - 1;
-                }
-            };
+});
+"use strict";
+require(['jquery', 'utility', 'scroll', 'prompt', 'encryption', 'header'], function ($, util, scroll, prompt, Encryption) {
+    //初始化提示信息
+    var prompt = new prompt.Prompt({
+        prompt: $('.prompt')
+    });
+    //发送的url地址
+    var Pathurl = {
+        checkout: Encryption.Encryption('../index.php/api/createOrder'), //发送结算信息给后台
+        back: '',
+        print: Encryption.Encryption('../index.php/api/printSetting'),
+        delete: Encryption.Encryption('../index.php/api/deleteCartItem') //删除购物车
+    };
+    var Iscroll = bindScroll($('.container'));
+    //!!!!! FileMarks已经在网页脚本中定义，可以直接获取
+    /*
+     * FileMarks里面包含的字段有
+     * name: 文件名
+     * mark: 文件唯一性标识
+     * type: 文件类型
+     */
+
+    $('.pages').on('select blur', function () {
+        // var $tr = $(this).parents("tr"), //找到点击的元素所在的行
+        //     $single =(function(){ return Number($tr.find('.single').html())*Number($tr.find('.pages-amount').html())})(), //获取单价
+        //     $gross = $tr.find('.gross-price'), //获取总价
+        var reg = /^\d+$/,
+            pages = $(this).val().trim();
+        if (!reg.test(pages)) {
+            prompt.changeInfo("输入的份数必须为整数且大于0");
+            $(this).val(1);
+        } else if (Number(pages) === 0) {
+            prompt.changeInfo('小朋友不可以是0哦~~');
+            $(this).val(1);
         }
-        function ga(a, b, d, e) {
-            var f, h, j, k, l, o, r, s, w, x;
-            if ((b ? b.ownerDocument || b : v) !== n && m(b), b = b || n, d = d || [], k = b.nodeType, 'string' != typeof a || !a || 1 !== k && 9 !== k && 11 !== k)
-                return d;
-            if (!e && p) {
-                if (11 !== k && (f = _.exec(a)))
-                    if (j = f[1]) {
-                        if (9 === k) {
-                            if (h = b.getElementById(j), !h || !h.parentNode)
-                                return d;
-                            if (h.id === j)
-                                return d.push(h), d;
-                        } else if (b.ownerDocument && (h = b.ownerDocument.getElementById(j)) && t(b, h) && h.id === j)
-                            return d.push(h), d;
+    });
+    var Delete_btn = {
+        $delete_btns: $('.delete-btns'),
+        $tbody: $('tbody'),
+        deleteItem: function deleteItem($target) {
+            var li = $target.parents('tr'),
+                mark = $target.attr('data-mark'),
+                _this = this;
+            $.ajax({
+                url: Pathurl.remove,
+                type: 'POST',
+                data: {
+                    fileMD5: mark
+                }
+            }).then(function (data) {
+                if (data.success) {
+                    prompt.changeInfo('删除成功!');
+                    li.detach();
+                } else {
+                    prompt.changeInfo('删除失败!');
+                }
+            });
+        },
+        removeRow: function removeRow($target) {
+            var decision = confirm("确认删除吗？");
+            if (decision) {
+                var mark = $target.attr('data-mark'),
+                    signal = -1;
+                $.ajax({
+                    url: Pathurl.delete, //删除goods
+                    async: true,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        fileMD5: mark
+                    })
+                }).done(function () {
+                    $target.parents('tr').detach();
+                    var orders = $('td[role="order"]');
+                    syncInfo.fillGross();
+                    orders.each(function (i, val) {
+                        orders.eq(i).text(i + 1);
+                        console.log(val.innerHTML);
+                    });
+                    setTimeout(function () {
+                        Iscroll.forEach(function (val) {
+                            val.refresh();
+                        });
+                    }, 0);
+                }).fail(function () {
+                    prompt.changeInfo("删除失败");
+                });
+            }
+        },
+        init: function init() {
+            var _this = this;
+            this.$tbody.on('click', function (e) {
+                var $target = $(e.target);
+                if ($target.hasClass('delete-btns')) {
+                    _this.removeRow($target);
+                }
+            });
+        }
+    };
+    Delete_btn.init();
+    var Operator = {
+        $plus: $('.plus'),
+        $minus: $('.minus'),
+        getInput: function getInput($target) {
+            return $target.siblings('input');
+        },
+        addText: function addText($target) {
+            var num = this.getInput($target);
+            num.val(Number(num.val()) + 1);
+        },
+        decrease: function decrease($target) {
+            var num = this.getInput($target);
+            num.val(Number(num.val()) - 1);
+        },
+        getResult: function getResult($target) {
+            var tr = $target.parents('tr'),
+                pages = Number(tr.find('.pages').val()).toFixed(0),
+                single_price = Number(tr.find('.single').text()).toFixed(1),
+                gross = tr.find('.gross-price');
+            gross.text(Number(single_price * pages).toFixed(1));
+        },
+
+        init: function init() {
+            var _this = this;
+            this.$plus.on('click', function () {
+                _this.addText($(this));
+                Operator.getResult($(this));
+            });
+            this.$minus.on('click', function () {
+                _this.decrease($(this));
+                $('.pages').trigger('select');
+                Operator.getResult($(this));
+            });
+        }
+    };
+    Operator.init();
+    //!计算总价
+    //结算
+
+    $('input[name="method"]').on('change', function (event) {
+
+        var $pick = $('.pick'),
+            $deliver = $('.deliver'),
+            method = $(this).val();
+        if (method === "到店自取") {
+            $pick.show().siblings().hide();
+        } else if (method === "送货上门") {
+            $deliver.show().siblings().hide();
+        }
+    });
+    var PayBill = {
+        checkout: $('.clearing'), //结算按钮
+        init: function init() {
+            var _this = this;
+            this.checkout.on('click', function () {
+                var _this2 = this;
+
+                //异步发送订单，跳转到个人中心页面
+                var method = $('input[name="method"]:checked').val(),
+                    totle = $('.total-price').html(),
+                    info = {};
+                if (method == null || method == '') {
+                    prompt.changeInfo("请选择收货方式!");
+                } else {
+                    if (method === "到店自取") {
+                        var store_name = $('.print-shop').val(); //获取打印店名称
+                        info = {
+                            'shop': store_name, //收货方式
+                            'address': '' //打印店
+                        };
                     } else {
-                        if (f[2])
-                            return H.apply(d, b.getElementsByTagName(a)), d;
-                        if ((j = f[3]) && c.getElementsByClassName)
-                            return H.apply(d, b.getElementsByClassName(j)), d;
-                    }
-                if (c.qsa && (!q || !q.test(a))) {
-                    if (s = r = u, w = b, x = 1 !== k && a, 1 === k && 'object' !== b.nodeName.toLowerCase()) {
-                        o = g(a), (r = b.getAttribute('id')) ? s = r.replace(ba, '\\$&') : b.setAttribute('id', s), s = '[id=\'' + s + '\'] ', l = o.length;
-                        while (l--)
-                            o[l] = s + ra(o[l]);
-                        w = aa.test(a) && pa(b.parentNode) || b, x = o.join(',');
-                    }
-                    if (x)
-                        try {
-                            return H.apply(d, w.querySelectorAll(x)), d;
-                        } catch (y) {
-                        } finally {
-                            r || b.removeAttribute('id');
+                            var address = $('.address').val();
+                            info = {
+                                'shop': '', //收货方式
+                                'address': address //打印店
+                            };
                         }
+                    $(this).addClass('sending').prop('disabled', true); //禁止多次点击结算按钮
+                    $.ajax({
+                        url: Pathurl.checkout,
+                        dataType: 'JSON',
+                        contentType: "application/json",
+                        type: 'POST',
+                        data: JSON.stringify(info)
+                    }).then(function (data) {
+                        if (data.success) {
+                            window.location.href = '../user/orders';
+                        } else {
+                            prompt.changeInfo(data.msg);
+                            $(_this2).removeClass('sending').prop('disabled', false);
+                        }
+                    });
                 }
+            });
+        }
+
+    };
+    PayBill.init();
+    // !结算
+    //继续上传和文库添加，返回前一页
+    $('.upload,.add').on('click', function () {
+        window.location.href = './upload'; //返回继续上传页面     
+    });
+
+    var syncInfo = {
+        table: $('#table'),
+        totlePrice: $('.total-price'),
+        flag: 0,
+        init: function init() {
+            this.table.on('click', function (e) {
+                var $target = $(e.target),
+                    role = $target.attr('data-role'),
+                    data = new Object(),
+                    $tr = $target.parents('tr'),
+                    $single = $tr.find();
+
+                switch (role) {
+                    case "page":
+                        data = {
+                            option: "TwoSides",
+                            option_value: syncInfo.getValue($target),
+                            fileMD5: syncInfo.Hash($target)
+                        }; //获得页码和对应的hash值
+                        break;
+                    case "direction":
+                        data = {
+                            option: "direction",
+                            option_value: syncInfo.getValue($target),
+                            fileMD5: syncInfo.Hash($target)
+                        }; //获得打印方向和对应的hash值
+                        break;
+                    case "ppt-mount":
+                        data = {
+                            option: "pptPerPage",
+                            option_value: $target.val(),
+                            fileMD5: syncInfo.Hash($target)
+                        }; //获得ppt的打印数量
+                        break;
+                    case "size":
+                        if (syncInfo.flag !== 0) {
+                            data = {
+                                option: "paperSize",
+                                option_value: $target.val(),
+                                fileMD5: syncInfo.Hash($target)
+                            }; //获得打印纸张的大小
+                            syncInfo.flag = 0;
+                        } else {
+                            syncInfo.flag++;
+                        }
+                        break;
+
+                    case "copies-btn":
+                        data = {
+                            option: "amount",
+                            option_value: $target.parents('tr').find('.pages').val(),
+                            fileMD5: syncInfo.Hash($target)
+                        };
+                        break;
+                }
+                if (Object.keys(data).length !== 0) {
+                    data = JSON.stringify(data);
+                    $.ajax({
+                        url: Pathurl.print,
+                        async: true,
+                        dataType: 'JSON',
+                        type: 'post',
+                        contentType: 'application/json',
+                        data: data
+                    }).then(function (data) {
+                        syncInfo.fillInfo($target, data);
+                    }, function () {
+                        prompt.changeInfo('信息有误~');
+                    });
+                }
+            });
+        },
+        bindCopies: function bindCopies() {},
+        Hash: function Hash($target) {
+            return $target.parents('tr').find('.delete-btns').attr('data-mark');
+        },
+        getValue: function getValue($target) {
+            return $target.attr('value');
+        },
+        getName: function getName($target) {
+            return $target.parents("tr").find('.file-name').html();
+        },
+        getTr: function getTr($target) {
+            return $target.parents('tr');
+        },
+        fillText: function fillText($target, data) {
+            $target.text(data);
+        },
+        fillInfo: function fillInfo($target, data) {
+            var $tr = this.getTr($target),
+                single = $tr.find('.single'),
+                single_price = single.text();
+            gross = $tr.find('.gross-price');
+            if (single_price != data.single) {
+                this.fillText(single, data.single);
+                this.fillText(gross, data.gross);
             }
-            return i(a.replace(R, '$1'), b, d, e);
+            this.fillGross(); //计算总价;
+        },
+        fillGross: function fillGross() {
+            var smallGross = this.table.find('.gross-price'),
+                sum = 0;
+            smallGross.each(function (i) {
+                sum += Number(smallGross.eq(i).text());
+            });
+            console.log(sum);
+            this.totlePrice.text(sum.toFixed(1));
         }
-        function ha() {
-            var a = [];
-            function b(c, e) {
-                return a.push(c + ' ') > d.cacheLength && delete b[a.shift()], b[c + ' '] = e;
-            }
-            return b;
-        }
-        function ia(a) {
-            return a[u] = !0, a;
-        }
-        function ja(a) {
-            var b = n.createElement('div');
-            try {
-                return !!a(b);
-            } catch (c) {
-                return !1;
-            } finally {
-                b.parentNode && b.parentNode.removeChild(b), b = null;
-            }
-        }
-        function ka(a, b) {
-            var c = a.split('|'), e = a.length;
-            while (e--)
-                d.attrHandle[c[e]] = b;
+    };
+    syncInfo.init();
+});[c[e]] = b;
         }
         function la(a, b) {
             var c = b && a, d = c && 1 === a.nodeType && 1 === b.nodeType && (~b.sourceIndex || C) - (~a.sourceIndex || C);
@@ -5242,13 +5307,13 @@ define('header', [
     'encryption'
 ], function ($, Encryption) {
     var Pathurl = {
-        login: Encryption.Encryption('/99dayin/index.php/api/login'),
-        sigin: Encryption.Encryption('/99dayin/index.php/api/signup'),
+        login: Encryption.Encryption('/index.php/api/login'),
+        sigin: Encryption.Encryption('/index.php/api/signup'),
         Linklogin: '',
-        username: Encryption.Encryption('/99dayin/index.php/api/verifySmsCode'),
-        CF_url: Encryption.Encryption('/99dayin/index.php/api/sendSmsCode'),
+        username: Encryption.Encryption('/index.php/api/verifySmsCode'),
+        CF_url: Encryption.Encryption('/index.php/api/sendSmsCode'),
         upload: '',
-        logout: Encryption.Encryption('/99dayin/index.php/api/logout')
+        logout: Encryption.Encryption('/index.php/api/logout')
     };
     var login = {
         $username: $('.login-account'),

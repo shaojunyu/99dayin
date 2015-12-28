@@ -249,7 +249,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
     }
     Order.init();
     //验证用户名的正确性
-    var username_reg = [/^[\u4e00-\u9fa5A-Za-z0-9-_]*$/, /^[\u4e00-\u9fa5A-Za-z0-9-_]{4,12}$/],
+    var username_reg = [/^[\u4e00-\u9fa5A-Za-z0-9-_]*$/, /^[\u4e00-\u9fa5A-Za-z0-9-_]{2,12}$/],
         username_msg = ['姓名只能输入中英文，数字，下划线和减号!', '用户名输入长度只能在4~12位!'],
         //验证密码
         pwd_reg = [/^[a-zA-Z]\w*$/, /^[a-zA-Z]\w{5,15}$/],

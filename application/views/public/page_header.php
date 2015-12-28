@@ -1,6 +1,6 @@
     <div class="header">
         <div class="setWidth">
-            <a class="logo" href="#">
+            <a class="logo" href="www.99dayin.com">
                 <img class="logo-print" src="./img/logo.png" alt="logo" />
                 <span>九九打印</span>
             </a>

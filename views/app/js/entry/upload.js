@@ -176,6 +176,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             $scroll = $('.scroll-frame');
         $scroll.show();
         if (_id === "show-shopping") {
+            prompt.changeInfo("正在跳转~");
             moveBlock($scroll, 0);
         } else if (_id === "show-store") {
             moveBlock($scroll, -141);
