@@ -57,20 +57,20 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
              */
             else if ($target.hasClass('store-login')) {
                 toggleActive($target, 'active');
-                
+
             } else if (_parent.hasClass('store-login')) {
                 toggleActive(_parent, 'active');
-                
+
             }
             /*
              * 修改登录样式,切换到用户登录
              */
             else if ($target.hasClass('user-login')) {
                 toggleActive($target, 'active');
-                
+
             } else if (_parent.hasClass('user-login')) {
                 toggleActive(_parent, 'active');
-                
+
             }
         })
         /*
@@ -137,14 +137,14 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
             var _this = this;
             $('body').on('click', function(e) {
                 var $target = $(e.target);
-                if ($target.attr('id')=='confirm-btn') {
+                if ($target.attr('id') == 'confirm-btn') {
                     var username = _this.getText(_this.$username),
                         ps = _this.getText(_this.$ps),
                         iden = _this.getIden();
                     $.ajax({
                         url: Pathurl.login,
-                        type:"POST",
-                        contentType:"application/json",
+                        type: "POST",
+                        contentType: "application/json",
                         dataType: 'json',
                         data: JSON.stringify({
                             'username': username,
@@ -160,17 +160,17 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                             }
                         }
                     });
-                }else if($target.hasClass('.QQ-login')){
-                     sendAjax({
-                    url: Pathurl.Linklogin,
-                    data: {
-                        'login_method': 'QQ'
-                    },
-                    success: _this.linkSuccess
-                 })
+                } else if ($target.hasClass('.QQ-login')) {
+                    sendAjax({
+                        url: Pathurl.Linklogin,
+                        data: {
+                            'login_method': 'QQ'
+                        },
+                        success: _this.linkSuccess
+                    })
                 }
             })
-          
+
             this.title.on('click', function(e) {
                 var $target = $(e.target);
                 if ($target.hasClass('name')) {
@@ -215,154 +215,167 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
         college_reg = [/^[\u4e00-\u9fa5]{0,}$/],
         college_msg = ['输入不能包含非法字符!'];
     var Enroll = {
-        $username: $('.username'), //用户名
-        $pwd: $('.ps'), //密码
-        $CF_pwd: $('.confir-ps'), //再次输入密码
-        $phone: $('.phone'), //手机号
-        $security_code: $('.secu-code'), //验证码
-        $college: $('.college'), //学校
-        $enroll_btn: $('.enroll'), //确认注册按钮
-        $confir_btn: $('.comfir-btn'), //发送验证码button
-        CF_code: '', //验证码
-   
-        //绑定事件，验证输入框的正确性
-        addDetect: function() {
-            var _this = this;
-            this.$username.enroll({
-                reg: username_reg,
-                msg: username_msg,
-            });
+            $username: $('.username'), //用户名
+            $pwd: $('.ps'), //密码
+            $CF_pwd: $('.confir-ps'), //再次输入密码
+            $phone: $('.phone'), //手机号
+            $security_code: $('.secu-code'), //验证码
+            $college: $('.college'), //学校
+            $enroll_btn: $('.enroll'), //确认注册按钮
+            $confir_btn: $('.comfir-btn'), //发送验证码button
+            CF_code: '', //验证码
 
-            this.$pwd.enroll({
-                reg: pwd_reg,
-                msg: pwd_msg
-            });
-            this.$phone.enroll({
-                reg: phone_reg,
-                msg: phone_msg
-            });
-            // this.$college.enroll({
-            //     reg: college_reg,
-            //     msg: college_msg
-            // });
-            this.$CF_pwd.inputFocus(). //inputFocus用来改变当聚焦在input框上的样式
-            on('blur', function() { //触发blur事件，用来检验两次密码输入是否一致
-                var ps1 = _this.$pwd.val(),
-                    ps2 = $(this).val();
-                if (ps1 !== ps2) {
-                    prompt.changeInfo('两次密码输入不一致!');
-                    $(this).addClass('error');
-                    $(this).attr('data-iden', '0');
-                } else {
-                    $(this).removeClass('error');
-                    $(this).attr('data-iden', '1');
-                }
-            });
-            //发送验证码...
-            $('.comfir-btn').on('click', function() {
-                var $this = $(this),
-                    phone = _this.$phone.val();
-                sendAjax({
-                    url: Pathurl.CF_url,
-                    data: {
-                        "phone": phone
-                    },
-                    beforeSend: function() {
-                        $this.addClass('sending').attr('disabled', 'disabled'); //添加发送状态
-                    },
-                    success: function(data) {
-                        //检查验证码的输入的正确性
-                        if (data.success) {
-
-                        } else {
-                            $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
-                            prompt.changeInfo(data.msg);
-                        }
-                    }
-                })
-            })
-        },
-        send: function() {
-            var _this = this;
-            this.$enroll_btn.on('click', function() {
-                var sign = [],
-                    username = _this.$username.val(),
-                    pwd = _this.$pwd.val(),
-                    phone = _this.$phone.val(),
-                    college = _this.$college.val(),
-                    code = _this.$security_code.val();
-                if (code == '' || code === null) {
-                    prompt.changeInfo('验证码输入不能为空!');
-                    return false;
-                }
-                _this.$enroll_btn.parents('.register').find('.username,.ps,.confir-ps,.phone,.college,.enroll').each(function() {
-                    sign.push($(this).attr('data-iden')); //获取标识                    
+            //绑定事件，验证输入框的正确性
+            addDetect: function() {
+                var _this = this;
+                this.$username.enroll({
+                    reg: username_reg,
+                    msg: username_msg,
                 });
-                for (var i = 0; i < sign.length; i++) {
-                    if (sign[i] == 0) {
-                        prompt.changeInfo('信息未填写完整!');
+
+                this.$pwd.enroll({
+                    reg: pwd_reg,
+                    msg: pwd_msg
+                });
+                this.$phone.enroll({
+                    reg: phone_reg,
+                    msg: phone_msg
+                });
+                // this.$college.enroll({
+                //     reg: college_reg,
+                //     msg: college_msg
+                // });
+                this.$CF_pwd.inputFocus(). //inputFocus用来改变当聚焦在input框上的样式
+                on('blur', function() { //触发blur事件，用来检验两次密码输入是否一致
+                    var ps1 = _this.$pwd.val(),
+                        ps2 = $(this).val();
+                    if (ps1 !== ps2) {
+                        prompt.changeInfo('两次密码输入不一致!');
+                        $(this).addClass('error');
+                        $(this).attr('data-iden', '0');
+                    } else {
+                        $(this).removeClass('error');
+                        $(this).attr('data-iden', '1');
+                    }
+                });
+                //发送验证码...
+                $('.comfir-btn').on('click', function() {
+                    var $this = $(this),
+                        phone = _this.$phone.val();
+                    if (phone == "" || phone == null) {
+                        prompt.changeInfo("请先输入手机号");
+                        return;
+                    } else if (!phone_reg[0].test(phone)) {
+                        prompt.changeInfo("手机号输入不正确!");
+                        return;
+                    }
+                    sendAjax({
+                        url: Pathurl.CF_url,
+                        data: {
+                            "phone": phone
+                        },
+                        beforeSend: function() {
+                            $this.addClass('sending').attr('disabled', 'disabled'); //添加发送状态
+                        },
+                        success: function(data) {
+                            //检查验证码的输入的正确性
+                            if (data.success) {
+                                prompt.changeInfo(data.msg);
+                            } else {
+                                $this.removeClass('sending').removeAttr('disabled', 'disabled'); //删除发送状态
+                            }
+                        }
+                    })
+                })
+            },
+            send: function() {
+                var _this = this;
+                this.$enroll_btn.on('click', function() {
+                    var sign = [],
+                        username = _this.$username.val(),
+                        pwd = _this.$pwd.val(),
+                        phone = _this.$phone.val(),
+                        college = _this.$college.val(),
+                        code = _this.$security_code.val();
+                    if (code == '' || code === null) {
+                        prompt.changeInfo('验证码输入不能为空!');
                         return false;
                     }
-                };
-                //发送数据
-                $.ajax({
-                        url: Pathurl.username,
-                        type: 'POST',
-                        contentType:"application/json",
-                        dataType: "json",
-                        data: JSON.stringify({
-                            phone: phone, //手机号
-                            smsCode: code // 验证码
-                        }),
-                        beforeSend:function(){
-                            _this.$enroll_btn.addClass("").prop("disabled",true);
+                    _this.$enroll_btn.parents('.register').find('.username,.ps,.confir-ps,.phone,.college,.enroll').each(function() {
+                        sign.push($(this).attr('data-iden')); //获取标识                    
+                    });
+                    for (var i = 0; i < sign.length; i++) {
+                        if (sign[i] == 0) {
+                            prompt.changeInfo('信息未填写完整!');
+                            return false;
                         }
-                    })
-                    .done(function(data) {
-                        if (data.success) {
-                            $(this).removeClass('error');
-                            $(this).attr('data-iden', 1);
-                            $.ajax({
-                                url: Pathurl.sigin,
-                                type: 'POST',
-                                data: {
-                                    'username': username,
-                                    'password': pwd,
-                                    'phone': phone,
-                                    'college': college
-                                },
-                                success: function(data) {
-                                    if (data.success) {
-                                        window.location.href = './';
-                                    } else {
-                                        prompt.changeInfo('注册失败!');
-                                        _this.$enroll_btn.addClass("").prop("disabled",false);
-                                    }
-                                }
-                            });
-                        }else{
-                            _this.$enroll_btn.addClass("").prop("disabled",false);
-                            prompt.changeInfo("验证码输入错误!");
-                        } 
-                    })
+                    };
+                    //发送数据
+                    $.ajax({
+                            url: Pathurl.sigin,
+                            type: 'POST',
+                            data: {
+                                'username': username,
+                                'password': pwd,
+                                'phone': phone,
+                                'college': college
+                            }
+                        })
+                        .then((data) => {
+                            if (data.success) {
+                                return true;
+                            } else {
+                                prompt.changeInfo(data.msg);
+                                _this.$enroll_btn.addClass("").prop("disabled", false);
+                                return false;
+                            }
+                        })
+                        .then((flag) => {
+                            if (flag) {
+                                $.ajax({
+                                        url: Pathurl.username,
+                                        type: 'POST',
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            phone: phone, //手机号
+                                            smsCode: code // 验证码
+                                        }),
+                                        beforeSend: function() {
+                                            _this.$enroll_btn.addClass("").prop("disabled", true);
+                                        }
+                                    })
+                                    .done(function(data) {
+                                        if (data.success) {
+                                            $(this).removeClass('error');
+                                            $(this).attr('data-iden', 1);
+                                            window.location.href="./";
+                                        } else {
+                                            _this.$enroll_btn.addClass("").prop("disabled", false);
+                                            prompt.changeInfo("验证码输入错误!");
+                                        }
+                                    })
+                            }
+                        })
 
-            })
-        },
-        init: function() {
-            this.addDetect();
-            this.send();
+
+                })
+            },
+            init: function() {
+                this.addDetect();
+                this.send();
+            }
         }
-    }
-    // Enroll.init();
-    //发短信验证
-    // AV.initialize('wL9slmcVqycA5k9J6wUy8U4Q', 'IRQRmm0slTOsGDH9QKd2qnhF');
-    // var TestObject = AV.Object.extend('TestObject');
-    // var testObject = new TestObject();
-    // testObject.save({
-    //   foo: 'bar'
-    // }, {
-    //   success: function(object) {
-    //     alert('LeanCloud works!');
-    //   }
-    // });
+        // Enroll.init();
+        //发短信验证
+        // AV.initialize('wL9slmcVqycA5k9J6wUy8U4Q', 'IRQRmm0slTOsGDH9QKd2qnhF');
+        // var TestObject = AV.Object.extend('TestObject');
+        // var testObject = new TestObject();
+        // testObject.save({
+        //   foo: 'bar'
+        // }, {
+        //   success: function(object) {
+        //     alert('LeanCloud works!');
+        //   }
+        // });
 })

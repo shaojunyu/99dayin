@@ -3093,85 +3093,6 @@
         return a.$ === n && (a.$ = Lb), b && a.jQuery === n && (a.jQuery = Kb), n;
     }, typeof b === U && (a.jQuery = a.$ = n), n;
 });
-'use strict';
-function toggleShow($target) {
-    if ($target.css('display') === 'none') {
-        $target.show();
-    } else {
-        $target.hide();
-    }
-}
-function changeClass($target, classname) {
-    $target.addClass(classname).siblings().removeClass(classname);
-}
-function bindScroll($target) {
-    var arr = new Array();
-    $target.each(function () {
-        var iscroll = new IScroll('#' + $(this).attr('id'), {
-            scrollbars: true,
-            mouseWheel: true,
-            interactiveScrollbars: true,
-            shrinkScrollbars: 'scale',
-            useTransition: true
-        });
-        arr.push(iscroll);
-    });
-    return arr;
-}
-function refreshScroll(arr) {
-    arr.forEach(function (val) {
-        val.refresh();
-    });
-}
-sendAjax.DEFAULT = {
-    type: 'post',
-    complete: function complete() {
-    },
-    beforeSend: function beforeSend() {
-    },
-    data: {}
-};
-function sendAjax(opts) {
-    var opts = $.extend({}, sendAjax.DEFAULT, opts);
-    $.ajax({
-        url: opts.url,
-        type: opts.type,
-        data: opts.data,
-        success: function success(data) {
-            opts.success(data);
-        },
-        complete: function complete() {
-            opts.complete();
-        },
-        beforeSend: function beforeSend() {
-            opts.beforeSend();
-        }
-    });
-}
-function openModal(target, close) {
-    $.modal.close();
-    console.log(close);
-    target.modal({
-        overlayClose: close,
-        onOpen: function onOpen(dialog) {
-            dialog.overlay.fadeIn('fast', function () {
-                dialog.data.hide();
-                dialog.container.fadeIn('fast', function () {
-                    dialog.data.fadeIn('normal');
-                });
-            });
-        },
-        overlayCss: { backgroundColor: '#000' },
-        opacity: 85
-    });
-}
-function moveBlock($target, location) {
-    $target.css('transform', 'translateX(' + location + 'px)');
-}
-function changeShow(first, second) {
-    first.show();
-    second.hide();
-}
 define('utility', [], function () {
     return;
 });
@@ -4705,7 +4626,7 @@ define('prompt', ['jquery'], function ($) {
         }, 1500);
     };
     Prompt.prototype.showInfo = function (info) {
-        this.prompt_ele.text($info);
+        this.prompt_ele.text(info);
         this.showPrompt();
     };
     Prompt.prototype.hideInfo = function (info) {
@@ -5327,7 +5248,7 @@ define('header', [
                         url: Pathurl.logout,
                         success: function success(data) {
                             if (data.success)
-                                window.location.href = '/';
+                                window.location.href = './';
                         }
                     });
                 }
