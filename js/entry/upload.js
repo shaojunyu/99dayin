@@ -10551,8 +10551,7 @@ require([
                 });
             },
             UploadProgress: function UploadProgress(up, file) {
-                console.log(file.percent);
-                prompt.showInfo(file.percent);
+                prompt.showInfo(file.percent + '%');
                 if (file.percent === 100) {
                     upload.flag++;
                 }
@@ -10561,7 +10560,6 @@ require([
                 }
             },
             FileUploaded: function FileUploaded(up, file, info) {
-                console.log('promot is ' + info.status + ' and loading is here');
                 if (info.status == 200) {
                     prompt.loading(100);
                     upload.addFileToken(file);

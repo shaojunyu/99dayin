@@ -238,8 +238,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                  * 文件上传进度条
                  */
                 UploadProgress(up, file) {
-                    console.log(file.percent);
-                    prompt.showInfo(file.percent); //注意一下这里的Progress会提醒两次上传100%
+                    prompt.showInfo(file.percent+"%"); //注意一下这里的Progress会提醒两次上传100%
                     if (file.percent === 100) {
                         upload.flag++;
                     }
@@ -251,7 +250,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                  * 当筛选完毕后上传,新文件,并提示上传成功
                  */
                 FileUploaded(up, file, info) {
-                    console.log(`promot is ${info.status} and loading is here`);
                     if (info.status == 200) {
                         //添加购物车数据
                         prompt.loading(100);
