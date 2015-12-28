@@ -122,6 +122,19 @@ class Api extends CI_Controller{
 		}
 	}
 	
+	//根据验证码重设密码
+	public function resetPassword(){
+		$smsCode = $this->post_data->smsCode;
+		$newPassword = $this->post_data->newPassword;
+		try {
+			$this->bmobUser->resetPasswordBySmsCode($smsCode, $newPassword);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+		
+	}
+	
 	public function updatePassword(){
 		try {
 			$oldPassword = $this->post_data->oldPassword;
