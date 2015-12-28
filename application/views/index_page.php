@@ -71,6 +71,7 @@
         <div>
             <button class="confirm-btn login-btn" id="confirm-btn">确认</button>
         </div>
+
         <div class="login-choice">
             <div class="user-login active">
                 <div>用</div>
@@ -78,6 +79,7 @@
                 <div>登</div>
                 <div>录</div>
             </div>
+
         </div>
     </div>
    <div class="signin-frame" id="signin-frame">

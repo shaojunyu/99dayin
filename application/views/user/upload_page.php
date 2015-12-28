@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div class="pagination" id="pagination">
-					<button id="another-group">正在建设！</button>
+				
 				</div>
 			</section>
 		</article>
