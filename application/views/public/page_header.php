@@ -2,7 +2,7 @@
         <div class="setWidth">
             <a class="logo" href="#">
                 <img class="logo-print" src="./img/logo.png" alt="logo" />
-                <span>99打印</span>
+                <span>九九打印</span>
             </a>
             <div class="titles">
                 <a href="http://www.99dayin.com" class="title-btn homepage-btn" data-content="首页">首页</a>

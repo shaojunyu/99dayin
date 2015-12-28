@@ -54,7 +54,7 @@
                         <div class="link-content"><a href="">官方贴吧</a></div>
                     </div>
                     <div class="column QR">
-                        <img src="./img/QR-code.png">
+                        <img style="width:120px;height:120px;" src="./img/QR-code.png">
                     </div>
                 </div>
             </footer>
