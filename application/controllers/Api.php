@@ -81,8 +81,8 @@ class Api extends CI_Controller{
 		}
 	}
 	public function login() {
-		$username = $this->input->post('username');
-		$password = $this->input->post('ps');
+		$username = $this->post_data->username;
+		$password = $this->post_data->password;
 		try {
 			$info = $this->bmobUser->login($username,$password);
 			$this->session->set_userdata('username',$username);

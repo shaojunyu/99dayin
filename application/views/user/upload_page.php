@@ -34,98 +34,18 @@
 				  <!-- <a id="uploadfiles" href="javascript:;">[Upload files]</a> -->
 		</article>
 		<article class="choose-base" id="choose-base">
-			<header class="base-header" id="base-header">
-				<button class="active" id="official-base">官方文库</button>
-				<!-- <button id="share-base">共享文库</button> -->
-				<input type="search" placeholder="输入关键字查找文件，按回车确定" id="search">
-			</header>
 			<section class="base-content">
 				<div class="article-content" id="article-content">
 					<div class="articles">
-						<div class="article-item" data-id="23123444553">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
-						</div>
-						<div class="article-item" data-id="23123444523">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
-						</div>
-						<div class="article-item" data-id="23123444553">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
-						</div>
-						<div class="article-item" data-id="23123444523">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
-						</div>
-						<div class="article-item" data-id="23123444553">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
-						</div>
-						<div class="article-item" data-id="23123444523">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
-						</div>
-						<div class="article-item" data-id="23123444553">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
-						</div>
-						<div class="article-item" data-id="23123444523">
-							<i class="file-logo logo-word"></i>
-							<p class="file-header">小树和小雨的故事</p>
-							<p>
-								<span class="upload-time">2015/2/19</span>打印次数:<span
-									id="print-num">133333</span>大小:<span id="size">200</span>kb
-							</p>
-							<i class="add-btn" data-mark="official-2" data-id="23123444523"></i>
-						</div>
+
 					</div>
 					<div class="articles">
 						<div></div>
-						<div></div>
+						<div>正在建设中</div>
 					</div>
 				</div>
 				<div class="pagination" id="pagination">
-					<div class="hover-btns">
-						<i class="active" data-order="1"></i> <i data-order="2"></i> <i
-							data-order="3"></i>
-					</div>
-					<button id="another-group">换一组</button>
+					<button id="another-group">正在建设！</button>
 				</div>
 			</section>
 		</article>
