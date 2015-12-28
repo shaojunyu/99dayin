@@ -59,7 +59,8 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
         promptPs: Encryption.Encryption('../index.php/api/updatePassword'), //修改密码的接口
         username: Encryption.Encryption(''), // 验证用户名是否存在
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'), //获取订单详情
-        sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode')
+        sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode'),
+         logout: Encryption.Encryption('/index.php/api/logout')
     }
     var Order = {
         pre: $('.order-content'), //未处理订单
@@ -398,7 +399,17 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                         .then((data) => {
                             if (data.success) {
                                 _this.promptPs.parents('.change-ps').hide();
-                                prompt.showInfo("密码修改成功!");
+                                $.ajax({
+                                   url: Pathurl.logout,
+                                   success: function(data) {
+                                       if (data.success){
+                                            prompt.showInfo("密码修改成功!");
+                                           window.location.href = './';
+                                       }
+                                   }
+                               });
+                                
+
                             } else {
                                 prompt.changeInfo("密码修改失败~");
                             }

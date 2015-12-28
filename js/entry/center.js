@@ -6009,7 +6009,8 @@ require([
         promptPs: Encryption.Encryption('../index.php/api/updatePassword'),
         username: Encryption.Encryption(''),
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'),
-        sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode')
+        sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode'),
+        logout: Encryption.Encryption('/index.php/api/logout')
     };
     var Order = {
         pre: $('.order-content'),
@@ -6311,7 +6312,15 @@ require([
                     }).then(function (data) {
                         if (data.success) {
                             _this.promptPs.parents('.change-ps').hide();
-                            prompt.showInfo('密码修改成功!');
+                            $.ajax({
+                                url: Pathurl.logout,
+                                success: function success(data) {
+                                    if (data.success) {
+                                        prompt.showInfo('密码修改成功!');
+                                        window.location.href = './';
+                                    }
+                                }
+                            });
                         } else {
                             prompt.changeInfo('密码修改失败~');
                         }
