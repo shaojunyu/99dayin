@@ -4308,7 +4308,13 @@ require([
     var login_frame = $('#login-frame'), signin_frame = $('#signin-frame');
     $('body').on('click', function (event) {
         var $target = $(event.target), _parent = $target.parent();
-        if ($target.hasClass('user-login')) {
+        if ($target.hasClass('login-btn')) {
+            detectShow(login_frame, true);
+            Enroll.init();
+        } else if ($target.hasClass('signin-btn')) {
+            detectShow(signin_frame, true);
+            Enroll.init();
+        } else if ($target.hasClass('user-login')) {
             toggleActive($target, 'active');
         } else if ($target.hasClass('store-login')) {
             toggleActive($target, 'active');
@@ -4405,7 +4411,6 @@ require([
                     toggleShow(_this.detail);
                 } else if ($target.hasClass('login')) {
                     detectShow(login_frame, true);
-                    Enroll.init();
                 } else if ($target.hasClass('signin')) {
                     detectShow(signin_frame, false);
                     Enroll.init();
@@ -4433,7 +4438,7 @@ require([
     login.init();
     var username_reg = [
             /^[\u4e00-\u9fa5A-Za-z0-9-_]*$/,
-            /^[\u4e00-\u9fa5A-Za-z0-9-_]{4,12}$/
+            /^[\u4e00-\u9fa5A-Za-z0-9-_]{2,12}$/
         ], username_msg = [
             '用户名只能输入中英文\uFF0C数字\uFF0C下划线和减号!',
             '用户名输入长度只能在4~12位!'

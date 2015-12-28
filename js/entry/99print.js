@@ -46,12 +46,13 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
     $('body').on('click', function (event) {
         var $target = $(event.target),
             _parent = $target.parent();
-        //      ($target.hasClass('login-btn')) {
-        //     detectShow(login_frame, true);
-        // } else if ($target.hasClass('signin-btn')) {
-        //     detectShow(signin_frame, true);
-        // } else if
-        if ($target.hasClass('user-login')) {
+        if ($target.hasClass('login-btn')) {
+            detectShow(login_frame, true);
+            Enroll.init();
+        } else if ($target.hasClass('signin-btn')) {
+            detectShow(signin_frame, true);
+            Enroll.init();
+        } else if ($target.hasClass('user-login')) {
             toggleActive($target, 'active');
         }
         /*
@@ -174,7 +175,6 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     toggleShow(_this.detail);
                 } else if ($target.hasClass('login')) {
                     detectShow(login_frame, true);
-                    Enroll.init();
                 } else if ($target.hasClass('signin')) {
                     detectShow(signin_frame, false);
                     Enroll.init();
@@ -202,7 +202,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
     login.init();
     // prompt.changeInfo("123");
     //验证信息的正则表达式和对应的信息
-    var username_reg = [/^[\u4e00-\u9fa5A-Za-z0-9-_]*$/, /^[\u4e00-\u9fa5A-Za-z0-9-_]{4,12}$/],
+    var username_reg = [/^[\u4e00-\u9fa5A-Za-z0-9-_]*$/, /^[\u4e00-\u9fa5A-Za-z0-9-_]{2,12}$/],
         username_msg = ['用户名只能输入中英文，数字，下划线和减号!', '用户名输入长度只能在4~12位!'],
         pwd_reg = [/^[a-zA-Z]\w*$/, /^[a-zA-Z]\w{5,15}$/],
         pwd_msg = ['密码以字母开头，只能包含字母,数字,下划线!', '密码输入长度只能在6~16位!'],
