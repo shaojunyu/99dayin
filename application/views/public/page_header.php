@@ -6,7 +6,7 @@
             </a>
             <div class="titles">
                 <a href="http://www.99dayin.com" class="title-btn homepage-btn" data-content="首页">首页</a>
-                <a href="javascript:void(0)" class="title-btn introduction" data-content="简介">简介</a>
+                <a href="<?php echo strpos(current_url(),'user/')?'../':'./';?>helper/base.html" class="title-btn introduction" data-content="简介">简介</a>
                 <!-- <div class="title-btn art-base" data-content="本校文库">本校文库</div> -->
                 <div class="title-btn">
                 <?php if ($this->session->userdata('username')) {?>
