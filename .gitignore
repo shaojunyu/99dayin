@@ -4,3 +4,4 @@ pingpp_webhooks/
 .project
 .settings/
 application/logs/
+.htaccess
