@@ -62,7 +62,7 @@ gulp.task('copy', function() {
     return gulp.src('app/js/entry/**/prompt.js')
         .pipe(gulp.dest('app/js/entry'));
 })
-gulp.task('copyCSS' ,function() {
+gulp.task('copyCSS',['prefix'] ,function() {
     return gulp.src('app/styles/**/*.css')
         .pipe(gulp.dest('../styles'));
 });
@@ -74,9 +74,6 @@ gulp.task('babel', function() {
             presets: ['es2015']
         }))
         .pipe(gulp.dest('../js/entry'));
-
-    // })
-
 
 });
 gulp.task('copyJS', function() {
@@ -219,8 +216,8 @@ gulp.task('index', function() {
                 'encryption': "../js/entry/function/encryption"
             }
         }))
-        .pipe(concat("index.js")) //合并  
-        .pipe(rename("index.js")) //重命名  
+        .pipe(concat("99print.js")) //合并  
+        .pipe(rename("99print.js")) //重命名  
         // .pipe(uglify()) //压缩  
         .pipe(gulp.dest('../js/entry')) //输出保存 
 

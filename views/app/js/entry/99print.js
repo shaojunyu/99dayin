@@ -78,7 +78,6 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
          * 切换active,以及去掉siblings的active
          */
     function toggleActive($target, classname) {
-        console.log(123);
         $target.addClass(classname)
             .siblings().removeClass(classname);
     }
@@ -93,7 +92,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
         Linklogin: '', //以QQ方式登录
         username: Encryption.Encryption('index.php/api/verifySmsCode'), //验证用户名的url
         CF_url: Encryption.Encryption('index.php/api/sendSmsCode'), //验证码发送的url
-        upload: '', //上传文件的地址
+        upload: 'http://www.99dayin.com/user/upload', //上传文件的地址
         logout: Encryption.Encryption('index.php/api/logout')
     }
     var login = {
@@ -142,6 +141,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     var username = _this.getText(_this.$username),
                         ps = _this.getText(_this.$ps),
                         iden = _this.getIden();
+                    prompt.showInfo("正在登录");
                     $.ajax({
                         url: Pathurl.login,
                         type: "POST",
@@ -151,13 +151,16 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                             'username': username,
                             'password': ps
                         }),
+                        beforeSend:function(){
+                            $target.addClass('disabled').prop('disabled',true);
+                        },
                         success: function(data) {
                             if (data.success) {
                                 window.location.href = './';
-                                console.log(1);
-                                // window.open('./');
+                                
                             } else {
                                 prompt.changeInfo(data.msg);
+                                $target.removeClass('disabled').prop('disabled',false);
                             }
                         }
                     });
@@ -241,10 +244,6 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                     reg: phone_reg,
                     msg: phone_msg
                 });
-                // this.$college.enroll({
-                //     reg: college_reg,
-                //     msg: college_msg
-                // });
                 this.$CF_pwd.inputFocus(). //inputFocus用来改变当聚焦在input框上的样式
                 on('blur', function() { //触发blur事件，用来检验两次密码输入是否一致
                     var ps1 = _this.$pwd.val(),

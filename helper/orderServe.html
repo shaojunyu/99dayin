@@ -3,46 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>99打印</title>
-    <style type="text/css">
-    body,
-    html {
-        box-sizing: content-box;
-        width: 100%;
-        font-size: 18px;
-        margin: 0;
-        padding: 0;
-        color: #fff;
-        text-align: center;
-        line-height: 1.5;
-    }
-    
-    body {
-        background-color: #09f;
-    }
-    
-    h1 {
-        text-shadow: 0 2px 2px #000;
-    }
-    
-    article {
-        position: relative;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
-        text-align: left;
-        width: 50%;
-        background-color: #2464EC;
-        padding: 20px;
-    }
-    </style>
+    <title>九九打印</title>
+   <link rel="stylesheet" type="text/css" href="./styles/dist.css">
 </head>
 
 <body>
-    <div class="title"></div>
-    <h1>订单服务</h1>
-    <article>
-        <h2>一、购买指南：</h2>
+<div class="header">
+        <div class="setWidth">
+            <a class="logo" href="#">
+                <img class="logo-print" src="./img/logo.png" alt="logo" />
+                <span>久久打印</span>
+            </a>
+            <a href="http://www.99dayin.com" class="titles">
+                <div class="title-btn homepage-btn" data-content="首页">首页</div>
+                <div class="title-btn introduction" data-content="简介">简介</div>
+                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
+                <div class="title-btn">
+                    <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                </div>
+            </a >
+        </div>
+    </div>
+<div class="back"></div>
+
+<article class="main">
+    <h1 class="title">订单服务</h1>
+    <article class="content">
+         <h2>一、购买指南：</h2>
         <p>
             第一步 用户登录或注册
             <br/> 第二步 在文库中选取所需文件
@@ -58,16 +45,33 @@
         <h2>三、送货政策：</h2>
         <p>
             九九打印贴心为您提供两种取货渠道：
-            <br/>
-            <h3>1.到店自取</h3> 30分钟后，用户可凭订单号到店自行提取。
-            <br/>
-            <h3>2.送货上门</h3> 为了使您的生活更加方便，九九打印推出送货上门政策。以下是我们安排的三个送货时间点，您可以根据自身情况进行选择：
+            </p>
+            <h3>1.到店自取</h3><p>
+             30分钟后，用户可凭订单号到店自行提取。
+            </p>
+            <h3>2.送货上门</h3> 
+            <p>为了使您的生活更加方便，九九打印推出送货上门政策。以下是我们安排的三个送货时间点，您可以根据自身情况进行选择：
             <br/> 时段一：12:30-13:00
             <br/> 时段二：18:00-18:30
             <br/> 时段三：22:00-22:30 (不同季节有所调整)
             <br/>
         </p>
     </article>
+</article>
+<script type="text/javascript">
+    var body = document.querySelector('body'),
+        html = document.querySelector('html'),
+        back = document.querySelector('.back'),
+        main= document.querySelector('.main');
+    function resizeBack(){
+        var htmlHeight = html.clientHeight,
+            mainHeight = main.clientHeight;  //内容高度
+        var height = (htmlHeight>mainHeight)?htmlHeight:mainHeight;
+        back.style.height = height+"px";
+    }
+    resizeBack();
+    window.addEventListener('resize',resizeBack,false);
+</script>
 </body>
 
 </html>

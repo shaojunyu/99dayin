@@ -4339,7 +4339,7 @@ require([
         Linklogin: '',
         username: Encryption.Encryption('index.php/api/verifySmsCode'),
         CF_url: Encryption.Encryption('index.php/api/sendSmsCode'),
-        upload: '',
+        upload: 'http://www.99dayin.com/user/upload',
         logout: Encryption.Encryption('index.php/api/logout')
     };
     var login = {
@@ -4391,7 +4391,6 @@ require([
                         success: function success(data) {
                             if (data.success) {
                                 window.location.href = './';
-                                console.log(1);
                             } else {
                                 prompt.changeInfo(data.msg);
                             }

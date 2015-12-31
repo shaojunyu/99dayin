@@ -3,46 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>99打印</title>
-    <style type="text/css">
-    body,
-    html {
-        box-sizing: content-box;
-        width: 100%;
-        font-size: 18px;
-        margin: 0;
-        padding: 0;
-        color: #fff;
-        text-align: center;
-        line-height: 1.5;
-    }
-    
-    body {
-        background-color: #09f;
-    }
-    
-    h1 {
-        text-shadow: 0 2px 2px #000;
-    }
-    
-    article {
-        position: relative;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
-        text-align: left;
-        width: 50%;
-        background-color: #2464EC;
-        padding: 20px;
-    }
-    </style>
+    <title>九九打印</title>
+   <link rel="stylesheet" type="text/css" href="./styles/dist.css">
 </head>
 
 <body>
-    <div class="title"></div>
-    <h1>关于公司</h1>
-    <article>
-        <h2>一、公司简介：</h2>
+<div class="header">
+        <div class="setWidth">
+            <a class="logo" href="#">
+                <img class="logo-print" src="./img/logo.png" alt="logo" />
+                <span>久久打印</span>
+            </a>
+            <a href="http://www.99dayin.com" class="titles">
+                <div class="title-btn homepage-btn" data-content="首页">首页</div>
+                <div class="title-btn introduction" data-content="简介">简介</div>
+                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
+                <div class="title-btn">
+                    <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                </div>
+            </a >
+        </div>
+    </div>
+<div class="back"></div>
+
+<article class="main" style="left:50%">
+    <h1 class="title">关于公司</h1>
+    <article class="content" >
+         <h2>一、公司简介：</h2>
         <p>
             &emsp;武汉巧然电子商务有限公司成立于2015年6月，由华科2012级本科生创立，是一个充满激情与梦想的青年团队。公司坚持以“客户体验为中心”的理念，坚持“让每一个用户满意”的目标，专注于校园生活服务。目前有旗下品牌“九九打印”、“四年生活”等。
         </p>
@@ -64,6 +51,22 @@
             <br/>
         </p>
     </article>
+</article>
+<script type="text/javascript">
+    var body = document.querySelector('body'),
+        html = document.querySelector('html'),
+        back = document.querySelector('.back'),
+        main= document.querySelector('.main');
+    function resizeBack(){
+        var htmlHeight = html.clientHeight,
+            mainHeight = main.clientHeight;  //内容高度
+        var height = (htmlHeight>mainHeight)?htmlHeight:mainHeight;
+        back.style.height = height+"px";
+    }
+    resizeBack();
+    window.addEventListener('resize',resizeBack,false);
+</script>
 </body>
 
 </html>
+

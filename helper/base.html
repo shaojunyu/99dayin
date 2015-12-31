@@ -1,50 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>99打印</title>
-    <style type="text/css">
-    body,
-    html {
-        box-sizing: content-box;
-        width: 100%;
-        font-size: 18px;
-        margin: 0;
-        padding: 0;
-        color: #fff;
-        text-align: center;
-        line-height: 1.5;
-    }
-    
-    body {
-        background-color: #09f;
-    }
-    
-    h1 {
-        text-shadow: 0 2px 2px #000;
-    }
-    
-    article {
-        position: relative;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
-        text-align: left;
-        width: 50%;
-        background-color: #2464EC;
-        padding: 20px;
-    }
-    </style>
+    <title>九九打印</title>
+   <link rel="stylesheet" type="text/css" href="./styles/dist.css">
 </head>
 
 <body>
-    <div class="title"></div>
-    <h1>关于文库</h1>
-    <article>
+<div class="header">
+        <div class="setWidth">
+            <a class="logo" href="#">
+                <img class="logo-print" src="./img/logo.png" alt="logo" />
+                <span>久久打印</span>
+            </a>
+            <a href="http://www.99dayin.com" class="titles">
+                <div class="title-btn homepage-btn" data-content="首页">首页</div>
+                <div class="title-btn introduction" data-content="简介">简介</div>
+                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
+                <div class="title-btn">
+                    <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                </div>
+            </a >
+        </div>
+    </div>
+<div class="back"></div>
+
+<article class="main" style="left:50%">
+    <h1 class="title">关于文库</h1>
+    <article class="content" >
+        
         <h2>一、文库简介：</h2>
-        <p>
-            <br/>校园文库即是所有与高校相关的复习资料、课件、参考文献等文档聚集在一起的平台，文档内容精确定位于高校，用户可以自主分享上传、检索打印。不管是复习、学习课件还是毕业论文，在这里，您总能快速找到准确且专业的资料。
+        <p>&emsp;校园文库即是所有与高校相关的复习资料、课件、参考文献等文档聚集在一起的平台，文档内容精确定位于高校，用户可以自主分享上传、检索打印。不管是复习、学习课件还是毕业论文，在这里，您总能快速找到准确且专业的资料。
         </p>
         <h2>二、使用说明：</h2>
         <p>【隐私保护】
@@ -63,9 +51,14 @@
             <br/> 【分享协议】
             <br/> 请您在分享前仔细阅读以下条款，如果您对本协议的任何条款表示异议，您可以拒绝在九九打印上分享您的文档；在九九打印上分享文档则意味着您已同意遵守本协议下全部规定，并完全服从于九九打印的统一管理。
             <br/>
-            <h3>第一章 总则</h3> 九九打印校园文库是九九打印为用户提供的信息存储空间，是供用户在线分享文档的开放平台。在此平台上分享文档须遵守本协议，本协议最终解释权归属九九打印。
+            <p>
+             九九打印校园文库是九九打印为用户提供的信息存储空间，是供用户在线分享文档的开放平台。在此平台上分享文档须遵守本协议.</p>
+            <h3>第一章 总则</h3>
+            <p>本协议最终解释权归属九九打印。
             <br/>
-            <h3>第二章 用户须知</h3> 第一条：用户分享文档请遵守以下几点
+            <h3>第二章 用户须知</h3>
+            <p> 第一条：用户分享文档请遵守以下几点
+            
             <br/> 1 、不得分享涉及侵权内容的文档
             <br/> 2 、请勿分享国家法律禁止的内容
             <br/> 3 、请勿分享涉嫌个人隐私的文档
@@ -76,13 +69,13 @@
             <br/> 第二条： 任何用户发现文库文档内容涉嫌侮辱或者诽谤他人、侵害他人合法权益的或违反文库协议的，有权与我们联系进行投诉。
             <br/> 第三条：九九打印护您的个人信息，不接受任何个人或单位的查询。
             <br/>
-            <h3>第三章 权利声明</h3>
+            </p><h3>第三章 权利声明</h3><p>
             <br/>第五条 ：九九打印是一个用户在线分享文档的开放平台。对于用户上传的资料文档九九打印自身不编辑或修改文档内容。同时，用户不能侵犯包括他人的著作权在内的知识产权以及其他权利。一旦由于用户上传的文档发生权利纠纷或侵犯了任何第三方的合法权益，其责任由用户本人承担.
             <br/>第六条：用户可以为介绍、评论、研究等目的，在合理的范围内适当引用他人已经发表的作品，但应当注明作者姓名、作品名称，并不得侵犯著作权人及其他权利人的合法权益。
             <br/>第七条：用户承诺：其所上传的所有文档内容符合中国法律法规和规范性文件的相关规定，不侵犯任何第三方的合法权益。如用户违反前述保证，九九打印有权删除相关文档内容，并可以暂停或终止向该用户提供服务。
             <br/>第八条：如因九九打印网用户上传的内容侵犯了第三方的合法权利，第三方向九九打印提出异议，九九打印有权删除相关的内容。提出异议者和文档上传者之间的相关法律问题得到解决后，以此为依据，向九九打印提出申请，文库可以恢复被删除的内容。
             <br/>第九条：用户从九九打印中获得的信息，未经事先许可，用户不得以盈利为目的自己或提供给第三方进行使用（符合法律规定的“合理使用”条件的除外）。否则，一切法律后果由该用户或第三方自负，与九九打印无关。
-            <h3>第四章 处罚规则</h3>
+            </p><h3>第四章 处罚规则</h3><p>
             <br/>第十条：九九打印郑重提醒用户，若出现下列情况任意一种或几种，将承担包括被关闭全部或者部分权限、被暂停或被删除其帐号的后果，情节严重的，还将承担相应的法律责任。
             <br/>1. 使用不雅或不恰当ID和昵称；
             <br/> 2. 多次涉及侵犯他人著作权、名誉权等合法权利。
@@ -100,13 +93,32 @@
             <br/> 6. 严禁用户以任何方式转让、出售自己的文库账号；
             <br/> 7. 其他九九打印认为不恰当的情况。
             <br/>
-            <h3>第五章 附则</h3>
+            </p><h3>第五章 附则</h3><p>
             <br/>第十二条：所有用户发表的文档、视频、音频而引起的法律纠纷，与九九打印无关。
             <br/>第十三条：九九打印如因系统维护或升级等而需暂停服务时，将事先公告。若因硬件故障或其它不可抗力而导致暂停服务，于暂停服务期间造成的一切不便与损失，九九打印不负任何责任。
             <br/>第十四条：九九打印有权根据中华人民共和国法律、法规及规范性文件的变化以及互联网及自身业务的发展情况，不断修改和完善包括文库协议在内的相关条款。九九打印保留随时修改文库协议的权利。
             <br/> 第十五条：本协议未涉及的问题参见国家有关法律法规，当本协议与国家法律法规冲突时，以国家法律法规为准。
         </p>
     </article>
+</article>
+<script type="text/javascript">
+    var body = document.querySelector('body'),
+        html = document.querySelector('html'),
+        back = document.querySelector('.back'),
+        main= document.querySelector('.main');
+    function resizeBack(){
+        var htmlHeight = html.clientHeight,
+            mainHeight = main.clientHeight;  //内容高度
+        var height = (htmlHeight>mainHeight)?htmlHeight:mainHeight;
+        back.style.height = height+"px";
+    }
+    resizeBack();
+    window.addEventListener('resize',resizeBack,false);
+</script>
 </body>
 
 </html>
+
+
+
+
