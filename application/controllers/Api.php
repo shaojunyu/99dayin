@@ -109,10 +109,10 @@ class Api extends CI_Controller{
 	public function updateUserInfo(){
 		try {
 			$name = $this->post_data->name;
-			$phone = $this->post_data->phone;
+			//$phone = $this->post_data->phone;
 			$email = $this->post_data->email;
 			$this->bmobUser->update($this->session->userdata('userId'), $this->session->userdata('bmobToken'),array(
-					'mobilePhoneNumber'=>$phone,
+					//'mobilePhoneNumber'=>$phone,
 					'name'=>$name,
 					'email'=>$email
 			));
