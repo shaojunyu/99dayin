@@ -9,8 +9,6 @@
 
 <body>
 <div class="prompt"></div>
-
-<div class="prompt"></div>
     <div class="header">
         <div class="setWidth">
             <a class="logo" href="#">

@@ -20,7 +20,7 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
     var Pathurl = {
         CF_url: Encryption.Encryption('index.php/api/sendSmsCode'), //获取验证码地址
         upload: 'http://www.99dayin.com/user/upload', //上传文件的地址
-        confirm: Encryption.Encryption('../index.php/api/resetPassword'), //验证用户名和手机号是否正确
+        confirm: Encryption.Encryption('./index.php/api/resetPassword'), //验证用户名和手机号是否正确
         username: Encryption.Encryption('index.php/api/verifySmsCode'), //验证用户名的url
 
     }
@@ -52,7 +52,8 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
                         $this.addClass('sending').prop('disabled', true); //添加发送状态
                     },
                     success: function(data) {
-                        //检查验证码的输入的正确性
+                        data = JSON.parse(data);
+                        //验证验证码
                         if (data.success) {
                             prompt.changeInfo(data.msg);
                         } else {
@@ -95,8 +96,10 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
                         })
                         .then(function(data) { //返回success,msgs
                             if (data.success) {
-                                prompt.changeInfo(data.msg);
-                                window.location.href="http://www.99dayin.com";
+                                prompt.showInfo("密码修改成功,3s后返回首页");
+                                setTimeout(function(){
+                                    window.location.href="http://www.99dayin.com";    
+                                },3000)
                             } else {
                                 prompt.changeInfo(data.msg);
                                 $(_this).removeClass('disabled').prop('disabled',false);  //删除发送状态

@@ -5534,10 +5534,14 @@ require([
                             'address': ''
                         };
                     } else {
-                        var address = $('.address').val();
+                        var address = $('.address').val(), area = $('.school-area').val(), build = $('.building').val();
                         info = {
                             'shop': '',
-                            'address': address
+                            'address': {
+                                num: address,
+                                area: area,
+                                build: build
+                            }
                         };
                     }
                     $(this).addClass('sending').prop('disabled', true);
@@ -5582,7 +5586,7 @@ require([
                     data = {
                         option: 'direction',
                         option_value: syncInfo.getValue($target),
-                        fileMD5: syncInfo.Hash($target)
+                        infofileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'ppt-mount':
