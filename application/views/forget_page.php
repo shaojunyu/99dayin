@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>九九打印</title>
-    <link rel="stylesheet" type="text/css" href="../styles/fetch.css">
+    <link rel="stylesheet" type="text/css" href="./styles/fetch.css">
 </head>
 
 <body>
