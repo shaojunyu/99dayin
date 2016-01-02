@@ -404,7 +404,7 @@ class Api extends CI_Controller{
 		$address = "";
 		$shop = "";
 		if (isset($this->post_data->address) and isset($this->post_data->shop)) {
-			$address = $this->post_data->address;
+			$address = $this->post_data->address->area.$this->post_data->address->build.'栋'.$this->post_data->address->num;
 			$shop = $this->post_data->shop;
 		}else {
 			$this->echo_msg(false,"参数不全");
