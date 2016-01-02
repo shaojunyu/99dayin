@@ -8,9 +8,11 @@
 class BmobException extends Exception
 {
 	var $error_msg;
+	var $code;
 	public function __construct($message="", $code = 0) {
 		
 		$this->error_msg = $message;
+		$this->code = $code;
 		//codes are only set by a bmob.com error
 		if($code != 0){
 			$message = "bmob.cn error: ".$message;
