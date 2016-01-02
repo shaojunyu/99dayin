@@ -1,13 +1,13 @@
 define(['jquery','encryption'],function($,Encryption){
      
     var Pathurl = {
-        login: Encryption.Encryption('/index.php/api/login'),
-        sigin: Encryption.Encryption('/index.php/api/signup'),
+        login: Encryption.Encryption('../index.php/api/login'),
+        sigin: Encryption.Encryption('../index.php/api/signup'),
         Linklogin: '', //以QQ方式登录
-        username: Encryption.Encryption('/index.php/api/verifySmsCode'), //验证用户名的url
-        CF_url: Encryption.Encryption('/index.php/api/sendSmsCode'), //验证码发送的url
+        username: Encryption.Encryption('../index.php/api/verifySmsCode'), //验证用户名的url
+        CF_url: Encryption.Encryption('../index.php/api/sendSmsCode'), //验证码发送的url
         upload: '', //上传文件的地址
-        logout: Encryption.Encryption('/index.php/api/logout')
+        logout: Encryption.Encryption('../index.php/api/logout')
     }
    var login = {
            $username: $('.login-account'),
@@ -96,8 +96,9 @@ define(['jquery','encryption'],function($,Encryption){
                        sendAjax({
                            url: Pathurl.logout,
                            success: function(data) {
+                            data = JSON.parse(data);
                                if (data.success)
-                                   window.location.href = './';
+                                   window.location.href = '/';
                            }
                        });
                    }

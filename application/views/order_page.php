@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="../styles/center.css">
     
-    <title>99打印</title>
+    <title>九九打印</title>
 </head>
 
 <body>
