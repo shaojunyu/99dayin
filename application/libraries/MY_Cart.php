@@ -208,7 +208,7 @@ class MY_Cart extends MY_Base_Class{
 				}else {
 					$optionValue = false;
 				}
-				echo $optionValue;
+				//echo $optionValue;
 				//if (in_array($optionValue,array(true,false))) {
 					$items[$key]->printSettings->isTwoSides = $optionValue;
 				//}
