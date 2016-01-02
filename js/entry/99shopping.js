@@ -5242,13 +5242,13 @@ define('header', [
     'encryption'
 ], function ($, Encryption) {
     var Pathurl = {
-        login: Encryption.Encryption('/index.php/api/login'),
-        sigin: Encryption.Encryption('/index.php/api/signup'),
+        login: Encryption.Encryption('../index.php/api/login'),
+        sigin: Encryption.Encryption('../index.php/api/signup'),
         Linklogin: '',
-        username: Encryption.Encryption('/index.php/api/verifySmsCode'),
-        CF_url: Encryption.Encryption('/index.php/api/sendSmsCode'),
+        username: Encryption.Encryption('../index.php/api/verifySmsCode'),
+        CF_url: Encryption.Encryption('../index.php/api/sendSmsCode'),
         upload: '',
-        logout: Encryption.Encryption('/index.php/api/logout')
+        logout: Encryption.Encryption('../index.php/api/logout')
     };
     var login = {
         $username: $('.login-account'),
@@ -5326,6 +5326,7 @@ define('header', [
                     sendAjax({
                         url: Pathurl.logout,
                         success: function success(data) {
+                            data = JSON.parse(data);
                             if (data.success)
                                 window.location.href = './';
                         }
@@ -5534,10 +5535,14 @@ require([
                             'address': ''
                         };
                     } else {
-                        var address = $('.address').val();
+                        var address = $('.address').val(), area = $('.school-area').val(), build = $('.building').val();
                         info = {
                             'shop': '',
-                            'address': address
+                            'address': {
+                                num: address,
+                                area: area,
+                                build: build
+                            }
                         };
                     }
                     $(this).addClass('sending').prop('disabled', true);
@@ -5582,7 +5587,7 @@ require([
                     data = {
                         option: 'direction',
                         option_value: syncInfo.getValue($target),
-                        fileMD5: syncInfo.Hash($target)
+                        infofileMD5: syncInfo.Hash($target)
                     };
                     break;
                 case 'ppt-mount':

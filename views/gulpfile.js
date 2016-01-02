@@ -222,7 +222,32 @@ gulp.task('index', function() {
         .pipe(gulp.dest('../js/entry')) //输出保存 
 
 });
+gulp.task('fetch', function() {
+    return gulp.src('../js/**/*.js')
+        .pipe(amdOptimize("../js/entry/fetch", {
+            paths: {
+                'jquery': '../js/lib/jQuery',
+                'iscroll': '../js/lib/iscroll',
+                 'scroll': '../js/entry/function/scroll', //滚动条插件
+                 'enroll': '../js/entry/function/enroll', //注册模块
+                'modal': '../js/lib/jquery.simplemodal',
+                'prompt': '../js/entry/function/prompt', //提示模块
+                'utility': '../js/entry/utility/utility', //基本工具函数
+                'header': '../js/entry/header', 
+                'fileupload': "../js/lib/plupload.full.min",
+                'md5': "../js/lib/spark-md5.min",
+                'header':'../js/entry/header',
+                'encryption': "../js/entry/function/encryption",
+                'validate': "../js/entry/function/validate" //验证信息
+            }
+        }))
+        .pipe(concat("fetch.js")) //合并  
+        .pipe(rename("fetch.js")) //重命名  
+        // .pipe(uglify()) //压缩  
+        .pipe(gulp.dest('../js/entry')) //输出保存 
+
+});
 gulp.task('compile', function() {
-    gulp.watch(['app/js/**/*.js'], ['babel','centerRjs','rjs','rjs1','confirmRjs','orderId','index']); //'rjs','rjs1','confirmRjs'
+    gulp.watch(['app/js/**/*.js'], ['babel','centerRjs','rjs','rjs1','confirmRjs','orderId','index','fetch']); //'rjs','rjs1','confirmRjs'
 });
 gulp.task('default', ['sync', 'watch']);

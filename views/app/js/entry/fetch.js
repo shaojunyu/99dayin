@@ -20,12 +20,12 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
     var Pathurl = {
         CF_url: Encryption.Encryption('index.php/api/sendSmsCode'), //获取验证码地址
         upload: 'http://www.99dayin.com/user/upload', //上传文件的地址
-        confirm: '', //验证用户名和手机号是否正确
+        confirm: Encryption.Encryption('./index.php/api/resetPassword'), //验证用户名和手机号是否正确
         username: Encryption.Encryption('index.php/api/verifySmsCode'), //验证用户名的url
 
     }
     var confirm = {
-        userName: $('.username'), //用户名
+        // userName: $('.username'), //用户名
         phone: $('.phone'), //手机号
         code: $('.CF-code'), //验证码
         newPs: $('.newPs'), //新密码
@@ -52,7 +52,8 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
                         $this.addClass('sending').prop('disabled', true); //添加发送状态
                     },
                     success: function(data) {
-                        //检查验证码的输入的正确性
+                        data = JSON.parse(data);
+                        //验证验证码
                         if (data.success) {
                             prompt.changeInfo(data.msg);
                         } else {
@@ -62,8 +63,8 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
                 })
             });
             this.confBth.on('click', function() {
-                var userName = confirm.userName.val().trim(), //用户名
-                    phone = confirm.phone.val().trim(), //手机号
+                // var userName = confirm.userName.val().trim(), //用户名
+                var phone = confirm.phone.val().trim(), //手机号
                     code = confirm.code.val().trim(), //验证码
                     newPs = confirm.newPs.val().trim(), //新密码
                     _this =this;
@@ -85,65 +86,24 @@ require(['jquery', 'validate', 'encryption', 'prompt', 'utility'], function($, v
                     $(_this).addClass('disabled').prop('disabled',true);  //添加验证状态
                     $.ajax({
                             url: Pathurl.confirm, //验证用户名和手机号是否正确
+                            type:"POST",
                             dataType: 'JSON',
                             contentType: 'application/json',
                             data: JSON.stringify({
-                                phone: phone,
-                                userName: userName
+                                smsCode: code,
+                                newPassword:phone
                             })
-
                         })
                         .then(function(data) { //返回success,msgs
                             if (data.success) {
-                                return true;
+                                prompt.showInfo("密码修改成功,3s后返回首页");
+                                setTimeout(function(){
+                                    window.location.href="http://www.99dayin.com";    
+                                },3000)
                             } else {
                                 prompt.changeInfo(data.msg);
                                 $(_this).removeClass('disabled').prop('disabled',false);  //删除发送状态
                                 return false;
-                            }
-                        })
-                        .then(function(flag) {
-                            if (flag) {
-                                $.ajax({ //验证验证码是否正确
-                                        url: Pathurl.username,
-                                        type: 'POST',
-                                        contentType: "application/json",
-                                        dataType: "json",
-                                        data: JSON.stringify({
-                                            phone: phone, //手机号
-                                            smsCode: code // 验证码
-                                        })
-                                    })
-                                    .then(function(data) {
-                                        if (data.success) {
-                                           return true;
-                                        } else {
-                                            prompt.changeInfo("验证码输入错误!");
-                                            $(_this).removeClass('disabled').prop('disabled',false);  //删除发送状态
-                                            return false
-                                        }
-                                    })
-                                    .then(function(flag){
-                                        if(flag){  //发送新密码以及手机号和用户名
-                                            $.ajax({
-                                                url:Pathurl.changePs,
-                                                dataType:"JSON",
-                                                contentType:"application/json",
-                                                data:JSON.stringify({
-                                                    newPs:newPs,
-                                                    phone:phone,
-                                                    userName:userName
-                                                })
-                                                .then(function(){
-                                                      prompt.changeInfo("密码修改成功~返回首页中");
-                                                     window.location.href = "http://www.99dayin.com";
-                                                })
-                                            })
-                                          
-                                        }else{
-
-                                        }
-                                    })
                             }
                         })
                 }

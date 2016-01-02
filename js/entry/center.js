@@ -5852,13 +5852,13 @@ define('header', [
     'encryption'
 ], function ($, Encryption) {
     var Pathurl = {
-        login: Encryption.Encryption('/index.php/api/login'),
-        sigin: Encryption.Encryption('/index.php/api/signup'),
+        login: Encryption.Encryption('../index.php/api/login'),
+        sigin: Encryption.Encryption('../index.php/api/signup'),
         Linklogin: '',
-        username: Encryption.Encryption('/index.php/api/verifySmsCode'),
-        CF_url: Encryption.Encryption('/index.php/api/sendSmsCode'),
+        username: Encryption.Encryption('../index.php/api/verifySmsCode'),
+        CF_url: Encryption.Encryption('../index.php/api/sendSmsCode'),
         upload: '',
-        logout: Encryption.Encryption('/index.php/api/logout')
+        logout: Encryption.Encryption('../index.php/api/logout')
     };
     var login = {
         $username: $('.login-account'),
@@ -5936,6 +5936,7 @@ define('header', [
                     sendAjax({
                         url: Pathurl.logout,
                         success: function success(data) {
+                            data = JSON.parse(data);
                             if (data.success)
                                 window.location.href = './';
                         }

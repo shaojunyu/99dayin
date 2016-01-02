@@ -223,7 +223,7 @@
                      } else{
                         var address = $('.address').val(), //宿舍号
                             area = $('.school-area').val(), //校区
-                            build = $('.building').val(), //楼栋
+                            build = $('.building').val(); //楼栋
                         info = {
                              'shop': '', //收货方式
                              'address': {
@@ -285,7 +285,7 @@
                          data = {
                              option: "direction",
                              option_value: syncInfo.getValue($target),
-                             fileMD5: syncInfo.Hash($target)
+                             infofileMD5: syncInfo.Hash($target)
                          }; //获得打印方向和对应的hash值
                          break;
                      case "ppt-mount":
