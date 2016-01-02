@@ -130,7 +130,14 @@ class Api extends CI_Controller{
 			$this->bmobUser->resetPasswordBySmsCode($smsCode, $newPassword);
 			$this->echo_msg(true);
 		} catch (Exception $e) {
-			$this->echo_msg(false,$e->error_msg);
+			if($e->code == '207'){
+				$this->echo_msg(false,"验证码错误");
+				return ;
+			}
+			else {
+				$this->echo_msg(false,$e->error_msg);
+			}
+			
 		}
 		
 	}
