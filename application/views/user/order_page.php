@@ -108,7 +108,7 @@
                     <input class="phone" type="type" value="<?php echo $userInfo->mobilePhoneNumber;?>"><span>手机:</span></div>
                 <div class="ps-input">
                     <!-- <button class="get-code">获取验证码</button> -->
-                    <input class="confir-code" type="type" data-iden='0'><span>验证码:</span>
+                    <!-- <input class="confir-code" type="type" data-iden='0'><span>验证码:</span> -->
                 </div>
                 <div class="ps-input">
                     <input class="email" type="type" value="<?php echo isset($userInfo->email)?$userInfo->email:'';?>"><span>邮箱:</span>

@@ -179,30 +179,18 @@
                         预计30分钟后取货
                     </div>
                     <div class="deliver">
-                    <div>
-                       <!--  <label>校区:</label>
+                 
+                        <label>校区:</label>
                         <select class="school-area" type="text" placeholder="校区">
-                            <option value="1">2</option>
-                            <option value="1">3</option>
-                            <option value="1">4</option>
-                            <option value="1">5</option>
-                            <option value="1">6</option>
-                            <option value="1">7</option>
+                            <option value="韵苑">韵苑</option>
+                            <option value="沁园">沁园</option>
+                            <option value="紫菘">紫菘</option>
                         </select>
                        <label>楼栋:</label> 
                        <select type="text" class="building" placeholder="楼栋">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                        </select> -->
-                       <!--  <label>收货时间:</label>
-                         <select class='time'>
-                            <option value="12:30-13:00">12:30-13:00</option>
-                            <option value="18:30-19:00">18:30-19:00</option>
-                            <option value="22:30-23:00">22:30-23:00</option>
-                        </select> -->
-                    </div>
-                        <input class="address" type="text" placeholder="请输入收货地址" />
-                       <!-- <input class="phone" type="text" placeholder="电话" /> -->
+                        </select>
+                        <label>宿舍号:</label>
+                        <input class="address" type="text" placeholder="宿舍号" />
                     </div>
                 </div>
                 <div class="right-part">

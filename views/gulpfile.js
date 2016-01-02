@@ -32,12 +32,12 @@ gulp.task('prefix', function() {
         //已经require("autoprefixer");
         autoprefix({
             browsers: ['last 3 Safari versions', "last 2 Explorer versions", 'last 2 Explorer versions', "iOS 5"],
-            cascade: true,
-            remove: true
+            cascade: true
+            // remove: true
         }),
-        flexpost
+     // flexpost
     ];
-     gulp.src('./app/**/*.css')
+    return gulp.src('./app/**/*.css')
         .pipe(postcss(processors))
         .pipe(gulp.dest('app/'));
 })

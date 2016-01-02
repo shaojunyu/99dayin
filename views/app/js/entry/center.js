@@ -79,20 +79,21 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
             $.ajax({
                     url: Pathurl.delteOrd,
                     type: "POST",
+                    dataType:"JSON",
                     contentType: 'application/json',
                     data: JSON.stringify({
                         orderId: orderId
                     })
                 })
                 .then((data) => {
+                    console.log(data.success);
                     if (data.success) {
                         parent_li.detach();
                         Iscroll.forEach(function(val) {
                             val.refresh();
                         });
-
                     } else {
-                        prompt.changeInfo("您的网络又问题，请重新删除~");
+                        prompt.changeInfo("您的网络有问题，请重新删除~");
                     }
                 })
         },

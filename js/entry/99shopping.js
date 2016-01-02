@@ -5480,6 +5480,43 @@ require([
             $deliver.show().siblings().hide();
         }
     });
+    var changeList = {
+        area: $('.school-area'),
+        build: $('.building'),
+        init: function init() {
+            changeList.list('韵苑');
+            this.area.on('change', function () {
+                var area = $(this).val();
+                changeList.list(area);
+            });
+        },
+        list: function list(area) {
+            var html = '';
+            switch (area) {
+            case '韵苑':
+                for (var i = 1; i <= 28; i++) {
+                    html += '<option value=' + i + '>' + i + '</option>';
+                }
+                break;
+            case '沁园':
+                for (var i = 9; i <= 13; i++) {
+                    html += '<option value=' + i + '>' + i + '</option>';
+                }
+                break;
+            case '紫菘':
+                for (var i = 1; i <= 13; i++) {
+                    html += '<option value=' + i + '>' + i + '</option>';
+                }
+                break;
+            default:
+                for (var i = 1; i <= 28; i++) {
+                    html += '<option value=' + i + '>' + i + '</option>';
+                }
+            }
+            this.build.html(html);
+        }
+    };
+    changeList.init();
     var PayBill = {
         checkout: $('.clearing'),
         init: function init() {

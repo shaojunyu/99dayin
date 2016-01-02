@@ -156,7 +156,6 @@
      //结算
      
      $('input[name="method"]').on('change', function(event) {
-        
          var $pick = $('.pick'),
              $deliver = $('.deliver'),
              method = $(this).val();
@@ -166,6 +165,43 @@
              $deliver.show().siblings().hide();
          }
      });
+     var changeList = {
+        area:$('.school-area'),
+        build:$('.building'),
+        init:function(){
+            changeList.list("韵苑");
+            this.area.on('change',function(){
+                var area = $(this).val();
+                changeList.list(area);
+            })
+        },
+        list:function(area){
+            var html = '';
+            switch(area){  //串联样式表
+                case "韵苑":
+                    for(var i =1;i<=28;i++){
+                        html+="<option value="+i+">"+i+"</option>";
+                    }
+                break;
+                case "沁园":
+                    for(var i=9;i<=13;i++){
+                        html+="<option value="+i+">"+i+"</option>";
+                    }
+                    break;
+                case "紫菘":
+                    for(var i=1;i<=13;i++){
+                        html+="<option value="+i+">"+i+"</option>";
+                    }
+                    break;
+                default:
+                     for(var i =1;i<=28;i++){
+                        html+="<option value="+i+">"+i+"</option>";
+                    }
+            }
+            this.build.html(html); //添加节点内容
+        }
+     }
+     changeList.init();
      var PayBill = {
          checkout: $('.clearing'), //结算按钮
          init: function() {
@@ -185,10 +221,16 @@
                              'address': '' //打印店
                          }
                      } else{
-                        var address = $('.address').val();
+                        var address = $('.address').val(), //宿舍号
+                            area = $('.school-area').val(), //校区
+                            build = $('.building').val(), //楼栋
                         info = {
                              'shop': '', //收货方式
-                             'address': address //打印店
+                             'address': {
+                                num:address,
+                                area:area,
+                                build:build
+                             }
                         }
                      }
                      $(this).addClass('sending').prop('disabled', true); //禁止多次点击结算按钮
