@@ -67,7 +67,7 @@
             <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
             <input  type="password" class="login-ps" placeholder="密码"/><i class="logo-ps"></i>
         </div>
-        <div class="forget"><a href="">忘记密码</a></div>
+        <div class="forget"><a href="./user/forget">忘记密码</a></div>
         <div>
             <button class="confirm-btn login-btn" id="confirm-btn">确认</button>
         </div>
