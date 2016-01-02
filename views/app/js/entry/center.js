@@ -54,13 +54,14 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
         delteOrd: Encryption.Encryption('../index.php/api/cancelOrder'), //删除订单路由
         addPrint: Encryption.Encryption(''), //加印路由
         getToken: Encryption.Encryption('../index.php/api/sendSmsCode'), //得到token值
-        changeInfo: Encryption.Encryption(''), //修改个人信息
+        changeInfo: Encryption.Encryption('../index.php/api/updateUserInfo'), //修改个人信息
         sendImg: Encryption.Encryption(''), //发送身份证，学生证图片
         promptPs: Encryption.Encryption('../index.php/api/updatePassword'), //修改密码的接口
         username: Encryption.Encryption(''), // 验证用户名是否存在
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'), //获取订单详情
         sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode'),
-         logout: Encryption.Encryption('/index.php/api/logout')
+         logout: Encryption.Encryption('../index.php/api/logout')
+
     }
     var Order = {
         pre: $('.order-content'), //未处理订单
@@ -402,6 +403,8 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                                 _this.promptPs.parents('.change-ps').hide();
                                 $.ajax({
                                    url: Pathurl.logout,
+                                   dataType:"JSON",
+                                   type:"GET",
                                    success: function(data) {
                                        if (data.success){
                                             prompt.showInfo("密码修改成功!");
@@ -441,7 +444,6 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     .then((data) => {
                         console.log(data);
                         if (data.success) {
-                            console.log(213);
                             Left.security = data.msg; //获取验证码;
                             Left.countDown(Left.obtain_code);
                         } else {
@@ -478,10 +480,9 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
             });
             this.address.enroll({});
             this.change_btn.on('click', function() {
-                let name = _this.name.val(),
-                    phone = _this.phone.val(),
-                    email = _this.email.val(),
-                    confirm = _this.confirm_code.val(),
+                let name = $('.ps-input .name').val().trim(),
+                    phone = _this.phone.val().trim(),
+                    email = _this.email.val().trim(),
                     flag = 0,
                     ele = $('.change-info .name,.change-info .phone,.change-info .confir-code,.change-info .email');
                 for (let i = 0; i < ele.length; i++) {
@@ -490,28 +491,13 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     }
                 }
                 if (flag === 0) {
-                    $.ajax({
-                            url: Pathurl.sendConfirm,
-                            type: 'POST',
-                            dataType: 'JSON',
-                            data: {
-                                phone: phone,
-                                smsCode: confirm
-                            }
-                        })
-                        .then((data) => {
-                            if (!data.success) {
-                                prompt.changeInfo("验证码输入错误~");
-                                return false;
-                            }
-                            _this.change_btn.addClass('sending');
-                            $.ajax({
+                        $.ajax({
                                 url: Pathurl.changeInfo,
                                 type: 'POST',
-                                contentType: "JSON",
-                                data: JOSN.stringify({
+                                dataType:'JSON',
+                                contentType: "application/json",
+                                data: JSON.stringify({
                                     name: name,
-                                    phone: phone,
                                     email: email
                                 }),
                                 beforeSend: function() {
@@ -527,8 +513,6 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                                     }
                                 }
                             });
-
-                        })
                 } else {
                     prompt.changeInfo('您的部分信息录入不正确!');
                 }

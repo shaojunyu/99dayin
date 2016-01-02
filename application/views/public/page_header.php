@@ -1,12 +1,12 @@
     <div class="header">
         <div class="setWidth">
-            <a class="logo" href="www.99dayin.com">
+            <a class="logo" href="http://www.99dayin.com">
                 <img class="logo-print" src="./img/logo.png" alt="logo" />
                 <span>九九打印</span>
             </a>
             <div class="titles">
                 <a href="http://www.99dayin.com" class="title-btn homepage-btn" data-content="首页">首页</a>
-                <a href="<?php echo strpos(current_url(),'user/')?'../':'./';?>helper/base.html" class="title-btn introduction" data-content="简介">简介</a>
+                <a href="<?php echo strpos(current_url(),'user/')?'../':'./';?>helper/base.html" target="blank" class="title-btn introduction" data-content="简介">简介</a>
                 <!-- <div class="title-btn art-base" data-content="本校文库">本校文库</div> -->
                 <div class="title-btn">
                 <?php if ($this->session->userdata('username')) {?>

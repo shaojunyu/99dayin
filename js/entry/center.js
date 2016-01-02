@@ -5938,7 +5938,7 @@ define('header', [
                         success: function success(data) {
                             data = JSON.parse(data);
                             if (data.success)
-                                window.location.href = './';
+                                window.location.href = '/';
                         }
                     });
                 }
@@ -6005,13 +6005,13 @@ require([
         delteOrd: Encryption.Encryption('../index.php/api/cancelOrder'),
         addPrint: Encryption.Encryption(''),
         getToken: Encryption.Encryption('../index.php/api/sendSmsCode'),
-        changeInfo: Encryption.Encryption(''),
+        changeInfo: Encryption.Encryption('../index.php/api/updateUserInfo'),
         sendImg: Encryption.Encryption(''),
         promptPs: Encryption.Encryption('../index.php/api/updatePassword'),
         username: Encryption.Encryption(''),
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'),
         sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode'),
-        logout: Encryption.Encryption('/index.php/api/logout')
+        logout: Encryption.Encryption('../index.php/api/logout')
     };
     var Order = {
         pre: $('.order-content'),
@@ -6317,6 +6317,8 @@ require([
                             _this.promptPs.parents('.change-ps').hide();
                             $.ajax({
                                 url: Pathurl.logout,
+                                dataType: 'JSON',
+                                type: 'GET',
                                 success: function success(data) {
                                     if (data.success) {
                                         prompt.showInfo('密码修改成功!');
@@ -6350,7 +6352,6 @@ require([
                 }).then(function (data) {
                     console.log(data);
                     if (data.success) {
-                        console.log(213);
                         Left.security = data.msg;
                         Left.countDown(Left.obtain_code);
                     } else {
@@ -6385,7 +6386,7 @@ require([
             });
             this.address.enroll({});
             this.change_btn.on('click', function () {
-                var name = _this.name.val(), phone = _this.phone.val(), email = _this.email.val(), confirm = _this.confirm_code.val(), flag = 0, ele = $('.change-info .name,.change-info .phone,.change-info .confir-code,.change-info .email');
+                var name = $('.ps-input .name').val().trim(), phone = _this.phone.val().trim(), email = _this.email.val().trim(), flag = 0, ele = $('.change-info .name,.change-info .phone,.change-info .confir-code,.change-info .email');
                 for (var i = 0; i < ele.length; i++) {
                     if (ele.eq(i).attr('data-iden') == 1) {
                     } else {
@@ -6394,41 +6395,26 @@ require([
                 }
                 if (flag === 0) {
                     $.ajax({
-                        url: Pathurl.sendConfirm,
+                        url: Pathurl.changeInfo,
                         type: 'POST',
                         dataType: 'JSON',
-                        data: {
-                            phone: phone,
-                            smsCode: confirm
-                        }
-                    }).then(function (data) {
-                        if (!data.success) {
-                            prompt.changeInfo('验证码输入错误~');
-                            return false;
-                        }
-                        _this.change_btn.addClass('sending');
-                        $.ajax({
-                            url: Pathurl.changeInfo,
-                            type: 'POST',
-                            contentType: 'JSON',
-                            data: JOSN.stringify({
-                                name: name,
-                                phone: phone,
-                                email: email
-                            }),
-                            beforeSend: function beforeSend() {
-                                _this.change_btn.addClass('sending');
-                            },
-                            success: function success(data) {
-                                if (data.success) {
-                                    prompt.changeInfo('信息修改成功,请重新登录!');
-                                    _this.change_btn.parents('.left-part').hide();
-                                } else {
-                                    prompt.changeInfo('信息修改失败\uFF0C请再次尝试');
-                                    _this.change_btn.removeClass('sending');
-                                }
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            name: name,
+                            email: email
+                        }),
+                        beforeSend: function beforeSend() {
+                            _this.change_btn.addClass('sending');
+                        },
+                        success: function success(data) {
+                            if (data.success) {
+                                prompt.changeInfo('信息修改成功,请重新登录!');
+                                _this.change_btn.parents('.left-part').hide();
+                            } else {
+                                prompt.changeInfo('信息修改失败\uFF0C请再次尝试');
+                                _this.change_btn.removeClass('sending');
                             }
-                        });
+                        }
                     });
                 } else {
                     prompt.changeInfo('您的部分信息录入不正确!');

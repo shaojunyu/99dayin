@@ -99,7 +99,7 @@ define(['jquery', 'encryption'], function ($, Encryption) {
                         url: Pathurl.logout,
                         success: function success(data) {
                             data = JSON.parse(data);
-                            if (data.success) window.location.href = './';
+                            if (data.success) window.location.href = '/';
                         }
                     });
                 }

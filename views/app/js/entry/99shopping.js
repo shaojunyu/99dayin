@@ -221,9 +221,13 @@
                              'address': '' //打印店
                          }
                      } else{
-                        var address = $('.address').val(), //宿舍号
+                        var address = $('.address').val().trim(), //宿舍号
                             area = $('.school-area').val(), //校区
                             build = $('.building').val(); //楼栋
+                        if(address==""||address==null){
+                            prompt.changeInfo("宿舍号不能为空~");
+                            return;
+                        }
                         info = {
                              'shop': '', //收货方式
                              'address': {
@@ -285,7 +289,7 @@
                          data = {
                              option: "direction",
                              option_value: syncInfo.getValue($target),
-                             infofileMD5: syncInfo.Hash($target)
+                             fileMD5: syncInfo.Hash($target)
                          }; //获得打印方向和对应的hash值
                          break;
                      case "ppt-mount":
@@ -320,16 +324,14 @@
                      data = JSON.stringify(data);
                      $.ajax({
                              url: Pathurl.print,
-                             async: true,
                              dataType: 'JSON',
                              type: 'post',
                              contentType: 'application/json',
                              data: data
                          })
                          .then((data) => {
+                            console.log(data);
                              syncInfo.fillInfo($target, data)
-                         }, () => {
-                             prompt.changeInfo('信息有误~')
                          });
                  }
              })

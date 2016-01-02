@@ -23,9 +23,9 @@
                         <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
-                <p class="indicative">认证信息</p>
+                <p class="indicative">名称</p>
                 <div class="authentic">
-                    <button class="authentic-btn">现在去认证</button>
+                    <button class="authentic-btn">九九打印</button>
                     <div class="authenticating">
                         <button>认证中...</button>
                         <a href="">联系客服</a>
@@ -105,7 +105,7 @@
                 <div class="ps-input ">
                     <input class="name" type="type" value="<?php echo isset($userInfo->name)?$userInfo->name:'';?>" ><span>姓名:</span></div>
                 <div class="ps-input">
-                    <input class="phone" type="type" value="<?php echo $userInfo->mobilePhoneNumber;?>"><span>手机:</span></div>
+                    <input class="phone" style="cursor:no-drop" type="type" readonly value="<?php echo $userInfo->mobilePhoneNumber;?>"><span>手机:</span></div>
                 <div class="ps-input">
                     <!-- <button class="get-code">获取验证码</button> -->
                     <!-- <input class="confir-code" type="type" data-iden='0'><span>验证码:</span> -->
