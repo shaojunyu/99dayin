@@ -119,9 +119,7 @@ class User extends CI_Controller{
 		//$this->load->view('errors/html/error_general.php');
 	}
 	
-	public function forget(){
-		$this->load->view('forget_page');
-	}
+
 	
 	
 }
