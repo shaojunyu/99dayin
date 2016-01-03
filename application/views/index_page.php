@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="./styles/homepage.css" />
     <title>九九打印</title>
+   <!--[if lte IE 9]>
+    <script type="text/javascript">
+    window.location.href="";   
+  </script>
+   <![endif]-->
 </head>
 
 <body>
