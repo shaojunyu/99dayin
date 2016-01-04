@@ -4727,9 +4727,6 @@ define('prompt', ['jquery'], function ($) {
         var _this = this;
         if (percent === 100) {
             this.prompt_ele.text('检测成功~开始上传');
-            setTimeout(function () {
-                _this.hidePrompt();
-            }, 800);
         }
     };
     Prompt.prototype.goPay = function (num) {

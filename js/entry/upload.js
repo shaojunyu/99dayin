@@ -4645,9 +4645,6 @@ define('prompt', ['jquery'], function ($) {
         var _this = this;
         if (percent === 100) {
             this.prompt_ele.text('检测成功~开始上传');
-            setTimeout(function () {
-                _this.hidePrompt();
-            }, 800);
         }
     };
     Prompt.prototype.goPay = function (num) {
@@ -11037,7 +11034,9 @@ require([
                 });
             },
             UploadProgress: function UploadProgress(up, file) {
+                console.log('new');
                 prompt.showInfo(file.percent + '%');
+                console.log(file.percent);
                 if (file.percent === 100) {
                     upload.flag++;
                 }
@@ -11217,7 +11216,7 @@ require([
                 }).then(function (data) {
                     if (data.success) {
                         up.removeFile(file);
-                        upload.addFileToken(file);
+                        prompt.changeInfo('文件已存在!');
                     } else {
                         upload.getAjax(up);
                     }

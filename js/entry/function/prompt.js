@@ -52,9 +52,9 @@ define(['jquery'], function ($) {
 		var _this = this;
 		if (percent === 100) {
 			this.prompt_ele.text("检测成功~开始上传");
-			setTimeout(function () {
-				_this.hidePrompt();
-			}, 800); //隐藏进度条
+			// setTimeout(function(){
+			// 	_this.hidePrompt();
+			// },800);  //隐藏进度条
 		}
 	};
 	Prompt.prototype.goPay = function (num) {
