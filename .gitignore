@@ -6,4 +6,3 @@ pingpp_webhooks/
 application/logs/
 .htaccess
 cacert.pem
-application/.htaccess
