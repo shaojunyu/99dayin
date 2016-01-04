@@ -85,14 +85,13 @@ class Api extends CI_Controller{
 		$password = $this->post_data->password;
 		try {
 			$info = $this->bmobUser->login($username,$password);
+			var_dump($info);
 			$this->session->set_userdata('username',$username);
 			$this->session->set_userdata('bmobToken',$info->sessionToken);
-			//获取userid
-			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
-			$res = $res->results[0];
-			$this->session->set_userdata('userId',$res->objectId);
+			//userId
+			$this->session->set_userdata('userId',$info->objectId);
 			//保存手机号
-			$this->session->set_userdata('phone',$res->mobilePhoneNumber);
+			$this->session->set_userdata('phone',$info->mobilePhoneNumber);
 			$this->echo_msg(true,'登录成功');
 			exit();
 		} catch (Exception $e) {
@@ -101,6 +100,35 @@ class Api extends CI_Controller{
 		}
 		
 	}
+	public function loginByPhone(){
+		$phone = $this->post_data->phone;
+		$password = $this->post_data->password;
+		try {
+			$res = $this->bmobUser->get('',array('where={"mobilePhoneNumber":"'.$phone.'"}','limit=1'));
+			if (empty($res->results[0])) {
+				$this->echo_msg(false);
+				return ;
+			}
+		} catch (Exception $e) {
+		}
+		
+		try {
+			$username = $res->results[0]->username;
+			$info = $this->bmobUser->login($username,$password);
+			
+			$this->session->set_userdata('username',$username);
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
+			//userId
+			$this->session->set_userdata('userId',$info->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$info->mobilePhoneNumber);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,'用户名或密码错误');
+		}
+	}
+	
+	
 	public function logout(){
 		$this->session->sess_destroy();
 		$this->echo_msg(true);
