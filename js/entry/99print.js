@@ -4333,7 +4333,8 @@ require([
         toggleActive($(this), 'active');
     });
     var Pathurl = {
-        login: Encryption.Encryption('index.php/api/login'),
+        userLogin: Encryption.Encryption('index.php/api/login'),
+        phoneLogin: Encryption.Encryption(' index.php/api/loginByPhone'),
         sigin: Encryption.Encryption('index.php/api/signup'),
         Linklogin: '',
         username: Encryption.Encryption('index.php/api/verifySmsCode'),
@@ -4349,7 +4350,7 @@ require([
         detail: $('.detail-btn'),
         print_btn: $('.print-btn'),
         getText: function getText($target) {
-            return $target.val();
+            return $target.val().trim();
         },
         getIden: function getIden() {
             var active = this.$iden;
@@ -4377,17 +4378,27 @@ require([
             $('body').on('click', function (e) {
                 var $target = $(e.target);
                 if ($target.attr('id') == 'confirm-btn') {
-                    var username = _this.getText(_this.$username), ps = _this.getText(_this.$ps), iden = _this.getIden();
+                    var username = _this.getText(_this.$username), ps = _this.getText(_this.$ps), iden = _this.getIden(), reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, data, url;
                     prompt.showInfo('正在登录');
+                    if (reg.test(username)) {
+                        data = {
+                            phone: username,
+                            password: ps
+                        };
+                        url = Pathurl.phoneLogin;
+                    } else {
+                        data = {
+                            username: username,
+                            password: ps
+                        };
+                        url = Pathurl.userLogin;
+                    }
                     $.ajax({
-                        url: Pathurl.login,
+                        url: url,
                         type: 'POST',
                         contentType: 'application/json',
                         dataType: 'json',
-                        data: JSON.stringify({
-                            'username': username,
-                            'password': ps
-                        }),
+                        data: JSON.stringify(data),
                         beforeSend: function beforeSend() {
                             $target.addClass('disabled').prop('disabled', true);
                         },

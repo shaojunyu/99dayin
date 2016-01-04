@@ -93,12 +93,12 @@ define(['jquery','encryption'],function($,Encryption){
                this.detail.on('click', function(e) {
                    var $target = $(e.target);
                    if ($target.hasClass('logout')) {
-                       sendAjax({
+                       $.ajax({
                            url: Pathurl.logout,
                            success: function(data) {
                             data = JSON.parse(data);
                                if (data.success)
-                                   window.location.href = '/';
+                                   window.location.href = 'http://www.99dayin.com';
                            }
                        });
                    }

@@ -16,14 +16,19 @@ require.config({
 });
 "use strict";
 
-require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5, tpl,validate) {
+require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', 'modal','fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5, tpl,validate,modal) {
     tpl = tpl.tpl;
     var validate = validate.val;
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
 
-
+    function detectShow($target, close) {  //打开模态框
+        if ($target.css('display') !== 'block') {
+            $.modal.close();
+            openModal($target, close);
+        }
+    }
     function changeClass($target, classname) {
         $target.addClass(classname).siblings().removeClass(classname);
     }
@@ -801,7 +806,10 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                     url:Pathurl.code,
                     type:"POST",
                     dataType:"JSON",
-                    contentType:'application/json'
+                    contentType:'application/json',
+                    data:{
+                        code:_code
+                    }
                 })
                 .then((data)=>{
                         

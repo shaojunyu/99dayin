@@ -1,13 +1,24 @@
 // var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var path = require('path');
 module.exports = {
-    context: __dirname + "/app/js/entry",
     entry: {
-        print: './99print.js'
+        print: './app/js/entry/99print.js'
     }, //演示单入口文件
     output: {
-        path: path.join(__dirname, 'out'), //打包输出的路径 
+        path: path.join(__dirname, '../js/entry'), //打包输出的路径 
         filename: '[name].entry.js', //打包后的名字
+    },
+    watch:true,
+     module:{
+        loaders:[
+            {
+                test:/\.js$/,
+                loader:'babel',
+                query:{
+                    presets:['es2015']
+                }
+            }
+        ]
     },
     resolve: {
         modulesDirectories: ['app/js'],
@@ -20,7 +31,8 @@ module.exports = {
             'enroll': 'entry/function/enroll', //注册模块
             'SMS': 'https://cdn1.lncld.net/static/js/av-mini-0.6.1.js', //短信模块
             'md5': "lib/spark-md5.min",
-            'encryption': "entry/function/encryption"
+            'encryption': "entry/function/encryption",
+
         },
         extensions:["", ".webpack.js", ".web.js", ".js"]
     }

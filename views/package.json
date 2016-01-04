@@ -12,8 +12,10 @@
   "dependencies": {
     "amd-optimize": "^0.6.1",
     "autoprefixer": "^6.2.0",
+    "babel-core": "^6.3.26",
     "babel-eslint": "^4.1.6",
-    "babel-preset-es2015": "^6.1.18",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
     "browser-sync": "^2.9.11",
     "eslint": "^1.10.3",
     "eslint-config-standard": "^4.4.0",

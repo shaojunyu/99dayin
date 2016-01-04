@@ -71,7 +71,7 @@
         <div class="header-btn"><span class="active login-btn">登录</span><span class="signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
         <div class="portrait"><img src="./img/portrait.png"></div>
         <div class="input-frame">
-            <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
+            <input  type="text" class="login-account" placeholder="用户名/手机号"/><i class="logo-user"></i>
             <input  type="password" class="login-ps" placeholder="密码"/><i class="logo-ps"></i>
         </div>
         <div class="forget"><a href="./forget">忘记密码</a></div>

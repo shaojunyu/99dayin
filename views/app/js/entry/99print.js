@@ -87,13 +87,15 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
         //发送路径的url地址
 
     var Pathurl = {
-        login: Encryption.Encryption('index.php/api/login'),
+        userLogin: Encryption.Encryption('index.php/api/login'),  //用户名登录
+        phoneLogin:Encryption.Encryption(' index.php/api/loginByPhone'),  //手机号登录
         sigin: Encryption.Encryption('index.php/api/signup'),
         Linklogin: '', //以QQ方式登录
         username: Encryption.Encryption('index.php/api/verifySmsCode'), //验证用户名的url
         CF_url: Encryption.Encryption('index.php/api/sendSmsCode'), //验证码发送的url
         upload: 'http://www.99dayin.com/user/upload', //上传文件的地址
         logout: Encryption.Encryption('index.php/api/logout')
+        
     }
     var login = {
         $username: $('.login-account'),
@@ -103,7 +105,7 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
         detail: $('.detail-btn'), //获得个人信息列表
         print_btn: $('.print-btn'), //打印按钮
         getText: function($target) {
-            return $target.val();
+            return $target.val().trim();
         },
         /*
          * 检验用户以哪种方式登录
@@ -140,17 +142,29 @@ require(['jquery', 'scroll', 'modal', 'prompt', 'enroll', 'encryption', 'utility
                 if ($target.attr('id') == 'confirm-btn') {
                     var username = _this.getText(_this.$username),
                         ps = _this.getText(_this.$ps),
-                        iden = _this.getIden();
+                        iden = _this.getIden(),
+                        reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
+                        data,url;
                     prompt.showInfo("正在登录");
+                    if(reg.test(username)){
+                        data = {
+                            phone:username,
+                            password:ps
+                        };
+                        url = Pathurl.phoneLogin;
+                    }else{
+                        data = {
+                            username:username,
+                            password:ps
+                        };
+                        url = Pathurl.userLogin;
+                    }
                     $.ajax({
-                        url: Pathurl.login,
+                        url: url,
                         type: "POST",
                         contentType: "application/json",
                         dataType: 'json',
-                        data: JSON.stringify({
-                            'username': username,
-                            'password': ps
-                        }),
+                        data: JSON.stringify(data),
                         beforeSend:function(){
                             $target.addClass('disabled').prop('disabled',true);
                         },
