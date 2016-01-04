@@ -5154,6 +5154,94 @@ define('encryption', ['md5'], function (md5) {
         }
     };
 });
+'use strict';
+define('tpl', [], function () {
+    var tpl = {
+        article: function article(type, md5, name, uploadTime, times, size) {
+            return '<div class="article-item" data-id="' + md5 + '">\n\t\t\t\t\t\t\t<i class="file-logo ' + type + '"></i>\n\t\t\t\t\t\t\t<p class="file-header">' + name + '</p>\n\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t<span class="upload-time">' + uploadTime + '</span>打印次数:<span\n\t\t\t\t\t\t\t\t\tid="print-num">' + times + '</span>大小:<span id="size">' + size + '</span>kb\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<i class="add-btn" data-mark="official-1" data-id="' + md5 + '"></i>\n\t\t\t\t\t\t</div>';
+        }
+    };
+    return { tpl: tpl };
+});
+'use strict';
+define('validate', [], function () {
+    var validator = {
+        types: {
+            isEmail: {
+                validate: function validate(value) {
+                    var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+                    return reg.test(value);
+                },
+                instructions: '邮箱格式错误'
+            },
+            isNonEmpty: {
+                validate: function validate(value) {
+                    return !(value == '' || value === undefined);
+                },
+                instructions: '日期不能为空'
+            },
+            isPassword: {
+                validate: function validate(value) {
+                    if (value.length < 6 || value.length > 21) {
+                        return false;
+                    }
+                    var reg = /^(([a-z]+[\w]*[0-9]+)|([0-9]+[\w]*[a-z]+))[a-z0-9]*$/i;
+                    return reg.test(value);
+                },
+                instructions: '密码长度在6-20位,且必须包含数字和字母'
+            },
+            isNickname: {
+                validate: function validate(value) {
+                    if (value.length > 8 || value == '') {
+                        return false;
+                    }
+                    return true;
+                },
+                instructions: '昵称字符长度要在8个以内'
+            },
+            isPhone: {
+                validate: function validate(value) {
+                    var reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+                    if (value == '' || value === undefined) {
+                        return false;
+                    } else {
+                        return reg.test(value);
+                    }
+                },
+                instructions: '手机号格式不正确'
+            },
+            isCode: {
+                validate: function validate(value) {
+                    var reg = /\d+/;
+                    return reg.test(value);
+                },
+                instructions: '编码必须为数字'
+            },
+            isEmpty: {
+                validate: function validate(value) {
+                    if (value == '' || value === undefined) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                },
+                instructions: '输入不能为空~'
+            }
+        },
+        val: function val(data) {
+            var rule = data.rule, value = data.value, type = this.types[rule];
+            if (type.validate(value)) {
+                return { flag: true };
+            } else {
+                return {
+                    flag: false,
+                    instructions: type.instructions
+                };
+            }
+        }
+    };
+    return validator;
+});
 !function (e, t) {
     'use strict';
     function n(e, t) {
@@ -10368,7 +10456,9 @@ require.config({
         'header': 'entry/header',
         'fileupload': 'lib/plupload.full.min',
         'md5': 'lib/spark-md5.min',
-        'encryption': 'entry/function/encryption'
+        'encryption': 'entry/function/encryption',
+        'validate': 'entry/function/validate',
+        'tpl': 'entry/function/template'
     }
 });
 'use strict';
@@ -10378,10 +10468,14 @@ require([
     'prompt',
     'encryption',
     'md5',
+    'tpl',
+    'validate',
     'fileupload',
     'utility',
     'header'
-], function ($, iscroll, prompt, Encryption, md5) {
+], function ($, iscroll, prompt, Encryption, md5, tpl, validate) {
+    tpl = tpl.tpl;
+    var validate = validate.val;
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -10584,11 +10678,24 @@ require([
                 var $target = $(e.target);
                 if ($target.hasClass('add-btn')) {
                     var data_area = $target.attr('data-area'), data_mark = $target.attr('data-mark'), $parent = $target.parents('.article-item'), li = document.createElement('li');
-                    Base.alreadyAdd($target);
-                    li.innerHTML = $parent.html().replace('already-add', 'logo-error');
-                    _this.shopping.append(li);
-                    _this.changeInputText(1);
-                    refresh();
+                    $.ajax({
+                        url: Pathurl,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ fileMD5: data_mark })
+                    }).then(function (data) {
+                        if (data.success) {
+                            Base.alreadyAdd($target);
+                            li.innerHTML = $parent.html().replace('already-add', 'logo-error');
+                            _this.shopping.append(li);
+                            _this.changeInputText(1);
+                            $parent.detach();
+                            refresh();
+                        } else {
+                            prompt.changeInfo(data.msg);
+                        }
+                    });
                 }
             });
             this.delete_btn.on('click', function (e) {
@@ -10642,7 +10749,6 @@ require([
                 this.content_a.attr('data-num', num + amount);
         },
         addFiles: function addFiles(file) {
-            console.log(file.hash);
             var file_date = new Date(), date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(), size = plupload.formatSize(file.size), name = file.name, mark = file.hash, index = name.lastIndexOf('.'), li = document.createElement('li'), className = getClass.getClass(name.substring(index + 1));
             li.innerHTML = '<i class="file-logo ' + className + '"></i>' + '<p class="file-header">' + name.substring(0, index) + '</p>' + '<p>上传时间:<span class="upload-time">' + date + '</span>' + '大小:<span>' + String(size).toUpperCase() + '</span></p>' + '<i class="logo-error" data-mark=' + mark + ' data-area=self></i>';
             $(li).attr('data-type', className);
@@ -10843,18 +10949,23 @@ require([
                 start += unit;
             }
         },
+        getData: function getData() {
+            $.ajax({
+                url: Pathurl.getOfficial,
+                type: 'POST',
+                dataType: 'JSON'
+            }).then(function (data) {
+                if (data.success) {
+                    var files = data.files, len = files.length, unit = Math.floor(len / 3);
+                    _this.repeatAdd(files, unit);
+                }
+            });
+        },
         init: function init() {
+            this.getData();
             var _this = this;
             this.changeGroup.on('click', function () {
-                sendAjax({
-                    url: Pathurl.getOfficial,
-                    success: function success(data) {
-                        if (data.success) {
-                            var files = data.files, len = files.length, unit = Math.floor(len / 3);
-                            _this.repeatAdd(files, unit);
-                        }
-                    }
-                });
+                _this.getData();
             });
         }
     };
@@ -10915,6 +11026,45 @@ require([
         }
     };
     Pay.init();
+    var myBase = {
+        leftBar: $('.leftBar'),
+        rightFile: $('.rightFile'),
+        apply: $('.apply'),
+        code: $('.code'),
+        init: function init() {
+            var _this2 = this;
+            var leftScroll, rightScroll;
+            setTimeout(function () {
+                leftScroll = bindScroll(_this2.leftBar);
+                rightScroll = bindScroll(_this2.rightFile);
+            }, 3000);
+            this.apply.on('click', function () {
+                var _code = _this2.code.val().trim(), isEmpty = validate({
+                        value: _code,
+                        type: 'isEmpty'
+                    }), isCode = validate({
+                        value: _code,
+                        type: 'isCode'
+                    });
+                if (!isEmpty.flag) {
+                    prompt.changeInfo(isEmpty.instructions);
+                    return;
+                }
+                if (!isCode.flag) {
+                    prompt.changeInfo(isCode.instructions);
+                    return;
+                }
+                $.ajax({
+                    url: Pathurl.code,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    contentType: 'application/json'
+                }).then(function (data) {
+                });
+            });
+        }
+    };
+    myBase.init();
 });
 define('../js/entry/upload', [
     'jquery',
@@ -10922,6 +11072,8 @@ define('../js/entry/upload', [
     'prompt',
     'encryption',
     'md5',
+    'tpl',
+    'validate',
     'fileupload',
     'utility',
     'header'

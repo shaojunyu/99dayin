@@ -17,7 +17,7 @@
 		<!-- 上传文件 -->
 		<div class="fn-choice" id="fn-choice">
 			<button class="active" id="upolad-files">上传文件</button>
-			<button id="base-choose">文库选择</button>
+			<button id="base-choose">我的文库</button>
 			<span class="color-block"></span>
 		</div>
 		<article class="file-content" id="file-content">
@@ -34,20 +34,124 @@
 				  <!-- <a id="uploadfiles" href="javascript:;">[Upload files]</a> -->
 		</article>
 		<article class="choose-base" id="choose-base">
-			<section class="base-content">
-				<div class="article-content" id="article-content">
-					<div class="articles">
 
-					</div>
-					<div class="articles">
-						<div></div>
-						<div>正在建设中</div>
-					</div>
-				</div>
-				<div class="pagination" id="pagination">
-				
-				</div>
-			</section>
+            <section class="searchBtn"><input type="text" class="code" placeholder="输入文库编码"> <button class="apply">申请加入</button></section>
+            <article class="content">
+                <div class="leftBar" id="wrapper">
+                <ul>
+                    <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                      <li>
+                        <h3>测控1301</h3>
+                        编号:<span class="groupNum">f321312</span>
+                    </li>
+                </ul>
+                </div>
+                <section class="rightFile" id="rightFile">
+                    <article class='fileWrapper' id="fileWrapper">
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                        <div class="article-item" data-id="23123444553">
+                            <i class="file-logo logo-word"></i>
+                            <p class="file-header">小树和小雨的故事</p>
+                            <p><span class="upload-time">2015/2/19</span>打印次数:<span id="print-num">133333</span>大小:<span id="size">200</span>kb</p>
+                            <i class="add-btn" data-mark="official-1" data-id="23123444553"></i>
+                        </div>
+                    </article>
+                
+                </section>
+            </article>
 		</article>
 		<div class="shopping-store" id="store">
 			<div class="shopping-header">

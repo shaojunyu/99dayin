@@ -3139,6 +3139,23 @@ define('validate', [], function () {
                     }
                 },
                 instructions: '手机号格式不正确'
+            },
+            isCode: {
+                validate: function validate(value) {
+                    var reg = /\d+/;
+                    return reg.test(value);
+                },
+                instructions: '编码必须为数字'
+            },
+            isEmpty: {
+                validate: function validate(value) {
+                    if (value == '' || value === undefined) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                },
+                instructions: '输入不能为空~'
             }
         },
         val: function val(data) {

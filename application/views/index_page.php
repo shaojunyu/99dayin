@@ -62,7 +62,9 @@
                         <img style="width:120px;height:120px;" src="./img/QR-code.png">
                     </div>
                 </div>
+                 <p class="declaration" href="javascript:void(0)">@2015 99dayin.com 版权所有</p>
             </footer>
+
         </div>
     </div>
     <div class="login-frame" id="login-frame">
@@ -139,7 +141,7 @@
               <button class="confirm-btn enroll">确 认</button>
           </div>
       </div>
-    
+   
     <script src="js/lib/require.js" data-main="js/entry/99print.js"></script>
 
 </body>

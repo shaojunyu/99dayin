@@ -43,7 +43,7 @@ gulp.task('prefix', function() {
 })
 
 gulp.task('watch', function() {
-    gulp.watch('app/styles/**/*.css', ['prefix'])
+    gulp.watch('app/styles/**/*.css', ['copyCSS'])
 })
 gulp.task('sync', function() {
     var files = [
@@ -62,7 +62,7 @@ gulp.task('copy', function() {
     return gulp.src('app/js/entry/**/prompt.js')
         .pipe(gulp.dest('app/js/entry'));
 })
-gulp.task('copyCSS',['prefix'] ,function() {
+gulp.task('copyCSS' ,function() {
     return gulp.src('app/styles/**/*.css')
         .pipe(gulp.dest('../styles'));
 });
@@ -105,7 +105,9 @@ gulp.task('rjs', function() {
                 'fileupload': "../js/lib/plupload.full.min",
                 'md5': "../js/lib/spark-md5.min",
                 'header':'../js/entry/header',
-                'encryption': "../js/entry/function/encryption"
+                'encryption': "../js/entry/function/encryption",
+                 'tpl':'entry/function/template',
+                 'validate': "../js/entry/function/validate" //验证信息
             }
         }))
         .pipe(concat("upload.js")) //合并  

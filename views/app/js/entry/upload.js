@@ -9,12 +9,16 @@ require.config({
         'header': 'entry/header',
         'fileupload': "lib/plupload.full.min",
         'md5': "lib/spark-md5.min",
-        'encryption': "entry/function/encryption"
+        'encryption': "entry/function/encryption",
+        'validate':"entry/function/validate",
+        'tpl': 'entry/function/template'
     }
 });
 "use strict";
-require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5) {
 
+require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5, tpl,validate) {
+    tpl = tpl.tpl;
+    var validate = validate.val;
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
@@ -71,7 +75,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
     /*
      * 用来检测尾缀,是否符合标准,如果符合返回true; 如果不符合返回false;
      */
-    function parseSuffix(file, reg= /[.](doc|docx|ppt|pdf|pptx|word)$/ ) {
+    function parseSuffix(file, reg = /[.](doc|docx|ppt|pdf|pptx|word)$/) {
         if (reg.test(file.name)) {
             return true; //符合标准返回true
         } else {
@@ -199,6 +203,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
             });
             arr.push(iscroll);
         })
+
         return arr;
     }
     //绑定打印车内容滚动条
@@ -239,7 +244,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                  * 文件上传进度条
                  */
                 UploadProgress(up, file) {
-                    prompt.showInfo(file.percent+"%"); //注意一下这里的Progress会提醒两次上传100%
+                    prompt.showInfo(file.percent + "%"); //注意一下这里的Progress会提醒两次上传100%
                     if (file.percent === 100) {
                         upload.flag++;
                     }
@@ -278,14 +283,31 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                         data_mark = $target.attr('data-mark'),
                         $parent = $target.parents('.article-item'),
                         li = document.createElement('li');
-                    //将文库改为已添加
-                    Base.alreadyAdd($target);
-                    li.innerHTML = $parent.html().replace('already-add', 'logo-error');
-                    _this.shopping.append(li);
-                    _this.changeInputText(1);
-                    //刷新滚动条
-                    refresh();
-                    //然后就没了，最后添加 '前去结算' 的时候将数组发给后台，然后让他请求数据
+                    $.ajax({
+                            url: Pathurl,
+                            type: "POST",
+                            dataType: "JSON",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                fileMD5: data_mark
+                            })
+                        })
+                        .then((data) => {
+                            if (data.success) {
+                                //将文库改为已添加
+                                Base.alreadyAdd($target);
+                                li.innerHTML = $parent.html().replace('already-add', 'logo-error');
+                                _this.shopping.append(li);
+                                _this.changeInputText(1);
+                                $parent.detach();
+                                //刷新滚动条
+                                refresh();
+                                //然后就没了，最后添加 '前去结算' 的时候将数组发给后台，然后让他请求数据
+                            } else {
+                                prompt.changeInfo(data.msg);
+                            }
+                        })
+
                 }
             })
             this.delete_btn.on('click', function(e) {
@@ -342,8 +364,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
          * 当上传完成时,将上传的文件添加给购物车
          */
         addFiles(file) {
-
-            console.log(file.hash);
             var file_date = new Date(), //添加日期
                 date = file_date.getFullYear() + '/' + (file_date.getMonth() + 1) + '/' + file_date.getDate(),
                 size = plupload.formatSize(file.size), //添加文件大小
@@ -399,7 +419,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                 url: Pathurl.remove,
                 type: 'POST',
                 dataType: 'json',
-                contentType:'application/json',
+                contentType: 'application/json',
                 data: JSON.stringify({
                     fileMD5: mark //发送文件的hash值 
                 })
@@ -622,41 +642,40 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                     start += unit;
                 }
             },
+            getData() {
+                $.ajax({
+                        url: Pathurl.getOfficial,
+                        type: 'POST',
+                        dataType: "JSON"
+                    })
+                    .then((data) => {
+                        //这里的数据需要有:
+                        //data是josn 里面有 success,和files
+                        //files的上限个数为24个
+                        /*
+                         * name  文件名
+                         * date  上传日期
+                         * size  文件大小
+                         * area  文件位置
+                         * mark  文件唯一性标识
+                         * type  文件类型比如doc,docx等.
+                         */
+                        if (data.success) {
+                            var files = data.files,
+                                len = files.length,
+                                unit = Math.floor(len / 3); //每组长度
+                            _this.repeatAdd(files, unit);
+                        }
+                    })
+            },
             /*
              * 换一组得到数据...
              */
             init() {
+                this.getData();
                 var _this = this;
                 this.changeGroup.on('click', function() {
-                    //测试数据
-                    // var files =  upload.filesArray,
-                    //     len = files.length,
-                    //     unit = Math.floor(len / 3); //每组长度
-
-                    // _this.repeatAdd(files,unit);
-                    sendAjax({
-                        url: Pathurl.getOfficial,
-                        success(data) {
-                            //这里的数据需要有:
-                            //data是josn 里面有 success,和files
-                            //files的上限个数为24个
-                            /*
-                             * name  文件名
-                             * date  上传日期
-                             * size  文件大小
-                             * area  文件位置
-                             * mark  文件唯一性标识
-                             * type  文件类型比如doc,docx等.
-                             */
-                            if (data.success) {
-                                var files = data.files,
-                                    len = files.length,
-                                    unit = Math.floor(len / 3); //每组长度
-                                _this.repeatAdd(files, unit);
-                            }
-
-                        }
-                    })
+                    _this.getData();
                 });
             }
 
@@ -734,7 +753,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
                                 }, 100);
                             } else if (SSE.flag != 0) {
                                 clearInterval(time2);
-                                    prompt.goPay(SSE.flag);
+                                prompt.goPay(SSE.flag);
 
                             }
                         })
@@ -748,39 +767,49 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'fileupload', 'util
     /*
      * 搜索框
      */
-    // var Search = {
-    //     search: $('#search'), //搜索框
-    //     init() {
-    //         this.search.on('keyup', function(e) {
-    //             var code = e.which,
-    //                 val = $(this).val();
-    //             if (code === 13) {
-    //                 //如果开始搜索,则向服务端请求数据,最多只有24条信息
-    //                 sendAjax({
-    //                     url: Pathurl.search,
-    //                     data: {
-    //                         "search": val
-    //                     },
-    //                     success(data) {
-
-    //                          * 返回的data有 data.success || data.files
-
-    //                         if (data.success) {
-    //                             //向下面的展示框填入数据
-    //                             var files = data.files,
-    //                                 len = files.length,
-    //                                 unit = Math.floor(len / 3); //每组长度
-    //                             Base.repeatAdd(files, unit);
-    //                         } else {
-    //                             prompt.changeInfo('对不起您的浏览器抽风了!');
-    //                         }
-    //                     }
-    //                 })
-    //             }
-    //         })
-    //     }
-    //     // }
-    //     // Search.init();
+    let myBase = {
+        leftBar: $('.leftBar'),
+        rightFile:$('.rightFile'),
+        apply:$('.apply'),
+        code:$('.code'),
+        init() {
+            var leftScroll,
+                rightScroll;
+            setTimeout(()=>{
+                leftScroll = bindScroll(this.leftBar); //执行绑定
+                rightScroll =bindScroll(this.rightFile);
+            },3000);
+            this.apply.on("click",()=>{
+                let _code = this.code.val().trim(),
+                    isEmpty = validate({
+                        value:_code,
+                        type:'isEmpty'
+                    }),
+                    isCode = validate({
+                        value:_code,
+                        type:"isCode"
+                    });
+                if(!isEmpty.flag){  //是否为空
+                    prompt.changeInfo(isEmpty.instructions);
+                    return;
+                }
+                if(!isCode.flag){  //编码格式是否正确
+                    prompt.changeInfo(isCode.instructions);
+                    return;
+                }
+                $.ajax({
+                    url:Pathurl.code,
+                    type:"POST",
+                    dataType:"JSON",
+                    contentType:'application/json'
+                })
+                .then((data)=>{
+                        
+                })
+            })
+        }
+    }
+    myBase.init();
     // SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
     // setTimeout(()=>{SSE.close()},3000);
 })
