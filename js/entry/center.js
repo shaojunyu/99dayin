@@ -4727,9 +4727,6 @@ define('prompt', ['jquery'], function ($) {
         var _this = this;
         if (percent === 100) {
             this.prompt_ele.text('检测成功~开始上传');
-            setTimeout(function () {
-                _this.hidePrompt();
-            }, 800);
         }
     };
     Prompt.prototype.goPay = function (num) {
@@ -6020,9 +6017,11 @@ require([
         pre: $('.order-content'),
         history: $('.his-content'),
         order_btn: $('.orders-choice'),
-        checkout_modal: $('.paying'),
+        checkout_modal: $('.method'),
+        pay_model: $('.paying'),
         orderPage: $('.file-info'),
         wrapContent: $('#warpper2 #scroller'),
+        payMethod: $('.wetChat,.aliyPay'),
         deleteOrder: function deleteOrder($target) {
             var parent_li = $target.parents('li'), orderId = $target.attr('data-order');
             $.ajax({
@@ -6116,7 +6115,7 @@ require([
                         _this.deleteOrder($target);
                     }
                 } else if ($target.hasClass('go-pay')) {
-                    var li = $target.parents('li'), num = li.find('.order-num').text(), money = li.find('.money').text();
+                    console.log(123);
                     openModal(_this.checkout_modal, false);
                 } else if ($target.hasClass('showFiles')) {
                     var data = $target.data('order');
@@ -6180,6 +6179,9 @@ require([
                         prompt.changeInfo('请求失败,请重试~');
                     });
                 }
+            });
+            this.payMethod.on('click', function () {
+                openModal(_this.pay_model, false);
             });
         }
     };

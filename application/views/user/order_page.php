@@ -161,7 +161,7 @@
                                     </div>
                                 </div>
                                 <div class="order-btns">
-                                    <a class="go-pay"  target="view_window" href="./pay?orderId=<?php echo $order->objectId;?>" data-seq='1'>去付款</a>
+                                    <a class="go-pay" href="javascript:void(0)">去付款</a>
                                     <a class="cancel" data-order="<?php echo $order->objectId;?>" href="javascript:void(0)">取消订单</a>
                                 </div>
                                 <div class="summary">
@@ -236,16 +236,24 @@
     <div class="paying" data-num=''>
         <header class="title">支付中<i class="close simplemodal-close">X</i></header>
         <article class="content">
-            <p>您将转至支付宝网站进行支付！</p>
-            <p>请您在新打开的支付宝页面进行支付，支付完成前请不要关闭此窗口。</p>
+            <p>您将转至支付页面进行支付！</p>
+            <p>请您在新打开的支付页面进行支付，支付完成前请不要关闭此窗口。</p>
         </article>
         <footer class="paying-btn">
             <button>已完成支付</button>
             <button>支付遇到问题</button>
         </footer>
     </div>
+     <div class="method" data-num=''>
+        <header class="title">支付方式<i class="close simplemodal-close">X</i></header>
+        <article class="content">
+            <p>请选择支付方式~</p>
+        </article>
+        <footer class="paying-btn">
+            <a href="javascript:void(0)" class="wetChat">微信支付</a><a href="javascript:void(0)" class="aliyPay">支付宝支付</a>
+        </footer>
+    </div>
     <script src="js/lib/require.js" data-main="js/entry/center.js"></script>
-   
 </body>
 
 </html>

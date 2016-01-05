@@ -62,7 +62,9 @@
                         <img style="width:120px;height:120px;" src="./img/QR-code.png">
                     </div>
                 </div>
-                 <p class="declaration" href="javascript:void(0)">@2015 99dayin.com 版权所有</p>
+                 <p class="declaration" style="font-size:14px; color: #696969;">© 2015 巧然电商版权所有 
+                 鄂ICP备15018392号
+</p>
             </footer>
 
         </div>

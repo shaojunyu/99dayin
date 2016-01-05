@@ -249,7 +249,9 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                  * 文件上传进度条
                  */
                 UploadProgress(up, file) {
+                    console.log("new");
                     prompt.showInfo(file.percent + "%"); //注意一下这里的Progress会提醒两次上传100%
+                    console.log(file.percent);
                     if (file.percent === 100) {
                         upload.flag++;
                     }
@@ -496,10 +498,10 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                             fileMD5: hash
                         })
                     })
-                    .then(data => {
+                    .then((data) => {
                         if (data.success) { //如果不存在的话
                             up.removeFile(file); //删除队列中已经存在的文件
-                            upload.addFileToken(file);
+                            prompt.changeInfo("文件已存在!");
                         } else {
                             upload.getAjax(up);
                         }
