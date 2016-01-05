@@ -60,16 +60,18 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
         username: Encryption.Encryption(''), // 验证用户名是否存在
         sendOrder: Encryption.Encryption('../index.php/api/getOrderInfo'), //获取订单详情
         sendConfirm: Encryption.Encryption('../index.php/api/verifySmsCode'),
-         logout: Encryption.Encryption('../index.php/api/logout')
+        logout: Encryption.Encryption('../index.php/api/logout')
 
     }
     var Order = {
         pre: $('.order-content'), //未处理订单
         history: $('.his-content'), //历史订单
         order_btn: $('.orders-choice'), //切换未处理订单和历史订单
-        checkout_modal: $('.paying'), //支付模态框
+        checkout_modal: $('.method'), //支付方式选择模态框
+        pay_model: $('.paying'), //支付模态框
         orderPage: $('.file-info'), //订单详情框
         wrapContent: $('#warpper2 #scroller'), //订单内容
+        payMethod: $('.wetChat,.aliyPay'), //支付方式
         deleteOrder: function($target) {
             var parent_li = $target.parents('li'),
                 orderId = $target.attr('data-order');
@@ -80,7 +82,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
             $.ajax({
                     url: Pathurl.delteOrd,
                     type: "POST",
-                    dataType:"JSON",
+                    dataType: "JSON",
                     contentType: 'application/json',
                     data: JSON.stringify({
                         orderId: orderId
@@ -167,9 +169,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     }
                     //点击按钮执行支付功能
                 } else if ($target.hasClass('go-pay')) {
-                    var li = $target.parents('li'),
-                        num = li.find('.order-num').text(), //获取数量  
-                        money = li.find('.money').text(); //获取总价    
+                    console.log(123);
                     openModal(_this.checkout_modal, false);
                 } else if ($target.hasClass('showFiles')) {
                     var data = $target.data('order');
@@ -229,7 +229,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                         }
                     });
                 } else if ($target.hasClass('showFiles')) {
-                     var data = $target.data('order');
+                    var data = $target.data('order');
                     $.ajax({
                             url: Pathurl.sendOrder,
                             type: 'POST',
@@ -247,6 +247,9 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                             prompt.changeInfo("请求失败,请重试~");
                         })
                 }
+            });
+            this.payMethod.on('click', function() {
+                openModal(_this.pay_model, false);
             });
         }
     }
@@ -286,6 +289,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
         phone: $('.phone'), //手机
         CF_code: $('.confir-code'), //验证码
         address: $('.address'), //地址
+
         file: new Array(),
         security: '', //验证码
         showImg: function(file, img) {
@@ -379,7 +383,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     prompt.changeInfo('输入不能为空,请先输入!');
                 } else if (!reg.test(newPs)) {
                     prompt.changeInfo('密码以字母开头，只能包含字母,数字,下划线!');
-                } else if(newPs === oldPs){
+                } else if (newPs === oldPs) {
                     prompt.changeInfo("修改密码不能与原始密码重复~");
                 } else if (newPs !== confirm) {
                     prompt.changeInfo('两次密码输入不一致!');
@@ -387,7 +391,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     /*
                      * 发送密码                    
                      */
-                     prompt.showInfo("正在修改中");
+                    prompt.showInfo("正在修改中");
                     $.ajax({
                             url: Pathurl.promptPs,
                             type: "POST",
@@ -402,17 +406,17 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                             if (data.success) {
                                 _this.promptPs.parents('.change-ps').hide();
                                 $.ajax({
-                                   url: Pathurl.logout,
-                                   dataType:"JSON",
-                                   type:"GET",
-                                   success: function(data) {
-                                       if (data.success){
+                                    url: Pathurl.logout,
+                                    dataType: "JSON",
+                                    type: "GET",
+                                    success: function(data) {
+                                        if (data.success) {
                                             prompt.showInfo("密码修改成功!");
-                                           window.location.href = './';
-                                       }
-                                   }
-                               });
-                                
+                                            window.location.href = './';
+                                        }
+                                    }
+                                });
+
 
                             } else {
                                 prompt.changeInfo("密码修改失败~");
@@ -491,28 +495,28 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
                     }
                 }
                 if (flag === 0) {
-                        $.ajax({
-                                url: Pathurl.changeInfo,
-                                type: 'POST',
-                                dataType:'JSON',
-                                contentType: "application/json",
-                                data: JSON.stringify({
-                                    name: name,
-                                    email: email
-                                }),
-                                beforeSend: function() {
-                                    _this.change_btn.addClass('sending');
-                                },
-                                success: function(data) {
-                                    if (data.success) {
-                                        prompt.changeInfo('信息修改成功,请重新登录!')
-                                        _this.change_btn.parents('.left-part').hide();
-                                    } else {
-                                        prompt.changeInfo('信息修改失败，请再次尝试');
-                                        _this.change_btn.removeClass('sending');
-                                    }
-                                }
-                            });
+                    $.ajax({
+                        url: Pathurl.changeInfo,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            name: name,
+                            email: email
+                        }),
+                        beforeSend: function() {
+                            _this.change_btn.addClass('sending');
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                prompt.changeInfo('信息修改成功,请重新登录!')
+                                _this.change_btn.parents('.left-part').hide();
+                            } else {
+                                prompt.changeInfo('信息修改失败，请再次尝试');
+                                _this.change_btn.removeClass('sending');
+                            }
+                        }
+                    });
                 } else {
                     prompt.changeInfo('您的部分信息录入不正确!');
                 }
@@ -579,7 +583,7 @@ require(['jquery', 'scroll', 'utility', 'prompt', 'enroll', 'ping++', 'modal', '
         },
         init: function() {
             var _this = this;
-            $('.paying-btn button,.close').on('click',()=>{
+            $('.paying-btn button,.close').on('click', () => {
                 window.location.href = "./orders"; //刷新页面
             })
         }
