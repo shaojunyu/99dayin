@@ -120,7 +120,19 @@ class User extends CI_Controller{
 	}
 	
 	function alipay(){
-		
+		$orderId = $this->input->get('orderId');
+		$bmobOrder = new BmobObject('Order');
+		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'","objectId":"'.$orderId.'","state":"'.orderState::UNPAID.'"}'));
+		if (empty($orderId) or empty($res->results)) {
+			echo '无效订单号！';
+			header('Location: '.base_url('user/orders'));
+			exit();
+		}else {
+			$order = new MY_Order();
+			$order->createAlipay();
+			//$charge = $order->getChargeInfo($chargeId);
+			//$this->load->view('user/pay_page',array('charge'=>$pay,'orderInfo'=>$res->results[0]));
+		}
 	}
 	
 
