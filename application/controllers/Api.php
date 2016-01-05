@@ -303,13 +303,13 @@ class Api extends CI_Controller{
 		}
 		
 		//文件信息写到本地文件，供文件监听器调用
-		try {
+// 		try {
 			//注意
-			$filedata = array('uploader'=>$uploader,'filename'=>urlencode($filename));
-			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
-		} catch (Exception $e) {
-			$this->echo_msg(false,$e->error_msg);
-		}
+// 			$filedata = array('uploader'=>$uploader,'filename'=>urlencode($filename));
+// 			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
+// 		} catch (Exception $e) {
+// 			$this->echo_msg(false,$e->error_msg);
+// 		}
 		
 		//文件信息保存到云
 		try {
