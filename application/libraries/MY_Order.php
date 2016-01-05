@@ -159,6 +159,68 @@ class MY_Order extends MY_Base_Class{
 			
 		}
 	}
+	
+	public function alipay(){
+		$channel = 'alipay_pc_direct';
+		switch ($channel){
+			case 'wx_pub_qr':
+				$extra = array(
+				'product_id' => 'print'
+						);
+						break;
+			case 'alipay_pc_direct':
+				$extra = array(
+						'success_url' => 'http://www.99dayin.com/success');
+				break;
+			default:
+				$extra = array();
+				break;
+		}
+		try {
+			$ch = Pingpp\Charge::create(array(
+					'subject' => '99打印在线支付',
+					'body' => '文档打印',
+					'amount'=>10,
+					'order_no'=>rand(1,99999),
+					'currency'  => 'cny',
+					'extra'     => $extra,
+					'channel'   => $channel,
+					'client_ip' => '127.0.0.1',
+					'app'       => array('id' => $this->pingpp_app_id)
+			));
+				
+			//更新订单的信息
+			//var_dump($ch->__toStdObject());
+			//$this->bmobOrder->update($orderId,array('pingppId'=>$ch->__toArray()['id']));
+			$alipay_pc_direct = $ch->__toStdObject()->credential->alipay_pc_direct;
+			var_dump($ch->__toStdObject()->credential->alipay_pc_direct);
+			$alipay_pc_direct_array = array();
+			foreach ($alipay_pc_direct as $k => $v){
+					$alipay_pc_direct_array[$k] = $v;
+			}
+			var_dump($alipay_pc_direct_array);
+			$this->argSort($alipay_pc_direct_array);
+			$sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8' method='post'>";
+			while (list ($key, $val) = each ($alipay_pc_direct_array)) {
+				$sHtml.= $key.":<input type='' name='".$key."' value='".$val."'/><br/>";
+			}
+			
+			//submit按钮控件请不要含有name属性
+			$sHtml = $sHtml."<input type='submit' value='提交'></form>";
+			
+			$sHtml = $sHtml."<script>document.forms['alipaysubmit'];</script>";
+			echo  $sHtml;
+		} catch (\Pingpp\Error\Base $e) {
+			header('Status: ' . $e->getHttpStatus());
+			echo($e->getHttpBody());
+		}
+	}
+	
+	function argSort($para) {
+		ksort($para);
+		reset($para);
+		return $para;
+	}
 }
 
 

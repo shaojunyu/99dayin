@@ -23,6 +23,6 @@ class Test extends CI_Controller{
 		var_dump($res);
 		
 		$order = new MY_Order();
-		$order->createOrder();
+		$order->alipay();
 	}
 }
