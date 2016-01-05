@@ -102,7 +102,7 @@ class User extends CI_Controller{
 	
 	
 	//支付页面
-	function pay() {
+	function wxpay() {
 		$orderId = $this->input->get('orderId');
 		$bmobOrder = new BmobObject('Order');
 		$res = $bmobOrder->get('',array('where={"userId":"'.$this->userId.'","objectId":"'.$orderId.'","state":"'.orderState::UNPAID.'"}'));
@@ -112,11 +112,15 @@ class User extends CI_Controller{
 			exit();
 		}else {
 			$order = new MY_Order();
-			$pay = $order->createPingPay();
+			$pay = $order->createWXPay();
 			//$charge = $order->getChargeInfo($chargeId);
 			$this->load->view('user/pay_page',array('charge'=>$pay,'orderInfo'=>$res->results[0]));
 		}
 		//$this->load->view('errors/html/error_general.php');
+	}
+	
+	function alipay(){
+		
 	}
 	
 
