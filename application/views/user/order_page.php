@@ -250,7 +250,7 @@
             <p>请选择支付方式~</p>
         </article>
         <footer class="paying-btn">
-            <a href="./wxpay?orderId=<?php echo $order->objectId;?>" target="blank" class="wetChat">微信支付</a><a href="./alipay?orderId=<?php echo $order->objectId; ?>" class="aliyPay">支付宝支付</a>
+            <a href="./wxpay?orderId=<?php echo $order->objectId;?>" target="blank" class="wetChat">微信支付</a><a href="./alipay?orderId=<?php echo $order->objectId; ?>" target="blank"  class="aliyPay">支付宝支付</a>
         </footer>
     </div>
     <script src="js/lib/require.js" data-main="js/entry/center.js"></script>
