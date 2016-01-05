@@ -49,6 +49,7 @@ require(['encryption'], function(encryption) {
         xhr.send(JSON.stringify({
             chargeId: chargeId
         }));
+       
     };
 
     setTimeout(() => {

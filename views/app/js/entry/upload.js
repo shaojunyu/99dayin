@@ -501,7 +501,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                     .then((data) => {
                         if (data.success) { //如果不存在的话
                             up.removeFile(file); //删除队列中已经存在的文件
-                            prompt.changeInfo("文件已存在!");
+                            upload.addFileToken(file);
                         } else {
                             upload.getAjax(up);
                         }

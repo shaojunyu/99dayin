@@ -11,8 +11,7 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
   <script type="text/javascript">
     
   </script>
-  <script type="text/javascript" src="./js/lib/jQuery.js"></script>
-  <script type="text/javascript" src="./js/entry/pay.js"></script>
+ 
   <!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>-->
 <style id="style-1-cropbar-clipper">
 .en-markup-crop-options {
@@ -87,18 +86,7 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
                     <p><label>创建时间</label><span class="pay_bill_value"><?php echo $orderInfo->createdAt;?></span></p>
                   </div>
                 </div>
-                                            <!--
-            <div class="pay_bill_unit no_extra">
-              <dl>
-                <dt></dt>
-                <dd></dd>
-              </dl>
-              <div class="pay_bill_info">
-                <p><label>交易单号</label><span class="pay_bill_value"></span></p>
-                <p><label>创建时间</label><span class="pay_bill_value"></span></p>
-              </div>
-            </div>
-            -->
+                                           
           </div>
         </div>
       </div>
@@ -108,14 +96,7 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
             <i class="icon30_add_on pngFix"></i>
           </div>
         </div>
-<!--         
-  这是另一种更简单的结构，但是扩展性较差。
-        <dl class="pay_widget help">
-          <dt class="widget_name">客服</dt>
-          <dd class="widget_desc">020 - 865437767</dd>
-          <dd class="widget_pic"><i class="icon30_add_on"></i></dd>
-        </dl>
- -->        
+    
       </div>
     </div>
     <b class="mail_box_corner left pngFix"></b>
@@ -125,10 +106,5 @@ $wx_qr = $charge->__toArray()['credential']->__toArray()['wx_pub_qr'];
 <div class="footer">
   <p class="copyright">© 武汉巧然电子科技有限公司</p>
 </div>
-<!--[if IE 6]>
-<script type="text/javascript" src="/zh_CN/htmledition/js/DD_belatedPNG1c27aa.js"></script>
-<script type="text/javascript"> window.onload = function() { DD_belatedPNG.fix(".pngFix"); } </script>
-<![endif]-->
-
-
+  <script src="js/lib/require.js" data-main="js/entry/pay.js"></script>
 </body></html>

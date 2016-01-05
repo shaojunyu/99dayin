@@ -11216,7 +11216,7 @@ require([
                 }).then(function (data) {
                     if (data.success) {
                         up.removeFile(file);
-                        prompt.changeInfo('文件已存在!');
+                        upload.addFileToken(file);
                     } else {
                         upload.getAjax(up);
                     }
