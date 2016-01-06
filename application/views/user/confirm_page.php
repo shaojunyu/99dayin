@@ -127,7 +127,7 @@
                             	<td  role="ppt-mount">
                             	<select data-role="ppt-mount">
                             	<option value="1"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$onePerPage){echo 'selected';}?>>1</option>
-                            	<option value="4"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$fourPerPage){echo 'selected';}?>>4</option>
+                            	<option selected="selected" value="4"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$fourPerPage){echo 'selected';}?>>4</option>
                             	<option value="6"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$sixPerPage){echo 'selected';}?>>6</option>
                             	<option value="9"<?php if ($item->printSettings->pptPerPage == pptPerPAge::$ninePerPage){echo 'selected';}?>>9</option>
                             	</select>

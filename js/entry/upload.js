@@ -11034,19 +11034,13 @@ require([
                 });
             },
             UploadProgress: function UploadProgress(up, file) {
-                console.log('new');
                 prompt.showInfo(file.percent + '%');
-                console.log(file.percent);
                 if (file.percent === 100) {
-                    upload.flag++;
-                }
-                if (upload.flag === 2) {
-                    upload.flag = 0;
+                    prompt.hidePrompt();
                 }
             },
             FileUploaded: function FileUploaded(up, file, info) {
                 if (info.status == 200) {
-                    prompt.loading(100);
                     upload.addFileToken(file);
                 } else {
                     prompt.changeInfo('上传失败!');
@@ -11094,7 +11088,10 @@ require([
                 }
             });
             this.content_a.on('click', function (e) {
-                SSE.close();
+                try {
+                    SSE.close();
+                } catch (err) {
+                }
             });
         },
         fillUpload: function fillUpload(up, data) {
@@ -11205,25 +11202,39 @@ require([
         },
         confirm: function confirm(up, hash, file) {
             file.hash = hash;
-            var sign = parseSuffix(file.getNative());
-            if (sign) {
-                $.ajax({
-                    url: Pathurl.confirmHash,
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ fileMD5: hash })
-                }).then(function (data) {
-                    if (data.success) {
-                        up.removeFile(file);
-                        upload.addFileToken(file);
-                    } else {
-                        upload.getAjax(up);
-                    }
-                });
+            if (this.repeatFile(hash)) {
+                prompt.changeInfo('文件已存在!');
             } else {
-                up.removeFile(file);
+                var sign = parseSuffix(file.getNative());
+                if (sign) {
+                    $.ajax({
+                        url: Pathurl.confirmHash,
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ fileMD5: hash })
+                    }).then(function (data) {
+                        if (data.success) {
+                            up.removeFile(file);
+                            prompt.changeInfo('上传成功~');
+                            upload.addFileToken(file);
+                        } else {
+                            upload.getAjax(up);
+                        }
+                    });
+                } else {
+                    up.removeFile(file);
+                }
             }
+        },
+        repeatFile: function repeatFile(hash) {
+            var i = $('#scroller .logo-error');
+            for (var val in i) {
+                if (i[val].dataset.mark == hash) {
+                    return true;
+                }
+            }
+            return false;
         }
     };
     upload.init();

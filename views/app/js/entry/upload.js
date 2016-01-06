@@ -10,25 +10,27 @@ require.config({
         'fileupload': "lib/plupload.full.min",
         'md5': "lib/spark-md5.min",
         'encryption': "entry/function/encryption",
-        'validate':"entry/function/validate",
+        'validate': "entry/function/validate",
         'tpl': 'entry/function/template'
     }
 });
 "use strict";
 
-require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', 'modal','fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5, tpl,validate,modal) {
+require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl', 'validate', 'modal', 'fileupload', 'utility', 'header'], function($, iscroll, prompt, Encryption, md5, tpl, validate, modal) {
     tpl = tpl.tpl;
     var validate = validate.val;
+
     function moveBlock($target, location) {
         $target.css('transform', 'translateX(' + location + 'px)');
     }
 
-    function detectShow($target, close) {  //打开模态框
+    function detectShow($target, close) { //打开模态框
         if ($target.css('display') !== 'block') {
             $.modal.close();
             openModal($target, close);
         }
     }
+
     function changeClass($target, classname) {
         $target.addClass(classname).siblings().removeClass(classname);
     }
@@ -233,7 +235,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
             ],
             max_file_size: "100mb", //设置最大上传文件大小
             prevent_duplicates: true //防止上传相同大小文件
-
         },
         init: {
             /*
@@ -249,15 +250,13 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                  * 文件上传进度条
                  */
                 UploadProgress(up, file) {
-                    console.log("new");
+
                     prompt.showInfo(file.percent + "%"); //注意一下这里的Progress会提醒两次上传100%
-                    console.log(file.percent);
+
                     if (file.percent === 100) {
-                        upload.flag++;
+                        prompt.hidePrompt();
                     }
-                    if (upload.flag === 2) {
-                        upload.flag = 0;
-                    }
+
                 },
                 /*
                  * 当筛选完毕后上传,新文件,并提示上传成功
@@ -265,7 +264,6 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                 FileUploaded(up, file, info) {
                     if (info.status == 200) {
                         //添加购物车数据
-                        prompt.loading(100);
                         upload.addFileToken(file);
                         // SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
                     } else {
@@ -324,7 +322,12 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
                 }
             });
             this.content_a.on('click', function(e) {
-                SSE.close();
+                try {
+                    SSE.close();
+                } catch (err) {
+
+                }
+
             })
         },
         fillUpload(up, data) {
@@ -486,30 +489,44 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
         confirm(up, hash, file) { //注意这里的原来的uploadfile对象      
             file.hash = hash;
             //验证文件尾缀
-
-            var sign = parseSuffix(file.getNative());
-            if (sign) {
-                $.ajax({
-                        url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
-                        type: "POST",
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            fileMD5: hash
-                        })
-                    })
-                    .then((data) => {
-                        if (data.success) { //如果不存在的话
-                            up.removeFile(file); //删除队列中已经存在的文件
-                            upload.addFileToken(file);
-                        } else {
-                            upload.getAjax(up);
-                        }
-                    })
+            if (this.repeatFile(hash)) { //文件是否存在
+                prompt.changeInfo("文件已存在!");
             } else {
-                up.removeFile(file); //删除队列中已经存在的文件
+                var sign = parseSuffix(file.getNative());
+                if (sign) {
+                    $.ajax({
+                            url: Pathurl.confirmHash, //验证文件,将hash值传给后台验证
+                            type: "POST",
+                            dataType: "json",
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                fileMD5: hash
+                            })
+                        })
+                        .then((data) => {
+                            if (data.success) { //如果不存在的话
+                                up.removeFile(file); //删除队列中已经存在的文件
+                                prompt.changeInfo("上传成功~");
+                                upload.addFileToken(file);
+                            } else {
+                                upload.getAjax(up);
+                            }
+                        })
+                } else {
+                    up.removeFile(file); //删除队列中已经存在的文件
+                }
             }
 
+
+        },
+        repeatFile(hash) { //检测文件是否已经存在
+            var i = $('#scroller .logo-error');
+            for (var val in i) {
+                if (i[val].dataset.mark == hash) {
+                    return true; //文件存在
+                }
+            }
+            return false; //文件不存在
         }
     }
     upload.init();
@@ -776,46 +793,46 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl','validate', '
      */
     let myBase = {
         leftBar: $('.leftBar'),
-        rightFile:$('.rightFile'),
-        apply:$('.apply'),
-        code:$('.code'),
+        rightFile: $('.rightFile'),
+        apply: $('.apply'),
+        code: $('.code'),
         init() {
             var leftScroll,
                 rightScroll;
-            setTimeout(()=>{
+            setTimeout(() => {
                 leftScroll = bindScroll(this.leftBar); //执行绑定
-                rightScroll =bindScroll(this.rightFile);
-            },3000);
-            this.apply.on("click",()=>{
+                rightScroll = bindScroll(this.rightFile);
+            }, 3000);
+            this.apply.on("click", () => {
                 let _code = this.code.val().trim(),
                     isEmpty = validate({
-                        value:_code,
-                        type:'isEmpty'
+                        value: _code,
+                        type: 'isEmpty'
                     }),
                     isCode = validate({
-                        value:_code,
-                        type:"isCode"
+                        value: _code,
+                        type: "isCode"
                     });
-                if(!isEmpty.flag){  //是否为空
+                if (!isEmpty.flag) { //是否为空
                     prompt.changeInfo(isEmpty.instructions);
                     return;
                 }
-                if(!isCode.flag){  //编码格式是否正确
+                if (!isCode.flag) { //编码格式是否正确
                     prompt.changeInfo(isCode.instructions);
                     return;
                 }
                 $.ajax({
-                    url:Pathurl.code,
-                    type:"POST",
-                    dataType:"JSON",
-                    contentType:'application/json',
-                    data:{
-                        code:_code
-                    }
-                })
-                .then((data)=>{
-                        
-                })
+                        url: Pathurl.code,
+                        type: "POST",
+                        dataType: "JSON",
+                        contentType: 'application/json',
+                        data: {
+                            code: _code
+                        }
+                    })
+                    .then((data) => {
+
+                    })
             })
         }
     }
