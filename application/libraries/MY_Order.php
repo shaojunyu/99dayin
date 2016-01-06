@@ -195,7 +195,7 @@ class MY_Order extends MY_Base_Class{
 			}
 				
 			//submit按钮控件请不要含有name属性
-			//$sHtml = $sHtml."<input type='submit' value='提交'></form>";
+			$sHtml = $sHtml."</form>";
 				
 			$sHtml = $sHtml."<script>document.forms['alipaysubmit'].submit();</script>";
 			echo  $sHtml;
