@@ -111,7 +111,7 @@ class printSettings{
 		$this->isTwoSides = false;
 		$this->amount = 1;
 		$this->isColor = false;
-		$this->pptPerPage = pptPerPage::$onePerPage;
+		$this->pptPerPage = pptPerPage::$fourPerPage;
 		$this->direction = printDirection::$vertical;
 		$this->remark = '';
 	}
