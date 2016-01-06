@@ -11035,13 +11035,11 @@ require([
             },
             UploadProgress: function UploadProgress(up, file) {
                 prompt.showInfo(file.percent + '%');
-                if (file.percent === 100) {
-                    prompt.hidePrompt();
-                }
             },
             FileUploaded: function FileUploaded(up, file, info) {
                 if (info.status == 200) {
                     upload.addFileToken(file);
+                    prompt.changeInfo('文件上传成功~');
                 } else {
                     prompt.changeInfo('上传失败!');
                 }
@@ -11205,6 +11203,7 @@ require([
             if (this.repeatFile(hash)) {
                 prompt.changeInfo('文件已存在!');
             } else {
+                console.log('good');
                 var sign = parseSuffix(file.getNative());
                 if (sign) {
                     $.ajax({
@@ -11229,8 +11228,9 @@ require([
         },
         repeatFile: function repeatFile(hash) {
             var i = $('#scroller .logo-error');
-            for (var val in i) {
-                if (i[val].dataset.mark == hash) {
+            console.dir(i);
+            for (var j = 0; j < i.length; j++) {
+                if (i[j].dataset.mark == hash) {
                     return true;
                 }
             }

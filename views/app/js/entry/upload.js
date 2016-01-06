@@ -250,13 +250,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl', 'validate', 
                  * 文件上传进度条
                  */
                 UploadProgress(up, file) {
-
                     prompt.showInfo(file.percent + "%"); //注意一下这里的Progress会提醒两次上传100%
-
-                    if (file.percent === 100) {
-                        prompt.hidePrompt();
-                    }
-
                 },
                 /*
                  * 当筛选完毕后上传,新文件,并提示上传成功
@@ -265,6 +259,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl', 'validate', 
                     if (info.status == 200) {
                         //添加购物车数据
                         upload.addFileToken(file);
+                        prompt.changeInfo("文件上传成功~");
                         // SSE.init();  //从这里开始发送SSE,用来表示后台的发送的格式是否正确
                     } else {
                         prompt.changeInfo("上传失败!");
@@ -492,6 +487,7 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl', 'validate', 
             if (this.repeatFile(hash)) { //文件是否存在
                 prompt.changeInfo("文件已存在!");
             } else {
+                console.log("good");
                 var sign = parseSuffix(file.getNative());
                 if (sign) {
                     $.ajax({
@@ -521,8 +517,10 @@ require(['jquery', 'iscroll', 'prompt', 'encryption', 'md5', 'tpl', 'validate', 
         },
         repeatFile(hash) { //检测文件是否已经存在
             var i = $('#scroller .logo-error');
-            for (var val in i) {
-                if (i[val].dataset.mark == hash) {
+            console.dir(i);
+            for (var j =0;j<i.length;j++) {
+                
+                if (i[j].dataset.mark == hash) {
                     return true; //文件存在
                 }
             }
