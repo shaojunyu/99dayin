@@ -430,7 +430,7 @@ class Api extends CI_Controller{
 	public function createOrder(){
 		$address = "";
 		$shop = "";
-		if (isset($this->post_data->address) and isset($this->post_data->shop)) {
+		if (isset($this->post_data->address->area) and isset($this->post_data->shop)) {
 			$address = $this->post_data->address->area.$this->post_data->address->build.'栋'.$this->post_data->address->num;
 			$shop = $this->post_data->shop;
 		}else {
