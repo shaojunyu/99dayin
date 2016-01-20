@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+	<meta property="qc:admins" content="1464750642611411166375" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="./styles/homepage.css" />
