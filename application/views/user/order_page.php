@@ -11,35 +11,21 @@
 
 <body>
     <div class="prompt"></div>
-    <div class="header">
-        <div class="setWidth">
-            <a class="logo" href="#">
-                <img class="logo-print" src="./img/logo.png" alt="logo" />
-                <span>九九打印</span>
-            </a>
-            <div class="titles">
-                <div class="title-btn homepage-btn" data-content="首页">首页</div>
-                <div class="title-btn introduction" data-content="简介">简介</div>
-                <div class="title-btn art-base" data-content="本校文库">本校文库</div>
-                <div class="title-btn"><span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span></div>
-            </div>
-        </div>
-    </div>
+	<?php $this->load->view('public/page_header');?>
     <div class="back-control">
         <div class="content">
             <div class="left-part basic-detail">
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href="">李广先</a>
-                        <p>手机:<span>1858232323</span></p>
-                        <p>账户类型:<span>管理员</span></p>
-                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                        <a href="javascript:void(0)"><?php echo $this->session->userdata('username');?></a>
+                        
+                        <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
-                <p class="indicative">认证信息</p>
+                <p class="indicative">名称</p>
                 <div class="authentic">
-                    <button class="authentic-btn">现在去认证</button>
+                    <button class="authentic-btn">九九打印</button>
                     <div class="authenticating">
                         <button>认证中...</button>
                         <a href="">联系客服</a>
@@ -47,9 +33,8 @@
                 </div>
                 <p class="indicative">个人信息</p>
                 <div class="info">
-                    <p>电话：<span>18888888888</span></p>
-                    <p>邮箱：<span>321312@qq.d</span></p>
-                    <p>收货地址：<span>韵苑21111</span></p>
+                    <p>手机：<span><?php echo isset($userInfo->mobilePhoneNumber)?$userInfo->mobilePhoneNumber:'暂无';?></span></p>
+                    <p>邮箱：<span><?php if (isset($userInfo->email)){echo $userInfo->email;}else{echo '暂无';}?></span></p>
                 </div>
                 <div class="basic-btn">
                     <button class="edit-info">编辑信息</button>
@@ -60,10 +45,9 @@
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href="">李广先</a>
-                        <p>手机:<span>1858232323</span></p>
-                        <p>账户类型:<span>管理员</span></p>
-                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                        <a href=""><?php echo $this->session->userdata('username');?></a>
+                        <p>手机:<span><?php echo isset($userInfo->mobilePhoneNumber)?$userInfo->mobilePhoneNumber:'暂无';?></span></p>
+                        <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
                 <p class="statement">为保护版权，我们需要确认您是本校学生。 我们向您保证，您的资料不会被泄露。 请放心上传。
@@ -89,10 +73,9 @@
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href="">李广先</a>
-                        <p>手机:<span>1858232323</span></p>
-                        <p>账户类型:<span>管理员</span></p>
-                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                        <a href=""><?php echo $this->session->userdata('username');?></a>
+                        <p>手机:<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
+                        <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
                 <div class="ps-input">
@@ -113,26 +96,23 @@
                 <div class="per-detail">
                     <img class="portrait" src="img/portrait.png" />
                     <div class="detail">
-                        <a href="">李广先</a>
-                        <p>手机:<span>1858232323</span></p>
-                        <p>账户类型:<span>管理员</span></p>
-                        <p>积分:<span>123</span> 余额:<span>10</span>元</p>
+                        <a href=""><?php echo $this->session->userdata('username');?></a>
+                        <p>手机:<span><?php echo $userInfo->mobilePhoneNumber;?></span></p>
+                        <p>积分:<span></span> 余额:<span></span>元</p>
                     </div>
                 </div>
                 <p class="info-title">个人信息</p>
                 <div class="ps-input ">
-                    <input class="name" type="type" value="123" ><span>姓名:</span></div>
+                    <input class="name" type="type" value="<?php echo isset($userInfo->name)?$userInfo->name:'';?>" ><span>姓名:</span></div>
                 <div class="ps-input">
-                    <input class="phone" type="type" value="123"><span>手机:</span></div>
+                    <input class="phone" style="cursor:no-drop" type="type" readonly value="<?php echo $userInfo->mobilePhoneNumber;?>"><span>手机:</span></div>
                 <div class="ps-input">
-                    <button class="get-code">获取验证码</button>
-                    <input class="confir-code" type="type" data-iden='0'><span>验证码:</span>
+                    <!-- <button class="get-code">获取验证码</button> -->
+                    <!-- <input class="confir-code" type="type" data-iden='0'><span>验证码:</span> -->
                 </div>
                 <div class="ps-input">
-                    <input class="email" type="type" value="123"><span>邮箱:</span>
+                    <input class="email" type="type" value="<?php echo isset($userInfo->email)?$userInfo->email:'';?>"><span>邮箱:</span>
                 </div>
-                <div class="ps-input">
-                    <input class="address" type="type" value="123"><span>收货地址:</span></div>
                 <div class="basic-btn">
                     <button class="back">取消</button>
                     <button class="change-btn">确认</button>
@@ -142,8 +122,6 @@
             <div class="right-part">
                 <div class="per-header">
                     <div class="extra-btn">
-                        <a href="javascript:void(0)">管理后台</a>
-                        <a href="javascript:void(0)">会员上传文件</a>
                     </div>
                     <div class="orders-choice">
                         <button class="pre-order-btn active">未处理订单</button>
@@ -169,29 +147,27 @@
                     * data-seq 是订单在原来数组中的位置                    
                     * -->
                     <div id="wrapper1" class="container pre-order">
-
                         <ul class="order-content" id="scroller">
-                   <?php 
-                    foreach ($orders as $order){
-                    	if ($order->state == 'UNPAID') {
-                    ?>
+                        <?php 
+                        	foreach ($orders as $order){
+                        		if($order->state == orderState::UNPAID){
+                        ?>
                             <li>
                                 <div class="order-details">
-                                    <div >订单编号:<span class="order-num">12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                    <div >订单编号:<span class="order-num"><?php echo $order->objectId;?></span></div>
+                                    <div>取货地址:<span>韵苑按打印店</span></div>
+                                    <div>包含文件:
+                                        <button class="showFiles" data-order="<?php echo $order->objectId;?>">查看文件</button>
+                                    </div>
                                 </div>
                                 <div class="order-btns">
-                               
-                                    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>
-                                    <a class="cancel" data-order="12324412312" href="javascript:void(0)">取消订单</a>
+                                    <a class="go-pay" href="javascript:void(0)">去付款</a>
+                                    <a class="cancel" data-order="<?php echo $order->objectId;?>" href="javascript:void(0)">取消订单</a>
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
-                                        总价：<span class="money">120</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
+                                        总价：<span class="money"><?php echo $order->totalPrice/100;?></span> 收货方式：
+                                        <span>自助取货</span> 支付状态：
                                         <span>未支付</span>
                                     </div>
                                     <img src="img/divided.png">
@@ -202,13 +178,17 @@
                     </div>
                     <div class="container his-order" id="wrapper2">
                         <ul class="his-content" id="scroller">
+                        <?php 
+                        foreach ($orders as &$order){
+                        	if ($order->state == orderState::PAID){
+                        ?>
                             <li>
                                 <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
+                                    <div>订单编号:<span><?php echo $order->objectId;?></span></div>
                                     <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
+                                    <div>包含文件:
+                                        <button class="showFiles" data-order="<?php echo $order->objectId;?>">查看文件</button>
+                                    </div>
                                 </div>
                                 <div class="order-btns">
                                     <!--    <a class="go-pay" href="javascript:void(0)" data-seq='1'>去付款</a>       -->
@@ -216,92 +196,64 @@
                                 </div>
                                 <div class="summary">
                                     <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
+                                        总价：<span><?php echo $order->totalPrice/100; ?></span> 收货方式：
+                                        <span>自助取货</span> 支付状态：
+                                        <span>已完成</span>
                                     </div>
                                     <img src="img/divided.png">
                                 </div>
                             </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span>未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="order-details">
-                                    <div>订单编号:<span>12fdsafdfdsafdsakfjsdjklfdksajkfkdsjkljakl;s;j;lkksajkfjdjsakjfksdklfjksddajfkljsakl3</span></div>
-                                    <div>收货地址:<span>韵苑按打印店</span></div>
-                                    <div>用户名:<span>CCC</span></div>
-                                    <div>联系电话:<span>18888888888</span></div>
-                                    <div>包含文件:<span title="201301000233123009">201301000233123009</span></div>
-                                </div>
-                                <div class="order-btns">
-                                    <a class="add-print" data-order="12324412312" data-seq='1' href="javascript:void(0)">加印</a>
-                                </div>
-                                <div class="summary">
-                                    <div class="summary-info">
-                                        总价：<span>120￥</span> 收货方式：
-                                        <span>送货上门</span> 支付状态：
-                                        <span id="status">未支付</span>
-                                    </div>
-                                    <img src="img/divided.png">
-                                </div>
-                            </li>
+                            <?php }}?>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+      <div class="file-info">
+        <header><span>序号</span>
+            <span>文件名</span>
+            <span>单/双面</span>
+            <span>横/竖</span>
+            <span>每页PPT数量</span>
+            <span>大小</span>
+            <span>份数</span>
+        </header>
+        <div class="container files" id="warpper2">
+            <article id="scroller">
+           <!--  <div class="row" data-num='1'>
+                    <span>1</span>
+                    <span><i class="logo-minword"></i>华科大数学竞赛</span>
+                    <span>单</span>
+                    <span>横</span>
+                    <span></span>
+                    <span>A4</span>
+                    <span>1</span>
+                </div> -->
+            </article>
+        </div>
+    </div>
     <div class="paying" data-num=''>
         <header class="title">支付中<i class="close simplemodal-close">X</i></header>
         <article class="content">
-            <p>您将转至支付宝网站进行支付！</p>
-            <p>请您在新打开的支付宝页面进行支付，支付完成前请不要关闭此窗口。</p>
+            <p>您将转至支付页面进行支付！</p>
+            <p>请您在新打开的支付页面进行支付，支付完成前请不要关闭此窗口。</p>
         </article>
         <footer class="paying-btn">
             <button>已完成支付</button>
             <button>支付遇到问题</button>
         </footer>
     </div>
+     <div class="method" data-num=''>
+        <header class="title">支付方式<i class="close simplemodal-close">X</i></header>
+        <article class="content">
+            <p>请选择支付方式~</p>
+        </article>
+        <footer class="paying-btn">
+            <a href="./wxpay?orderId=<?php echo $order->objectId;?>" target="blank" class="wetChat">微信支付</a><a href="./alipay?orderId=<?php echo $order->objectId; ?>" target="blank"  class="aliyPay">支付宝支付</a>
+        </footer>
+    </div>
     <script src="js/lib/require.js" data-main="js/entry/center.js"></script>
-   
 </body>
 
 </html>

@@ -1,71 +1,104 @@
 <?php
-use leancloud\AVQuery;
-use leancloud\AVObject;
-use leancloud\AVLibraryException;
 
 require_once 'MY_Base_Class.php';
 //自定义订单类
 class MY_Order extends MY_Base_Class{
 	private $userId;
-	private $AVOrder;
+	private $orderId;
 	private $cart;
-	private $AVQuery;
 	private $pingpp_app_id;
+	private $bmobOrder;
+	private $address;
+	private $totalPrice;
 	
-	public function __construct(){
+	public function __construct($orderId = ''){
 		parent::__construct();
 		$this->userId = $this->CI->session->userdata('userId');
 		$this->cart = new MY_Cart();
-		$this->AVQuery = new AVQuery('Order');
+		$this->bmobOrder = new BmobObject('Order');
+		
 		//引入ping++
 		require_once APPPATH.'third_party/pingpp/init.php';
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
 		\pingpp\Pingpp::setApiKey($live_key);
+		
+		//订单号不为空，则从bomb拉去信息
+		if(!empty($orderId)){
+			$this->orderId = $orderId;
+			$res = $this->bmobOrder->get($orderId);
+			$orderInfo = $res->results[0];
+			$this->totalPrice = $orderInfo->totalPrice;
+		}
 	}
 	
 	/*
-	 * //创建成功，返回订单号
+	 * 创建成功，返回订单号
 	 */
-	public function createOrder(){
-		$this->AVQuery->where('userId', $this->userId);
-		$this->AVQuery->where('state', orderState::UNPAID);
-		$res = $this->AVQuery->find()->results;
-		if (!empty($res)) {
-			throw new MY_Exception('存在未支付订单，无法创建新订单！');
-			return ;
-		}
-		
+	public function createOrder($address,$shop){
 		//创建订单
 		$items = $this->cart->getItems();
 		if (empty($items)) {
 			throw new MY_Exception('购物车为空');
-			return ;
+			return;
 		}
 		
-		$this->AVOrder = new AVObject('Order');
-		$this->AVOrder->userId = $this->userId;
-		$this->AVOrder->items = $items;
-		$this->AVOrder->price = 10;
-		$this->AVOrder->state = orderState::UNPAID;
-		$order = $this->AVOrder->save();
-		$this->cart->deleteAll();
-		//创建ping++ 支付订单
-		return $order;
+		//查询是否存在未支付订单
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"'.$this->userId.'"}','limit=1'));
+		if (!empty($res->results)) {
+			throw new MY_Exception('存在未支付订单,无法创建新订单!');
+			return;
+		}
+		if (empty($address)) {
+			$address = '韵苑打印店';
+		}
+		try {
+			$this->bmobOrder->create(array(
+					'userId'=>$this->userId,
+					'username'=>$this->CI->session->userdata('username'),
+					'items'=>json_encode($items),
+					'totalPrice'=>$this->get_total($items),
+					'state'=>orderState::UNPAID,
+					'shop'=>$shop,
+					'address'=>$address,
+					'phone'=>$this->CI->session->userdata('phone')
+			));
+			$this->cart->deleteAll();
+		} catch (Exception $e) {
+			echo $e;
+		}
 		
 	}
 	
-	//ping++
-	public function createPingPay(){
-		$this->AVQuery->where('userId', $this->userId);
-		$this->AVQuery->where('state', orderState::UNPAID);
-		
-		$res = $this->AVQuery->find()->results;
+	/*
+	 * 计算订单价格
+	 * return int
+	 * 计价单位 分
+	 */
+	private function get_total($items){
+		$k=0;
+		$total = 0;
+		while (isset($items[$k])){
+			$total += $items[$k]->subtotal;
+			$k++;
+		}
+		return $total;
+	}
+	
+	/**
+	 * 创建ping++支付
+	 * @throws MY_Exception
+	 * @return multitype:object
+	 */
+	public function createWXPay(){
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"'.$this->userId.'"}','limit=1'));
 		if (empty($res)) {
 			throw new MY_Exception('暂无未支付订单！');
 		}
-		$orderId = $res[0]->objectId;
+		$res = $res->results[0];
+		//var_dump($res);
+		$orderId = $res->objectId;
 		//return $orderId;
 		//支付渠道 wx_pub_qr
 		$channel = 'wx_pub_qr';
@@ -87,8 +120,8 @@ class MY_Order extends MY_Base_Class{
 			$ch = Pingpp\Charge::create(array(
 					'subject' => '99打印在线支付',
 					'body' => '文档打印',
-					'amount'=>1,
-					'order_no'=>$orderId,
+					'amount'=>$res->totalPrice,
+					'order_no'=>$orderId.time(),
 					'currency'  => 'cny',
 					'extra'     => $extra,
 					'channel'   => $channel,
@@ -97,16 +130,79 @@ class MY_Order extends MY_Base_Class{
 			));
 			
 			//更新订单的信息
-			
+			//var_dump($ch->__toStdObject());
+			$this->bmobOrder->update($orderId,array('pingppId'=>$ch->__toArray()['id']));
 			return ($ch);
-			
-			
 			
 		} catch (\Pingpp\Error\Base $e) {
     		header('Status: ' . $e->getHttpStatus());
     		echo($e->getHttpBody());
 		}
 		
+	}
+	
+	public function createAlipay(){
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"'.$this->userId.'"}','limit=1'));
+		if (empty($res)) {
+			throw new MY_Exception('暂无未支付订单！');
+		}
+		$res = $res->results[0];
+		//var_dump($res);
+		$orderId = $res->objectId;
+		$channel = 'alipay_pc_direct';
+		switch ($channel){
+			case 'wx_pub_qr':
+				$extra = array(
+				'product_id' => 'print'
+						);
+						break;
+			case 'alipay_pc_direct':
+				$extra = array(
+				'success_url' => 'http://www.99dayin.com/user/orders');
+				break;
+			default:
+				$extra = array();
+				break;
+		}
+		try {
+			$ch = Pingpp\Charge::create(array(
+					'subject' => '99打印在线支付',
+					'body' => '文档打印',
+					'amount'=>$res->totalPrice,
+					'order_no'=>$orderId,
+					'currency'  => 'cny',
+					'extra'     => $extra,
+					'channel'   => $channel,
+					'client_ip' => '127.0.0.1',
+					'app'       => array('id' => $this->pingpp_app_id)
+			));
+	
+			//更新订单的信息
+			//var_dump($ch->__toStdObject());
+			$this->bmobOrder->update($orderId,array('pingppId'=>$ch->__toArray()['id']));
+			$alipay_pc_direct = $ch->__toStdObject()->credential->alipay_pc_direct;
+			//var_dump($ch->__toStdObject()->credential->alipay_pc_direct);
+			$alipay_pc_direct_array = array();
+			foreach ($alipay_pc_direct as $k => $v){
+				$alipay_pc_direct_array[$k] = $v;
+			}
+			//var_dump($alipay_pc_direct_array);
+			//$this->argSort($alipay_pc_direct_array);
+			echo '正在跳转至支付宝支付页面...';
+			$sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8' method='post'>";
+			while (list ($key, $val) = each ($alipay_pc_direct_array)) {
+				$sHtml.= "<input type='hidden' name='".$key."' value='".$val."'/><br/>";
+			}
+				
+			//submit按钮控件请不要含有name属性
+			$sHtml = $sHtml."</form>";
+				
+			$sHtml = $sHtml."<script>document.forms['alipaysubmit'].submit();</script>";
+			echo  $sHtml;
+		} catch (\Pingpp\Error\Base $e) {
+			header('Status: ' . $e->getHttpStatus());
+			echo($e->getHttpBody());
+		}
 	}
 	
 	/*
@@ -117,25 +213,28 @@ class MY_Order extends MY_Base_Class{
 		return $ch;
 	}
 	
-	public function payOrder(){
-		
+	public function cancle_order(){
+		$res = $this->bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'"}','limit=1'));
+		$res = $res->results[0];
+		$orderId = $res->ObjectId;
+		try {
+			$this->bmobOrder->update($orderId,array('state'=>orderState::CANCELED));
+		}catch (Exception $e){
+			
+		}
 	}
 	
-	public function getOders() {
-		
-	}
-	
-	public function confirmOrder(){
-		
-	}
+
 }
 
 
 class orderState{
-	const PAID = 'PAID';//已支付
+	const PAID = 'PAID';//已支付，等待打印
+	const PRINTED = 'PRINTED';//已打印完成
 	const UNPAID = 'UNPAID';//未支付
 	const CANCELED = 'CANCELED';//取消
 	const EXPIRED = 'EXPIRED';//过期
 	const OTHER  = 'OTHER';//其他
 }
+
 

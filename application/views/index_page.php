@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="./styles/homepage.css" />
-    <title>99打印</title>
+    <title>九九打印</title>
+   <!--[if lte IE 9]>
+    <script type="text/javascript">
+    window.location.href="";   
+  </script>
+   <![endif]-->
 </head>
 
 <body>
@@ -30,50 +35,54 @@
                 <img class="link-bg" src="./img/bg-logo.png" />
                 <div class="more">
                     <div class="column">
-                        <div class="link-header">关于文库</div>
-                        <div class="link-content"><a href="#">文库简介</a></div>
-                        <div class="link-content"><a href="">使用说明</a></div>
-                        <div class="link-content"><a href="">鼓励分享</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/base.html">关于文库</a></div>
+                        <div class="link-content"><a href="./helper/base.html">文库简介</a></div>
+                        <div class="link-content"><a href="./helper/base.html">使用说明</a></div>
+                        <div class="link-content"><a href="./helper/base.html">鼓励分享</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header">订单服务</div>
-                        <div class="link-content"><a href="">购买指南</a></div>
-                        <div class="link-content"><a href="">支付方式</a></div>
-                        <div class="link-content"><a href="">送货政策</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/orderServe.html">订单服务</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">购买指南</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">支付方式</a></div>
+                        <div class="link-content"><a href="./helper/orderServe.html">送货政策</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header">关于公司</div>
-                        <div class="link-content"><a href="">公司简介</a></div>
-                        <div class="link-content"><a href="">加入我们</a></div>
-                        <div class="link-content"><a href="">联系我们</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/company.html">关于公司</a></div>
+                        <div class="link-content"><a href="./helper/company.html">公司简介</a></div>
+                        <div class="link-content"><a href="./helper/company.html">加入我们</a></div>
+                        <div class="link-content"><a href="./helper/company.html">联系我们</a></div>
                     </div>
                     <div class="column">
-                        <div class="link-header">关于我们</div>
-                        <div class="link-content"><a href="">新浪微博</a></div>
-                        <div class="link-content"><a href="">官方微信</a></div>
-                        <div class="link-content"><a href="">官方贴吧</a></div>
+                        <div class="link-header"><a style="color:#fff" target="blank" href="./helper/followUs.html">关于我们</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">新浪微博</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">官方微信</a></div>
+                        <div class="link-content"><a href="./helper/followUs.html">官方贴吧</a></div>
                     </div>
                     <div class="column QR">
-                        <img src="./img/QR-code.png">
+                        <img style="width:120px;height:120px;" src="./img/QR-code.png">
                     </div>
                 </div>
+                 <p class="declaration" style="font-size:14px; color: #696969;">© 2015 巧然电商版权所有 
+                 鄂ICP备15018392号
+</p>
             </footer>
+
         </div>
     </div>
     <div class="login-frame" id="login-frame">
         <div class="header-btn"><span class="active login-btn">登录</span><span class="signin-btn">注册</span><i class="logo-close simplemodal-close"></i></div>
         <div class="portrait"><img src="./img/portrait.png"></div>
         <div class="input-frame">
-            <input  type="text" class="login-account" placeholder="用户名"/><i class="logo-user"></i>
+            <input  type="text" class="login-account" placeholder="用户名/手机号"/><i class="logo-user"></i>
             <input  type="password" class="login-ps" placeholder="密码"/><i class="logo-ps"></i>
         </div>
-        <div class="forget"><a href="">忘记密码</a></div>
+        <div class="forget"><a href="./forget">忘记密码</a></div>
         <div>
             <button class="confirm-btn login-btn" id="confirm-btn">确认</button>
         </div>
-        <div class="link-login">
+        <!-- <div class="link-login">
             其他方式登录:<span class="QQ" id="QQ-login"><i class="logo-QQ"></i>QQ登录</span><span class="wei"><i class="logo-wei"></i>微信登录</span>
-        </div>
+        </div> -->
         <div class="login-choice">
             <div class="user-login active">
                 <div>用</div>
@@ -81,13 +90,13 @@
                 <div>登</div>
                 <div>录</div>
             </div>
-            <div class="store-login ">                
+           <!--  <div class="store-login ">                
                 <div>打</div>
                 <div>印</div>
                 <div>店</div>
                 <div>登</div>
                 <div>录</div>
-            </div>
+            </div> -->
         </div>
     </div>
    <div class="signin-frame" id="signin-frame">
@@ -134,7 +143,7 @@
               <button class="confirm-btn enroll">确 认</button>
           </div>
       </div>
-    
+   
     <script src="js/lib/require.js" data-main="js/entry/99print.js"></script>
 
 </body>

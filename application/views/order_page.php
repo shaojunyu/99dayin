@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" type="text/css" href="../styles/center.css">
     
-    <title>99打印</title>
+    <title>九九打印</title>
 </head>
 
 <body>
@@ -123,7 +123,7 @@
                 <div class="ps-input ">
                     <input class="name" type="type" value="123" ><span>姓名:</span></div>
                 <div class="ps-input">
-                    <input class="phone" type="type" value="123"><span>手机:</span></div>
+                    <input class="phone" type="type" value="123" readonly><span>手机:</span></div>
                 <div class="ps-input">
                     <button class="get-code">获取验证码</button>
                     <input class="confir-code" type="type" data-iden='0'><span>验证码:</span>

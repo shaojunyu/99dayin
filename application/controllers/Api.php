@@ -1,12 +1,17 @@
 <?php
 use Pingpp\Transfer;
 defined('BASEPATH') OR exit('No direct script access allowed');
+require_once APPPATH.'third_party/pingpp/init.php';
+require_once APPPATH.'third_party/bmob/lib/BmobObject.class.php';
+require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
+require_once APPPATH.'third_party/bmob/lib/BmobSms.class.php';
 
 class Api extends CI_Controller{
 	private $bmobUser;
 	private $bmobSms;
 	private $pingpp_app_id;
 	private $local_data;
+	private $post_data;//获取post数据
 	
 	public function __construct(){
 		parent::__construct();
@@ -22,28 +27,31 @@ class Api extends CI_Controller{
 		if ($md5 != $token) {
 			exit('加密错误！');
 		}
-		
 		//引入bomb
-		require_once APPPATH.'third_party/bmob/lib/BmobObject.class.php';
-		require_once APPPATH.'third_party/bmob/lib/BmobUser.class.php';
-		require_once APPPATH.'third_party/bmob/lib/BmobSms.class.php';
 		$this->bmobUser = new BmobUser();
-		
-// 		//引入ping++
-		require_once APPPATH.'third_party/pingpp/init.php';
+		//引入ping++
 		$test_key = 'sk_test_0CKaPS8CmDeLfr9CCOmXHGGS';
 		$live_key = 'sk_live_bOz9YlaOHrS7dFw9yYlUif7R';
 		$this->pingpp_app_id = 'app_SO0anHPWznHCbL0y';
 		\pingpp\Pingpp::setApiKey($live_key);
-		//本地用户数据保存
+		
+		//解析post数据,以json格式接收的数据
+		if($this->input->server('CONTENT_TYPE') === 'application/json'){
+			$this->post_data = json_decode($this->input->raw_input_stream);
+		}else {
+			
+		}
 		
 	}
 	public function index(){
 		echo 'api';
 	}
 	public function test(){
+		$b = new BmobObject('test');
+		$res = $b->create(array('id'=>'134'));
+		var_dump($res);
 	}
-	
+	//用户相关
 	public function signup(){
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
@@ -51,18 +59,20 @@ class Api extends CI_Controller{
 		$college = $this->input->post('college');
 		try {
 			
-			$this->bmobUser->register(array(
+			$info = $this->bmobUser->register(array(
 					'username'=>$username,
 					'password'=>$password,
 					'mobilePhoneNumber'=>$phone,
 					'college'=>$college
 			));
 			$this->session->set_userdata('username',$username);
-			
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
 			//获取userid
 			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
 			$res = $res->results[0];
 			$this->session->set_userdata('userId',$res->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$res->mobilePhoneNumber);
 			$this->echo_msg(true,'注册成功');
 			exit();
 		} catch (Exception $e) {
@@ -71,28 +81,105 @@ class Api extends CI_Controller{
 		}
 	}
 	public function login() {
-		$username = $this->input->post('username');
-		$password = $this->input->post('ps');
+		$username = $this->post_data->username;
+		$password = $this->post_data->password;
 		try {
-			$this->bmobUser->login($username,$password);
+			$info = $this->bmobUser->login($username,$password);
 			$this->session->set_userdata('username',$username);
-			//获取userid
-			$res = $this->bmobUser->get("",array('where={"username":"'.$username.'"}','limit=1'));
-			$res = $res->results[0];
-			$this->session->set_userdata('userId',$res->objectId);
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
+			//userId
+			$this->session->set_userdata('userId',$info->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$info->mobilePhoneNumber);
 			$this->echo_msg(true,'登录成功');
 			exit();
 		} catch (Exception $e) {
-			$this->echo_msg(false,'用户名或密码错误'.$e->error_msg);
+			$this->echo_msg(false,'用户名或密码错误');
 			exit();
 		}
 		
 	}
+	public function loginByPhone(){
+		$phone = $this->post_data->phone;
+		$password = $this->post_data->password;
+		try {
+			$res = $this->bmobUser->get('',array('where={"mobilePhoneNumber":"'.$phone.'"}','limit=1'));
+			if (empty($res->results[0])) {
+				$this->echo_msg(false);
+				return ;
+			}
+		} catch (Exception $e) {
+		}
+		
+		try {
+			$username = $res->results[0]->username;
+			$info = $this->bmobUser->login($username,$password);
+			
+			$this->session->set_userdata('username',$username);
+			$this->session->set_userdata('bmobToken',$info->sessionToken);
+			//userId
+			$this->session->set_userdata('userId',$info->objectId);
+			//保存手机号
+			$this->session->set_userdata('phone',$info->mobilePhoneNumber);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,'用户名或密码错误');
+		}
+	}
+	
+	
 	public function logout(){
 		$this->session->sess_destroy();
 		$this->echo_msg(true);
 	}
 	
+	public function updateUserInfo(){
+		try {
+			$name = $this->post_data->name;
+			//$phone = $this->post_data->phone;
+			$email = $this->post_data->email;
+			$this->bmobUser->update($this->session->userdata('userId'), $this->session->userdata('bmobToken'),array(
+					//'mobilePhoneNumber'=>$phone,
+					'name'=>$name,
+					'email'=>$email
+			));
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
+	
+	//根据验证码重设密码
+	public function resetPassword(){
+		$smsCode = $this->post_data->smsCode;
+		$newPassword = $this->post_data->newPassword;
+		try {
+			$this->bmobUser->resetPasswordBySmsCode($smsCode, $newPassword);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			if($e->code == '207'){
+				$this->echo_msg(false,"验证码错误");
+				return ;
+			}
+			else {
+				$this->echo_msg(false,$e->error_msg);
+			}
+			
+		}
+		
+	}
+	
+	public function updatePassword(){
+		try {
+			$oldPassword = $this->post_data->oldPassword;
+			$newPassword = $this->post_data->newPassword;
+			//$this->bmobUser->updateUserPassword($userId, $sessionToken, $oldPassword, $newPassword)
+			$this->bmobUser->updateUserPassword($this->session->userdata('userId'), $this->session->userdata('bmobToken'), $oldPassword, $newPassword);
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
 	//发送验证码
 	function sendSmsCode(){
 		$phone = $this->input->post('phone');
@@ -110,8 +197,8 @@ class Api extends CI_Controller{
 	
 	//验证短信验证码
 	public function verifySmsCode(){
-		$phone = $this->input->post('phone');
-		$smsCode = $this->input->post('smsCode');
+		$phone = $this->post_data->phone;
+		$smsCode = $this->post_data->smsCode;
 		try {
 			$bmobSms = new BmobSms();
 			$res = $bmobSms->verifySmsCode($phone, $smsCode);
@@ -133,10 +220,14 @@ class Api extends CI_Controller{
 	}
 	
 	public function getUploadToken(){
+		$username = $this->session->userdata('username');
+		
 		require_once APPPATH.'third_party/oss_php_sdk_20140625/sdk.class.php';
     	$id= 'GtzMAvDTnxg72R04';
     	$key= 'VhD2czcwLVAaE7DReDG4uEVSgtaSYK';
     	$host = 'http://99dayin.oss-cn-hangzhou.aliyuncs.com';
+    	$callback_body = '{"callbackUrl":"http://www.99dayin.com:12345","callbackHost":"www.99dayin.com","callbackBody":"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}","callbackBodyType":"application/x-www-form-urlencoded"}';
+    	$base64_callback_body = base64_encode($callback_body);
     	$now = time();
     	$expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
     	$end = $now + $expire;
@@ -169,55 +260,151 @@ class Api extends CI_Controller{
     	$response['policy'] = $base64_policy;
     	$response['signature'] = $signature;
     	$response['expire'] = $end;
+    	$response['callback'] = $base64_callback_body;
     	//这个参数是设置用户上传指定的前缀
     	$response['dir'] = $dir;
     	echo json_encode($response);
 	}
 	
+	/**
+	 * 验证文件是否已存在
+	 */
+	public function confirmMD5(){
+		$fileMD5 = $this->post_data->fileMD5;
+		if (empty($fileMD5)) {
+			$this->echo_msg(false);
+		}else {
+			$bmobObj = new BmobObject('File_Info');
+			$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+			if (count($res->results) == 1) {
+				$this->echo_msg(true);
+			}else {
+				$this->echo_msg(false);
+			}
+		}
+	}
 	/*
 	 * 上传成功，前端回调函数
 	 */
 	public function uploadACK(){
-		$username = $this->input->post('username');
-		$filename = $this->input->post('filename');
+		if ($this->input->server('CONTENT_TYPE') === 'application/json') {
+			$fileMD5 = $this->post_data->fileMD5;
+			$filename = urldecode($this->post_data->filename);
+		}else {
+			$filename = ($this->input->post('filename'));
+			$fileMD5 = $this->input->post('fileMD5');
+		}
+		$username = $this->session->userdata('username');
 		$uploader = $this->session->userdata('userId');
-		if (empty($filename)) {
-			$this->echo_msg(false,'参数不全');
+
+		if (empty($filename) or empty($fileMD5)) {
+			$this->echo_msg(false,$filename);
 			exit();
 		}
+		
 		//文件信息写到本地文件，供文件监听器调用
-		try {
-			$filedata = array('uploader'=>$uploader,'filename'=>$filename);
-			file_put_contents('./file_analysis/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
-		} catch (Exception $e) {
-			$this->echo_msg(false,$e->error_msg);
-		}
+// 		try {
+			//注意
+// 			$filedata = array('uploader'=>$uploader,'filename'=>urlencode($filename));
+// 			file_put_contents('./file_analysis/file_json/'.'file-'.$username.'-'.time().'.json',json_encode($filedata));
+// 		} catch (Exception $e) {
+// 			$this->echo_msg(false,$e->error_msg);
+// 		}
 		
 		//文件信息保存到云
 		try {
 			$bmobObj = new BmobObject("User_Upload");
 			$res = $bmobObj->create(array(
-					'filename'=>$filename,
+					'filename'=>urldecode($filename),
 					'uploader'=>$uploader
 			));
-			$this->echo_msg(true,'');
 		} catch (Exception $e) {
 			$this->echo_msg(false,$e->error_msg);
 		}
+		
+		//文件信息保存到购物车
+		try {
+			$cart = new MY_Cart();
+			$cart->addItem($filename, $fileMD5);
+		} catch (Exception $e) {
+			
+		}
+		$this->echo_msg(true,$filename);
 	}
 	
+	/*
+	 * 获取后台文件解析进程
+	 */
+	public function getProgress(){
+		header('Content-Type: text/event-stream');
+		header('Cache-Control: no-cache');
+		header('Connection: keep-alive');
+		$cart = new MY_Cart();
+		$items = $cart->getItems();
+		$num = count($items);
+		$bmobObj = new BmobObject('File_Info');
+		while ($num > 0){
+			foreach ($items as &$item){
+				$fileMD5 = $item->fileMD5;
+				$res = $bmobObj->get('',array('where={"fileMD5":"'.$fileMD5.'"}','limit=1'));
+				if (count($res->results) == 1) {
+					$num--;
+				}
+			}
+			$this->sendSSEMsg($num);
+			if ($num > 0) {
+				$num = count($items);
+			}
+		}
+		$this->sendSSEMsg($num);
+	}
+	
+	private function sendSSEMsg($msg){
+			echo "data:$msg" . PHP_EOL;
+			echo PHP_EOL;
+			ob_flush();
+			flush();
+	}
+
 	//删除购物车中的项目
 	public function deleteCartItem(){
-		$fileHash = $this->input->post('mark');
-		
+		$fileMD5 = $this->post_data->fileMD5;
 		$cart = new MY_Cart();
-		if ($cart->deleteItem($fileHash)) {
+		if ($cart->deleteItem($fileMD5)) {
 			$this->echo_msg(true,'删除成功');
 		}else {
 			$this->echo_msg(false,'删除失败，请重试');
 		}
 	}
 	
+	/*
+	 * 打印设置
+	 */
+	public function printSetting(){
+		if(!empty($this->post_data)){
+			$fileMD5 = $this->post_data->fileMD5;
+			$option = $this->post_data->option;
+			$option_value = $this->post_data->option_value;
+			$cart = new MY_Cart();
+			try {
+				$res = $cart->changePrintSetting($fileMD5, $option, $option_value);
+				echo json_encode(array("success"=>true,"single"=>$res['unitPrice'],"gross"=>$res['subtotal']));
+			} catch (Exception $e) {
+				$this->echo_msg(false);
+				echo $e;
+			}
+		}
+
+		
+	}
+	
+	/*
+	 * 获取购物车总价
+	 */
+	public function getTotalPrice(){
+		$cart = new MY_Cart();
+		//
+	}
 	//获取文件列表
 	public function getFileList(){
 		$bucket = 'dayin';
@@ -241,9 +428,20 @@ class Api extends CI_Controller{
 	 * 创建订单
 	 */
 	public function createOrder(){
+		$address = "";
+		$shop = "";
+		if (isset($this->post_data->address->area) and isset($this->post_data->shop)) {
+			$address = $this->post_data->address->area.$this->post_data->address->build.'栋'.$this->post_data->address->num;
+			$shop = $this->post_data->shop;
+		}else {
+			$this->echo_msg(false,"参数不全");
+			exit();
+		}
 		try{
+			
 			$order = new MY_Order();
-			$orderId = $order->createOrder();
+			//$order->test();
+			$orderId = $order->createOrder($address,$shop);
 			$this->echo_msg(true,'成功');
 		}catch (MY_Exception $e){
 			$this->echo_msg(false,$e->error_msg);
@@ -265,12 +463,66 @@ class Api extends CI_Controller{
 
 	}
 	
-	function isPaid(){
-		$chargeId = $this->input->post('chargeId');
+	/**
+	 * 获取订单内文件信息
+	 */
+	public function getOrderInfo(){
+		$orderId =  $this->post_data->orderId;
+		$bmobObj = new BmobObject('Order');
 		try {
-			$charge = Pingpp\Charge::retrieve($chargeId);
-			$values = $charge->__toArray();
+			$res = $bmobObj->get($orderId);
+			$items = json_decode($res->items);
+			
+			$newItems = array();
+			$k = 0;
+			foreach ($items as $item){
+				$temp['fileName'] = $item->filename;
+				$temp['twoSide'] = $item->printSettings->isTwoSides?'double':'single';
+				$temp['direction'] = $item->printSettings->direction;
+				$temp['pptPerPage'] = $item->printSettings->pptPerPage;
+				if($item->fileType != fileType::$PPT){
+					$temp['pptPerPage'] = 0;
+				}
+				$temp['paperSize'] = $item->printSettings->paperSize;
+				$temp['amount'] = $item->printSettings->amount;
+				$newItems[] = $temp;
+			}
+			echo json_encode($newItems);
 		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msr);
+		}
+
+	}
+	
+	/**
+	 * 取消订单
+	 */
+	public function cancelOrder(){
+		$orderId =  $this->post_data->orderId;
+		$bmobObj = new BmobObject('Order');
+		try {
+			$bmobObj->update($orderId,array('state'=>orderState::CANCELED));
+			$this->echo_msg(true);
+		} catch (Exception $e) {
+			$this->echo_msg(false,$e->error_msg);
+		}
+	}
+
+	/*
+	 * 取人订单是否已支付
+	 */
+	function isPaid(){
+		$chargeId = $this->post_data->chargeId;
+		try {
+			$res = \Pingpp\Charge::retrieve($chargeId);
+			$isPaid = $res->__toArray()['paid'];
+			if ($isPaid) {
+				$this->echo_msg(true);
+			}else {
+				$this->echo_msg(false,'UNPAID');
+			}
+		} catch (Exception $e) {
+			$this->echo_msg(false);
 		}
 		
 	}

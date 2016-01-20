@@ -1,5 +1,0 @@
-$logo-sprite-dimensions: true; 
-$logo-spacing: 5px;
-@import "compass/utilities/sprites",
-"logo/*.png";
-@include all-logo-sprites();

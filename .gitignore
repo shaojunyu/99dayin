@@ -1,9 +1,13 @@
+.idea/
+file_analysis/
+pingpp_webhooks/
 .project
 .settings/
-99-print/.sass-cache
-99-print/sass
-99-print/config.rb
-
 application/logs/
 .htaccess
+<<<<<<< HEAD
 .idea/
+=======
+cacert.pem
+pingpp_hook/
+>>>>>>> develoop

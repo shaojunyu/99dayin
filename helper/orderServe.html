@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>九九打印</title>
+   <link rel="stylesheet" type="text/css" href="../styles/dist.css">
+</head>
+
+<body>
+<div class="header">
+        <div class="setWidth">
+            <a class="logo"href="http://www.99dayin.com" >
+                <img class="logo-print" src="../img/logo.png" alt="logo" />
+                <span>九九打印</span>
+            </a>
+            <a href="http://www.99dayin.com" class="titles">
+                <div class="title-btn homepage-btn" data-content="首页">首页</div>
+                <div class="title-btn introduction" data-content="简介">简介</div>
+                <div class="title-btn">
+                    <span class="login" id="login" data-content="登录">登录</span><span>|</span><span class="signin" id="signin" data-content="注册">注册</span>
+                </div>
+            </a >
+        </div>
+    </div>
+<div class="back"></div>
+
+<article class="main">
+    <h1 class="title">订单服务</h1>
+    <article class="content">
+         <h2>一、购买指南：</h2>
+        <p>
+            第一步 用户登录或注册
+            <br/> 第二步 在文库中选取所需文件
+            <br/> 第三步 打印设置
+            <br/> 第四步 提交订单，在线支付
+            <br/> 第五步 到店自取或等候送货上门
+            <br/>
+        </p>
+        <h2>二、支付方式：</h2>
+        <p>
+            九九打印支持微信扫码和支付宝扫码的支付方式
+        </p>
+        <h2>三、送货政策：</h2>
+        <p>
+            九九打印贴心为您提供两种取货渠道：
+            </p>
+            <h3>1.到店自取</h3><p>
+             30分钟后，用户可凭订单号到店自行提取。
+            </p>
+            <h3>2.送货上门</h3> 
+            <p>为了使您的生活更加方便，九九打印推出送货上门政策。以下是我们安排的三个送货时间点，您可以根据自身情况进行选择：
+            <br/> 时段一：12:30-13:00
+            <br/> 时段二：18:00-18:30
+            <br/> 时段三：22:00-22:30 (不同季节有所调整)
+            <br/>
+        </p>
+    </article>
+</article>
+<script type="text/javascript">
+    var body = document.querySelector('body'),
+        html = document.querySelector('html'),
+        back = document.querySelector('.back'),
+        main= document.querySelector('.main');
+    function resizeBack(){
+        var htmlHeight = html.clientHeight,
+            mainHeight = main.clientHeight;  //内容高度
+        var height = (htmlHeight>mainHeight)?htmlHeight:mainHeight;
+        back.style.height = height+"px";
+    }
+    resizeBack();
+    window.addEventListener('resize',resizeBack,false);
+</script>
+</body>
+
+</html>
