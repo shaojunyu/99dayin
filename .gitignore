@@ -5,5 +5,9 @@ pingpp_webhooks/
 .settings/
 application/logs/
 .htaccess
+<<<<<<< HEAD
+.idea/
+=======
 cacert.pem
 pingpp_hook/
+>>>>>>> develoop
