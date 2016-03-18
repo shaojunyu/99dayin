@@ -3,7 +3,6 @@
 require_once 'MY_Base_Class.php';
 //自定义订单类
 class MY_Order extends MY_Base_Class{
-	private $userId;
 	private $orderId;
 	private $cart;
 	private $pingpp_app_id;

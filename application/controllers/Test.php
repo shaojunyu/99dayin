@@ -1,10 +1,9 @@
 <?php
-use Sts\Request\V20150401 as Sts;
-use OSS\OssClient;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Test extends CI_Controller{
-	var $qiniu_auth;
+
 	
 	public function __construct(){
 		parent::__construct();
@@ -14,15 +13,28 @@ class Test extends CI_Controller{
 	}
 	
 	public function index(){
-		require_once APPPATH.'third_party/aliyun_oss/vendor/autoload.php';
-		$accessKeyId = "GtzMAvDTnxg72R04"; ;
-		$accessKeySecret = "VhD2czcwLVAaE7DReDG4uEVSgtaSYK";
-		$endpoint = "oss-cn-hangzhou.aliyuncs.com";
-		$bmobOrder = new BmobObject('Order');
-		$res = $bmobOrder->get('',array('where={"state":"'.orderState::UNPAID.'","userId":"2447db529e"}','limit=1'));
-		var_dump($res);
+		$userId = $this->session->userdata('userId');
+		$redis = new Redis();
+		$redis->connect('127.0.0.1',6379);
+
+		var_dump($redis->lrange("user_list",0,100));
+
 		
-		$order = new MY_Order();
-		$order->alipay();
+		$cart = new BmobObject('Cart');
+		var_dump($_SERVER['HTTP_HOST']);
+		//while(true){
+// 			$userId = $redis->blPop('user_list',0);
+// 			$res = array();
+// 			$res = $cart->get('',array('where={"userId":"'.$userId.'"}','limit=1'));
+// 			$res = $res->results[0];
+// 			foreach ($res as $k=>$v){
+// 				$redis->hSet($userId.'_Cart',$k,$v);
+// 			}
+		//}
+		//$fp = fsockopen($_SERVER['HTTP_HOST'], 80, $errno, $errstr, 30);
+		
+		$r = $redis->hGetAll("f67390242f_Cart");
+		var_dump($r);
+		phpinfo();
 	}
 }

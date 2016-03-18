@@ -92,6 +92,18 @@ class Api extends CI_Controller{
 			//保存手机号
 			$this->session->set_userdata('phone',$info->mobilePhoneNumber);
 			$this->echo_msg(true,'登录成功');
+			
+			//redis队列
+			$redis = new Redis();
+			$redis->connect('127.0.0.1',6379);
+// 			$redis->lpush('user_list',$info->objectId);
+			$userId = $info->objectId;
+			$cart = new BmobObject('Cart');
+			$res = $cart->get('',array('where={"userId":"'.$userId.'"}','limit=1'));
+			$res = $res->results[0];
+			foreach ($res as $k=>$v){
+				$redis->hSet($userId.'_Cart',$k,$v);
+			}
 			exit();
 		} catch (Exception $e) {
 			$this->echo_msg(false,'用户名或密码错误');
